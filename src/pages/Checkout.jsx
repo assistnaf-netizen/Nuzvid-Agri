@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Truck, CreditCard, CheckCircle, ShieldCheck, MapPin, Loader2, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useSEO from '../hooks/useSEO';
+import { initializeRazorpayPayment } from '../lib/razorpay';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -125,7 +126,7 @@ const Checkout = () => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
     if (!user) {
       toast.error('You must log in to place an order.');
@@ -134,38 +135,72 @@ const Checkout = () => {
     }
 
     setLoading(true);
-    
-    // Simulate API order placement
-    setTimeout(() => {
-      const orderId = `ORD-${Date.now().toString().slice(-6)}`;
-      const totalAmount = total + shippingCost;
-      
-      clearCart();
-      setLoading(false);
-      navigate('/order-success', { 
-        state: { 
-          orderId, 
-          total: totalAmount,
-          address: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} - ${shippingInfo.pincode}`,
-          paymentMethod
-        } 
-      });
-    }, 2000);
+    const orderId = `ORD-${Date.now().toString().slice(-6)}`;
+    const shippingAddress = `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`;
+
+    if (paymentMethod === 'card') {
+      try {
+        await initializeRazorpayPayment(
+          {
+            amount: finalAmount,
+            email: formData.email,
+            phone: formData.phone,
+            name: `${formData.firstName} ${formData.lastName}`,
+            description: `Order ${orderId}`,
+            address: shippingAddress,
+          },
+          (response) => {
+            toast.success('Payment successful!');
+            clearCart();
+            setLoading(false);
+            navigate('/order-success', { 
+              state: { 
+                orderId, 
+                total: finalAmount,
+                address: shippingAddress,
+                paymentMethod: 'Razorpay UPI/Card',
+                paymentId: response.razorpay_payment_id
+              } 
+            });
+          },
+          () => {
+            toast.error('Payment cancelled.');
+            setLoading(false);
+          }
+        );
+      } catch (err) {
+        toast.error(err.message || 'Payment initialization failed.');
+        setLoading(false);
+      }
+    } else {
+      // Cash on Delivery
+      setTimeout(() => {
+        clearCart();
+        setLoading(false);
+        navigate('/order-success', { 
+          state: { 
+            orderId, 
+            total: finalAmount,
+            address: shippingAddress,
+            paymentMethod: 'Cash on Delivery'
+          } 
+        });
+      }, 2000);
+    }
   };
 
   return (
     <div className="checkout-page-wrapper">
       <div className="checkout-container">
         
-        <div className="checkout-header" style={{ position: 'relative', textAlign: 'center' }}>
+        <div className="checkout-header">
           <button 
             onClick={() => navigate(-1)} 
             className="checkout-back-btn"
-            style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', color: '#4b5563', fontWeight: 600 }}
           >
             <ArrowLeft size={16} /> <span className="back-text">Back</span>
           </button>
-          <h1 style={{ margin: 0 }}>Secure Checkout</h1>
+          <h1>Secure Checkout</h1>
         </div>
         
         <div className="checkout-grid">
@@ -207,13 +242,13 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '40px', marginBottom: '15px' }}>
-                <h3 className="checkout-section-title" style={{ margin: 0 }}>Shipping Address</h3>
+              <div className="shipping-title-wrapper">
+                <h3 className="checkout-section-title">Shipping Address</h3>
                 <button 
                   type="button" 
                   onClick={handleGetLocation} 
                   disabled={locationLoading}
-                  style={{ background: '#e8f0fe', color: '#1a73e8', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  className="location-track-btn"
                 >
                   {locationLoading ? <Loader2 size={16} className="spin" /> : <MapPin size={16} />}
                   Track Exact Location
@@ -302,19 +337,19 @@ const Checkout = () => {
               ))}
             </div>
             <div className="checkout-totals">
-              <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px dashed #e5e7eb' }}>
-                <div style={{ display: 'flex', gap: '10px' }}>
+              <div className="coupon-code-wrapper">
+                <div className="coupon-input-group">
                   <input 
                     type="text" 
                     placeholder="Enter Coupon Code" 
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
-                    style={{ flex: 1, padding: '10px 14px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', outline: 'none' }}
+                    className="coupon-input-box"
                   />
                   <button 
                     type="button"
                     onClick={handleApplyCoupon}
-                    style={{ background: '#27130F', color: 'white', border: 'none', padding: '0 20px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}
+                    className="coupon-apply-btn"
                   >
                     Apply
                   </button>
@@ -330,7 +365,7 @@ const Checkout = () => {
                 <span>{shippingCost === 0 ? 'Free' : `₹${shippingCost}`}</span>
               </div>
               {discount > 0 && (
-                <div className="total-row" style={{ color: '#10b981', fontWeight: 600 }}>
+                <div className="total-row discount-row">
                   <span>Discount ({couponCode})</span>
                   <span>-₹{discount}</span>
                 </div>
@@ -341,7 +376,7 @@ const Checkout = () => {
               </div>
             </div>
             
-            <div style={{ marginTop: '30px', textAlign: 'center', color: '#888', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <div className="secure-badge-container">
               <ShieldCheck size={18} /> Encrypted and Secure Checkout
             </div>
           </motion.div>

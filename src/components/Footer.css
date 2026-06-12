@@ -1,13 +1,28 @@
+/* ============================================
+   FOOTER — Premium hover & shading effects
+   ============================================ */
+
 .footer {
   background-color: var(--color-bg-dark);
   color: #ddd;
 }
 
+/* Value Prop Strip */
 .value-prop-section {
-  background-color: var(--color-primary);
-  padding: 30px 0;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #5a2a1a 100%);
+  padding: 32px 0;
   color: var(--color-white);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.value-prop-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  animation: shimmerSweep 4s linear infinite;
 }
 
 .value-prop-grid {
@@ -15,6 +30,20 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.value-item {
+  padding: 16px 12px;
+  border-radius: 8px;
+  transition: background 0.35s ease, transform 0.35s ease;
+  cursor: default;
+}
+
+.value-item:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-4px);
 }
 
 .value-item h4 {
@@ -23,14 +52,21 @@
   font-size: 16px;
   margin-bottom: 5px;
   text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.value-item:hover h4 {
+  color: #e8b87a;
 }
 
 .value-item p {
   font-size: 14px;
+  opacity: 0.85;
 }
 
+/* Main Footer */
 .main-footer {
-  padding: 60px 0;
+  padding: 64px 0 48px;
 }
 
 .footer-grid {
@@ -42,10 +78,23 @@
 .footer-col h3 {
   color: var(--color-secondary);
   font-family: var(--font-body);
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 20px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.footer-col h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-secondary), transparent);
+  border-radius: 2px;
 }
 
 .footer-logo-img {
@@ -53,57 +102,97 @@
   height: auto;
   margin-bottom: 20px;
   filter: brightness(0) invert(1);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.footer-logo-img:hover {
+  filter: brightness(0.9) invert(1) sepia(0.2);
+  transform: scale(1.04);
 }
 
 .contact-info p {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 14px;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
+  color: #bbb;
+  transition: color 0.3s ease;
 }
 
+.contact-info p:hover {
+  color: #ddd;
+}
+
+/* Social Links — scale + fill */
 .social-links {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   margin-top: 20px;
 }
 
 .social-links a {
   color: var(--color-white);
-  background-color: rgba(255,255,255,0.1);
-  width: 36px;
-  height: 36px;
+  background-color: rgba(255,255,255,0.08);
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .social-links a:hover {
   background-color: var(--color-secondary);
   color: var(--color-primary);
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(179, 139, 109, 0.4);
+  border-color: var(--color-secondary);
 }
 
+/* Footer Nav Links — arrow indicator on hover */
 .footer-col ul li {
   margin-bottom: 12px;
 }
 
 .footer-col ul a {
   font-size: 14px;
-  color: #bbb;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  transition: color 0.3s ease, gap 0.3s ease, padding-left 0.3s ease;
+  position: relative;
+}
+
+.footer-col ul a::before {
+  content: '›';
+  font-size: 16px;
+  color: var(--color-secondary);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .footer-col ul a:hover {
   color: var(--color-secondary);
-  padding-left: 5px;
+  padding-left: 14px;
 }
 
+.footer-col ul a:hover::before {
+  opacity: 1;
+  transform: translateX(-14px);
+}
+
+/* Newsletter Column */
 .newsletter-col p {
   font-size: 14px;
   margin-bottom: 15px;
   color: #bbb;
+  line-height: 1.7;
 }
 
 .newsletter-form {
@@ -113,28 +202,38 @@
 }
 
 .newsletter-form input {
-  padding: 12px 15px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: transparent;
+  padding: 13px 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
   color: var(--color-white);
   font-family: var(--font-body);
-  border-radius: 4px;
+  border-radius: 6px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  outline: none;
 }
 
 .newsletter-form input:focus {
-  outline: none;
   border-color: var(--color-secondary);
+  background: rgba(255,255,255,0.09);
+  box-shadow: 0 0 0 3px rgba(179, 139, 109, 0.2);
+}
+
+.newsletter-form input::placeholder {
+  color: rgba(255,255,255,0.35);
 }
 
 .newsletter-form button {
   width: 100%;
 }
 
+/* Copyright Bar */
 .copyright-bar {
-  background-color: #1a0c0a;
+  background-color: #16080600;
+  background: linear-gradient(to right, #110605, #1a0c0a, #110605);
   padding: 20px 0;
   font-size: 13px;
-  color: #aaa;
+  color: #888;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 
 .copyright-inner {
@@ -147,27 +246,14 @@
   letter-spacing: 1px;
 }
 
+/* Responsive */
 @media (max-width: 992px) {
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .value-prop-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .value-prop-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-  }
-  .value-prop-grid {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 30px;
-    column-gap: 10px;
-  }
-  .copyright-inner {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
+  .footer-grid { grid-template-columns: 1fr; }
+  .value-prop-grid { grid-template-columns: repeat(2, 1fr); row-gap: 30px; column-gap: 10px; }
+  .copyright-inner { flex-direction: column; gap: 15px; text-align: center; }
 }

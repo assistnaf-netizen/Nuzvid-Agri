@@ -1,48 +1,58 @@
-/* About Us Page Styling */
+/* ============================================
+   ABOUT US PAGE — Premium design system values
+   ============================================ */
 
 .about-page-wrapper {
-  background-color: #fcf9f2;
+  background-color: var(--color-bg-light);
 }
 
 /* Hero Banner */
 .about-hero {
   width: 100%;
-  height: 250px;
-  background-color: #3b2a21; /* fallback color */
-  background-image: url('https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977'); /* Placeholder, needs to be updated with actual banner */
+  height: 260px;
+  background-color: var(--color-primary);
+  background-image: url('https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977');
   background-size: cover;
   background-position: center;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Align text to the right like in the screenshot */
+  justify-content: flex-end;
   padding-right: 10%;
+  box-shadow: var(--shadow-sm);
 }
 
 .about-hero::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(to right, rgba(20, 10, 5, 0.4), rgba(20, 10, 5, 0.7));
 }
 
 .about-hero-text {
   position: relative;
   z-index: 2;
-  color: white;
+  color: var(--color-white);
   font-family: var(--font-heading);
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .about-hero-text a {
-  color: white;
+  color: var(--color-white);
   text-decoration: none;
   margin-right: 5px;
+  transition: var(--transition-smooth);
+}
+
+.about-hero-text a:hover {
+  color: var(--color-accent);
 }
 
 .about-hero-text span {
-  color: var(--color-primary);
+  color: var(--color-accent);
   margin-left: 5px;
 }
 
@@ -65,26 +75,44 @@
   position: relative;
 }
 
+.story-img-wrapper {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(60, 28, 20, 0.04);
+}
+
 .main-story-img {
   width: 100%;
-  border-radius: 4px;
   display: block;
+  transition: transform 0.8s ease;
+}
+
+.story-img-wrapper:hover .main-story-img {
+  transform: scale(1.04);
 }
 
 .experience-badge {
   position: absolute;
   bottom: -30px;
   right: -30px;
-  background-color: #4a2b16;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   width: 180px;
   height: 180px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
-  border: 10px solid #fcf9f2; /* Matches background to create the cutout effect */
+  border-radius: var(--radius-sm);
+  border: 10px solid var(--color-bg-light);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-smooth);
+}
+
+.story-image-side:hover .experience-badge {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
 .experience-badge h3 {
@@ -92,15 +120,16 @@
   font-size: 48px;
   margin: 0;
   line-height: 1;
-  color: #ffffff !important;
+  color: var(--color-white) !important;
 }
 
 .experience-badge p {
-  font-size: 14px;
+  font-size: 13px;
   margin: 5px 0 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #ffffff !important;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: var(--color-accent) !important;
 }
 
 .story-text-side {
@@ -108,34 +137,35 @@
 }
 
 .subtitle {
-  color: #4a2b16;
+  color: var(--color-accent);
   font-weight: 700;
   text-transform: uppercase;
   font-size: 14px;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   margin-bottom: 15px;
 }
 
 .story-text-side h2 {
   font-family: var(--font-heading);
   font-size: 54px;
-  color: #0f1f21;
-  line-height: 1.1;
+  color: var(--color-primary);
+  line-height: 1.15;
   margin-bottom: 30px;
 }
 
 .vertical-line-text {
-  border-left: 3px solid #8c5a3d;
+  border-left: 3px solid var(--color-accent);
   padding-left: 20px;
   font-size: 18px;
-  color: #333;
+  color: var(--color-text);
   margin-bottom: 30px;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.6;
 }
 
 .story-body-text {
   font-size: 16px;
-  color: #555;
+  color: var(--color-text-light);
   line-height: 1.8;
 }
 
@@ -146,14 +176,14 @@
 
 .mission-header h2 {
   font-family: var(--font-heading);
-  font-size: 32px;
-  color: #0f1f21;
+  font-size: 36px;
+  color: var(--color-primary);
   margin-bottom: 15px;
 }
 
 .mission-header h4 {
   font-style: italic;
-  color: #555;
+  color: var(--color-text-light);
   font-weight: normal;
   font-size: 18px;
   margin-bottom: 20px;
@@ -161,7 +191,7 @@
 
 .mission-header p {
   font-size: 16px;
-  color: #555;
+  color: var(--color-text-light);
   line-height: 1.8;
   max-width: 900px;
 }
@@ -178,19 +208,32 @@
   padding-left: 30px;
 }
 
+.mission-img-wrapper {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(60, 28, 20, 0.04);
+}
+
+.mission-img {
+  width: 100%;
+  display: block;
+  transition: transform 0.8s ease;
+}
+
+.mission-img-wrapper:hover .mission-img {
+  transform: scale(1.04);
+}
+
 .mission-image-side::before {
   content: '';
   position: absolute;
   left: 0;
   top: 20px;
   bottom: 20px;
-  width: 15px;
-  background-color: #4a2b16;
-}
-
-.mission-img {
-  width: 100%;
-  display: block;
+  width: 12px;
+  background-color: var(--color-accent);
+  border-radius: 4px;
 }
 
 .mission-text-side {
@@ -199,13 +242,13 @@
 
 .mission-text-side p {
   font-size: 16px;
-  color: #555;
+  color: var(--color-text-light);
   line-height: 1.8;
   margin-bottom: 25px;
 }
 
 .mission-text-side p strong {
-  color: #0f1f21;
+  color: var(--color-primary);
 }
 
 /* Mobile Responsiveness */
@@ -246,7 +289,7 @@
   }
   
   .mission-header h2 {
-    font-size: 26px;
+    font-size: 28px;
   }
   
   .vertical-line-text {

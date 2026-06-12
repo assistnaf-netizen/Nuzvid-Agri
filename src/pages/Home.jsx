@@ -391,14 +391,17 @@ const Home = () => {
         const viewedIds = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
         if (viewedIds.length === 0) return null;
         
-        const viewedProducts = viewedIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+        const viewedProducts = viewedIds
+          .map(id => products.find(p => p.id === id))
+          .filter(Boolean)
+          .slice(0, 4);
         if (viewedProducts.length === 0) return null;
 
         return (
           <section className="recently-viewed-section py-4" style={{ backgroundColor: '#f9fafb' }}>
             <div className="container">
               <h2 className="section-title text-center text-uppercase fw-bold" style={{ letterSpacing: '2px', color: '#333' }}>Recently Viewed<span style={{ color: '#8B4513' }}>.</span></h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginTop: '30px' }}>
+              <div className="recently-viewed-grid">
                 {viewedProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}

@@ -1,8 +1,10 @@
-/* Our Commitment Page Styling */
+/* ============================================
+   OUR COMMITMENT PAGE — Premium design system
+   ============================================ */
 
 .commitment-page-wrapper {
-  background-color: #ffffff; /* Page appears to be white */
-  padding: 60px 20px;
+  background-color: var(--color-bg-light);
+  padding: 80px 20px;
 }
 
 .commitment-container {
@@ -13,16 +15,14 @@
 /* Top Section (Two Columns) */
 .commitment-top-section {
   display: flex;
-  align-items: center; /* Center vertically, or flex-start? Looks like flex-start is better since text is long */
   align-items: flex-start;
   gap: 60px;
-  margin-bottom: 40px;
+  margin-bottom: 45px;
 }
 
 .commitment-image-side {
   width: 45%;
   position: relative;
-  /* Make room for the offset background block on the left */
   padding-left: 30px;
 }
 
@@ -32,36 +32,49 @@
   top: 10%;
   bottom: 10%;
   left: 0;
-  width: 100px; /* It sticks out from the left */
-  background-color: #4a2b16; /* Dark brown from Nuzvid branding */
+  width: 100px;
+  background-color: var(--color-accent);
   z-index: 0;
+  border-radius: var(--radius-sm);
+  opacity: 0.85;
+}
+
+.commitment-img-wrapper {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(60, 28, 20, 0.04);
 }
 
 .commitment-main-img {
   width: 100%;
-  position: relative;
-  z-index: 1;
-  border-radius: 4px;
   display: block;
+  transition: transform 0.8s ease;
+}
+
+.commitment-img-wrapper:hover .commitment-main-img {
+  transform: scale(1.04);
 }
 
 .commitment-text-side {
   width: 55%;
-  padding-top: 20px; /* Align visual weight with the image */
+  padding-top: 10px;
 }
 
 .commitment-text-side h2 {
   font-family: var(--font-heading);
-  font-size: 26px;
-  color: #0f1f21;
-  margin-bottom: 20px;
-  line-height: 1.4;
+  font-size: 30px;
+  color: var(--color-primary);
+  margin-bottom: 25px;
+  line-height: 1.35;
   font-weight: 700;
 }
 
 .commitment-text-side p {
   font-size: 16px;
-  color: #555;
+  color: var(--color-text-light);
   line-height: 1.8;
   margin-bottom: 25px;
 }
@@ -73,7 +86,7 @@
 
 .commitment-bottom-section p {
   font-size: 16px;
-  color: #555;
+  color: var(--color-text-light);
   line-height: 1.8;
   margin-bottom: 25px;
 }
@@ -97,10 +110,10 @@
 
 @media (max-width: 768px) {
   .commitment-page-wrapper {
-    padding: 40px 15px;
+    padding: 50px 15px;
   }
 
   .commitment-text-side h2 {
-    font-size: 22px;
+    font-size: 24px;
   }
 }

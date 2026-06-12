@@ -1,16 +1,24 @@
+/* ============================================
+   HEADER — Premium hover & scroll effects
+   ============================================ */
+
 .header {
   position: sticky;
   top: 0;
   width: 100%;
   z-index: 1000;
   background-color: var(--color-white);
-  transition: var(--transition);
+  transition: box-shadow 0.4s ease, background 0.4s ease;
 }
 
 .header.scrolled {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 24px rgba(60, 28, 20, 0.10);
+  background-color: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
+/* Top Bar */
 .top-bar {
   background-color: var(--color-white);
   color: var(--color-text);
@@ -40,6 +48,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.top-bar-item:hover {
+  color: var(--color-primary);
 }
 
 .top-bar-item svg {
@@ -59,12 +72,15 @@
   color: var(--color-text);
   display: flex;
   align-items: center;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .top-bar-right a:hover {
   color: var(--color-primary);
+  transform: translateY(-1px);
 }
 
+/* Main Nav */
 .main-nav-wrapper {
   border-bottom: 1px solid #f0f0f0;
   height: 88.8px;
@@ -80,6 +96,7 @@
   width: 100%;
 }
 
+/* Logo — subtle scale pulse on hover */
 .logo {
   text-align: center;
   display: flex;
@@ -89,8 +106,15 @@
 .logo-img {
   max-width: 140px;
   height: auto;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
 }
 
+.logo:hover .logo-img {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 8px rgba(60, 28, 20, 0.15));
+}
+
+/* Desktop Nav — animated underline slide */
 .desktop-nav ul {
   display: flex;
   gap: 30px;
@@ -103,29 +127,42 @@
   color: var(--color-text);
   position: relative;
   padding-bottom: 5px;
+  letter-spacing: 0.3px;
 }
 
-.desktop-nav a:hover,
-.desktop-nav a.active {
-  color: var(--color-primary);
-}
-
-.desktop-nav a.active::after {
+.desktop-nav a::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 0%;
   height: 2px;
-  background-color: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 2px;
+  transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+.desktop-nav a:hover {
+  color: var(--color-primary);
+}
+
+.desktop-nav a:hover::after,
+.desktop-nav a.active::after {
+  width: 100%;
+}
+
+.desktop-nav a.active {
+  color: var(--color-primary);
+}
+
+/* Nav Actions */
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
+/* Icon buttons — glow on hover */
 .icon-btn {
   color: var(--color-text);
   position: relative;
@@ -136,12 +173,19 @@
   height: 48px;
   padding: 0 12px;
   background-color: var(--color-white);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-xs);
   border-radius: 2px;
+  transition: all 0.3s ease;
 }
 
 .icon-btn:hover {
   color: var(--color-primary);
+  box-shadow: var(--shadow-sm), 0 0 0 3px rgba(214, 141, 60, 0.12);
+  transform: translateY(-2px);
+}
+
+.icon-btn:active {
+  transform: translateY(0) scale(0.96);
 }
 
 .cart-btn {
@@ -163,9 +207,14 @@
   justify-content: center;
   border-radius: 50%;
   margin: 0;
+  animation: pulseGlow 2s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.5);
 }
 
+/* Shop Now — shimmer sweep effect */
 .shop-now-btn {
+  position: relative;
+  overflow: hidden;
   background-color: var(--color-primary);
   color: var(--color-white);
   padding: 16px 32px;
@@ -175,6 +224,18 @@
   letter-spacing: 0.5px;
   margin-right: 25px;
   border: 1px solid var(--color-primary);
+  transition: all 0.35s ease;
+}
+
+.shop-now-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.55s ease;
 }
 
 .shop-now-btn:hover {
@@ -182,8 +243,19 @@
   color: var(--color-primary);
 }
 
+.shop-now-btn:hover::after {
+  left: 160%;
+}
+
+/* Mobile */
 .mobile-menu-toggle {
   display: none;
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+  transform: scale(1.1);
+  color: var(--color-primary);
 }
 
 .mobile-nav {
@@ -193,8 +265,15 @@
   top: 100%;
   left: 0;
   width: 100%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
   padding: 20px;
+  animation: slideDownMenu 0.3s ease forwards;
+  transform-origin: top;
+}
+
+@keyframes slideDownMenu {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .mobile-nav ul {
@@ -209,6 +288,12 @@
   font-weight: 500;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.mobile-nav a:hover {
+  color: var(--color-primary);
+  padding-left: 8px;
 }
 
 .mobile-shop-btn {
@@ -218,37 +303,12 @@
 }
 
 @media (max-width: 992px) {
-  .desktop-nav {
-    display: none;
-  }
-
-  .shop-now-btn {
-    display: none;
-  }
-
-  .mobile-menu-toggle {
-    display: block;
-  }
-
-  .mobile-nav.open {
-    display: block;
-  }
-
-  .top-bar {
-    display: none;
-  }
-
-  .nav-actions {
-    gap: 5px;
-  }
-
-  .icon-btn {
-    min-width: 36px;
-    height: 36px;
-    padding: 0 5px;
-  }
-
-  .logo-img {
-    max-width: 110px;
-  }
+  .desktop-nav { display: none; }
+  .shop-now-btn { display: none; }
+  .mobile-menu-toggle { display: block; }
+  .mobile-nav.open { display: block; }
+  .top-bar { display: none; }
+  .nav-actions { gap: 5px; }
+  .icon-btn { min-width: 36px; height: 36px; padding: 0 5px; }
+  .logo-img { max-width: 110px; }
 }

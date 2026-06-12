@@ -1,24 +1,32 @@
+/* ============================================
+   PRODUCT CARD — Premium hover & animations
+   ============================================ */
+
 .product-card {
   background-color: var(--color-white);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-xs);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(180, 120, 60, 0.18),
+              0 8px 16px rgba(60, 28, 20, 0.10);
 }
 
+/* Image wrapper */
 .product-image-wrapper {
   position: relative;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  background-color: #ffffff;
+  background: linear-gradient(145deg, #fdfaf5, #f5ede0);
 }
 
 .product-image-wrapper img {
@@ -26,7 +34,12 @@
   height: 100%;
   object-fit: contain;
   padding: 10px;
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.4s ease;
+}
+
+.product-card:hover .product-image-wrapper img {
+  transform: scale(1.08);
 }
 
 .hover-img {
@@ -40,30 +53,35 @@
   opacity: 1;
 }
 
-.product-actions {
+/* Overlay shimmer on hover */
+.product-image-wrapper::before {
+  content: '';
   position: absolute;
-  bottom: -50px;
-  left: 0;
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-  transition: bottom 0.3s ease;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 100%
+  );
   opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.product-card:hover .product-actions {
-  bottom: 0;
+.product-card:hover .product-image-wrapper::before {
   opacity: 1;
 }
 
 /* Badges */
 .product-badges {
   position: absolute;
-  top: 15px;
-  left: 15px;
+  top: 14px;
+  left: 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   z-index: 2;
 }
 
@@ -79,29 +97,35 @@
 
 .badge.new {
   background-color: #333;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(51,51,51,0.4); }
+  50%       { box-shadow: 0 0 0 5px rgba(51,51,51,0); }
 }
 
 .badge.sale {
   background-color: #d9534f;
 }
 
-/* Wishlist Button */
+/* Wishlist button */
 .wishlist-btn {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 35px;
-  height: 35px;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: white;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
   cursor: pointer;
   z-index: 2;
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   opacity: 0;
   transform: translateX(10px);
 }
@@ -112,22 +136,48 @@
 }
 
 .wishlist-btn:hover {
-  transform: scale(1.1) !important;
+  background-color: #fff0f0;
+  transform: scale(1.15) !important;
+  box-shadow: 0 4px 16px rgba(220, 50, 50, 0.25);
 }
 
-/* Action Buttons Flex Layout */
+.wishlist-btn.active {
+  background-color: #fff0f0;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Heart pop animation on toggle */
+@keyframes heartPop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.4); }
+  60%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.wishlist-btn.active svg {
+  animation: heartPop 0.4s ease forwards;
+}
+
+/* Action buttons slide-up */
 .product-actions {
   position: absolute;
   bottom: -60px;
   left: 0;
   width: 100%;
-  padding: 15px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  padding: 12px 14px;
+  background: linear-gradient(to top, rgba(20, 10, 5, 0.80), rgba(20, 10, 5, 0.15), transparent);
+  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              opacity 0.35s ease;
   opacity: 0;
   display: flex;
   gap: 10px;
   z-index: 2;
+}
+
+.product-card:hover .product-actions {
+  bottom: 0;
+  opacity: 1;
 }
 
 .action-btn {
@@ -149,10 +199,28 @@
   flex-grow: 1;
   background-color: var(--color-primary);
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.cart-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.18), transparent);
+  transition: left 0.5s ease;
 }
 
 .cart-btn:hover {
-  background-color: var(--color-secondary);
+  background-color: var(--color-accent);
+  transform: scale(1.02);
+}
+
+.cart-btn:hover::after {
+  left: 160%;
 }
 
 .details-btn {
@@ -160,29 +228,43 @@
   flex-shrink: 0;
   background-color: white;
   color: #333;
+  border-radius: 4px;
 }
 
 .details-btn:hover {
-  background-color: var(--color-secondary);
+  background-color: var(--color-accent);
   color: white;
+  transform: scale(1.08);
 }
 
+/* Product Info */
 .product-info {
-  padding: 20px;
+  padding: 18px 20px 20px;
   text-align: center;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background: white;
+  transition: background 0.3s ease;
+}
+
+.product-card:hover .product-info {
+  background: linear-gradient(to bottom, white, #fffaf4);
 }
 
 .product-title {
   font-family: var(--font-body);
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--color-text);
-  margin-bottom: 10px;
-  line-height: 1.3;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.product-card:hover .product-title {
+  color: var(--color-primary);
 }
 
 .product-rating {
@@ -207,14 +289,19 @@
 }
 
 .product-mrp {
-  font-size: 14px;
-  color: #999;
+  font-size: 13px;
+  color: #bbb;
   text-decoration: line-through;
 }
 
 .product-price {
   font-family: var(--font-heading);
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+.product-card:hover .product-price {
+  color: var(--color-accent);
 }

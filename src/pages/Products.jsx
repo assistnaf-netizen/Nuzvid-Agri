@@ -109,14 +109,10 @@ const Products = () => {
                 <li key={catName}>
                   <button 
                     onClick={() => setCategory(catName)}
-                    style={{
-                      background: 'none', border: 'none', padding: 0, textAlign: 'left',
-                      cursor: 'pointer', color: category === catName ? '#2d7a5c' : '#555',
-                      fontWeight: category === catName ? '700' : '500',
-                      fontSize: '14px', transition: 'all 0.2s'
-                    }}
+                    className={`category-btn ${category === catName ? 'active' : ''}`}
                   >
-                    {catName} <span style={{ color: '#9ca3af', fontWeight: 'normal' }}>({count})</span>
+                    <span className="category-name">{catName}</span>
+                    <span className="category-count">({count})</span>
                   </button>
                 </li>
               ))}
@@ -130,7 +126,7 @@ const Products = () => {
             </div>
             <ul className="widget-list">
               <li>
-                <label className="checkbox-label" style={{ cursor: 'pointer' }}>
+                <label className="checkbox-label">
                   <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
                   <span>In Stock</span>
                 </label>
