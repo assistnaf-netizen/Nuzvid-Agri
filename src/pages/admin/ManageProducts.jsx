@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
-import { Trash2, Plus, Search, Eye, Package, Download } from 'lucide-react';
+import { Trash2, Plus, Search, Eye, Package, Download, Edit2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import './admin.css';
 
@@ -13,6 +13,8 @@ const ManageProducts = () => {
   
   // New Product Form State
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
   const [newProduct, setNewProduct] = useState({
     title: '', price: '', mrp: '', category: '', image: '', hoverImage: '', description: '', isNew: false, sale: false
   });
@@ -48,41 +50,99 @@ const ManageProducts = () => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
-      const { data, error } = await supabase.from('products').insert([
-        { 
+      if (isEditing) {
+        const { data, error } = await supabase.from('products').update({ 
           name: newProduct.title, 
           price: parseFloat(newProduct.price), 
           original_price: newProduct.mrp ? parseFloat(newProduct.mrp) : null,
           category: newProduct.category,
           image_url: newProduct.image || 'https://via.placeholder.com/150',
           description: newProduct.description,
-          in_stock: true,
           is_featured: newProduct.isNew || newProduct.sale
-        }
-      ]).select();
+        }).eq('id', editId).select();
+        
+        if (error) throw error;
+        
+        const updatedProduct = {
+          id: data[0].id,
+          title: data[0].name,
+          price: data[0].price,
+          mrp: data[0].original_price,
+          category: data[0].category,
+          image: data[0].image_url,
+          hoverImage: data[0].image_url,
+          description: data[0].description,
+          isNew: data[0].is_featured,
+          sale: data[0].is_featured
+        };
+        
+        setProducts(products.map(p => p.id === editId ? updatedProduct : p));
+        toast.success('Product updated successfully!');
+      } else {
+        const { data, error } = await supabase.from('products').insert([
+          { 
+            name: newProduct.title, 
+            price: parseFloat(newProduct.price), 
+            original_price: newProduct.mrp ? parseFloat(newProduct.mrp) : null,
+            category: newProduct.category,
+            image_url: newProduct.image || 'https://via.placeholder.com/150',
+            description: newProduct.description,
+            in_stock: true,
+            is_featured: newProduct.isNew || newProduct.sale
+          }
+        ]).select();
+        
+        if (error) throw error;
+        
+        const insertedProduct = {
+          id: data[0].id,
+          title: data[0].name,
+          price: data[0].price,
+          mrp: data[0].original_price,
+          category: data[0].category,
+          image: data[0].image_url,
+          hoverImage: data[0].image_url,
+          description: data[0].description,
+          isNew: data[0].is_featured,
+          sale: data[0].is_featured
+        };
+        
+        setProducts([insertedProduct, ...products]);
+        toast.success('Product added successfully!');
+      }
       
-      if (error) throw error;
-      
-      const insertedProduct = {
-        id: data[0].id,
-        title: data[0].name,
-        price: data[0].price,
-        mrp: data[0].original_price,
-        category: data[0].category,
-        image: data[0].image_url,
-        hoverImage: data[0].image_url,
-        description: data[0].description,
-        isNew: data[0].is_featured,
-        sale: data[0].is_featured
-      };
-      
-      setProducts([insertedProduct, ...products]);
       setNewProduct({ title: '', price: '', mrp: '', category: '', image: '', hoverImage: '', description: '', isNew: false, sale: false });
       setIsAdding(false);
-      toast.success('Product added successfully!');
+      setIsEditing(false);
+      setEditId(null);
     } catch (error) {
       toast.error(error.message);
     }
+  };
+
+  const handleEditClick = (product) => {
+    setNewProduct({
+      title: product.title,
+      price: product.price,
+      mrp: product.mrp || '',
+      category: product.category,
+      image: product.image,
+      hoverImage: product.hoverImage || '',
+      description: product.description || '',
+      isNew: product.isNew,
+      sale: product.sale
+    });
+    setEditId(product.id);
+    setIsEditing(true);
+    setIsAdding(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancel = () => {
+    setIsAdding(false);
+    setIsEditing(false);
+    setEditId(null);
+    setNewProduct({ title: '', price: '', mrp: '', category: '', image: '', hoverImage: '', description: '', isNew: false, sale: false });
   };
 
   const handleDelete = async (id) => {
@@ -101,8 +161,8 @@ const ManageProducts = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1 style={{ fontSize: '28px', color: '#27130F' }}>Manage Products</h1>
-        <button onClick={() => setIsAdding(!isAdding)} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <Plus size={18} /> Add Product
+        <button onClick={() => { if(isAdding) handleCancel(); else setIsAdding(true); }} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <Plus size={18} /> {isAdding ? 'Close Form' : 'Add Product'}
         </button>
       </div>
 
@@ -153,8 +213,8 @@ const ManageProducts = () => {
             </label>
           </div>
           <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
-            <button type="submit" className="btn-primary">Save Product</button>
-            <button type="button" onClick={() => setIsAdding(false)} style={{ marginLeft: '10px', padding: '8px 15px', background: 'none', border: '1px solid #ccc', borderRadius: '4px' }}>Cancel</button>
+            <button type="submit" className="btn-primary">{isEditing ? 'Update Product' : 'Save Product'}</button>
+            <button type="button" onClick={handleCancel} style={{ marginLeft: '10px', padding: '8px 15px', background: 'none', border: '1px solid #ccc', borderRadius: '4px' }}>Cancel</button>
           </div>
         </form>
       )}
@@ -208,6 +268,7 @@ const ManageProducts = () => {
                   <td>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button className="admin-icon-btn" onClick={() => setSelectedProduct(product)} title="View Product"><Eye size={15} /></button>
+                      <button className="admin-icon-btn" style={{ color: '#3b82f6' }} onClick={() => handleEditClick(product)} title="Edit Product"><Edit2 size={15} /></button>
                       <button className="admin-icon-btn" style={{ color: '#ef4444' }} onClick={() => handleDelete(product.id)} title="Delete Product"><Trash2 size={15} /></button>
                     </div>
                   </td>
