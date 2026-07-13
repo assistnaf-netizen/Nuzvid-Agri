@@ -19,6 +19,7 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState('description');
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   useSEO({
     title: product ? product.title : 'Loading Product...',
@@ -61,12 +62,16 @@ const ProductDetail = () => {
           weight: data.weight,
           stock_quantity: data.stock_quantity !== null ? data.stock_quantity : 10,
           highlights: data.highlights || [],
+          variants: data.variants || [],
           isNew: data.is_featured,
           sale: data.is_featured,
           rating: 5.0,
           reviews: 12
         };
         setProduct(foundProduct);
+        if (foundProduct.variants && foundProduct.variants.length > 0) {
+          setSelectedVariant(foundProduct.variants[0]);
+        }
         setCurrentImageIndex(0);
 
         let recentlyViewed = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
@@ -117,16 +122,28 @@ const ProductDetail = () => {
     );
   }
 
+  const displayStock = selectedVariant ? selectedVariant.stock_quantity : product.stock_quantity;
+
   const handleQuantityChange = (type) => {
-    if (type === 'increment' && quantity < product.stock_quantity) setQuantity(q => q + 1);
+    if (type === 'increment' && quantity < displayStock) setQuantity(q => q + 1);
     if (type === 'decrement' && quantity > 1) setQuantity(q => q - 1);
   };
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addToCart(product);
+      addToCart({
+        ...product,
+        price: selectedVariant ? selectedVariant.price : product.price,
+        weight: selectedVariant ? selectedVariant.weight : product.weight,
+        sku: selectedVariant ? selectedVariant.sku : product.sku
+      });
     }
   };
+
+  const displayPrice = selectedVariant ? selectedVariant.price : product.price;
+  const displayMrp = selectedVariant ? selectedVariant.mrp : product.mrp;
+  const displaySku = selectedVariant ? selectedVariant.sku : product.sku;
+  const displayWeight = selectedVariant ? selectedVariant.weight : product.weight;
 
   return (
     <div className="product-detail-page">
@@ -199,21 +216,48 @@ const ProductDetail = () => {
               </div>
 
               <div className="detail-price-wrapper">
-                {product.mrp && product.mrp > product.price && (
-                  <span className="detail-price-old">₹{product.mrp.toFixed(2)}</span>
+                {displayMrp && displayMrp > displayPrice && (
+                  <span className="detail-price-old">₹{Number(displayMrp).toFixed(2)}</span>
                 )}
-                <span className="detail-price">₹{product.price.toFixed(2)}</span>
-                {product.mrp && product.mrp > product.price && (
+                <span className="detail-price">₹{Number(displayPrice).toFixed(2)}</span>
+                {displayMrp && displayMrp > displayPrice && (
                   <span style={{ color: '#10b981', fontWeight: 'bold', marginLeft: '10px', fontSize: '14px' }}>
-                    {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+                    {Math.round(((displayMrp - displayPrice) / displayMrp) * 100)}% OFF
                   </span>
                 )}
               </div>
 
+              {/* Variants Selector */}
+              {product.variants && product.variants.length > 0 && (
+                <div style={{ marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px', color: '#4b5563' }}>Select Size / Weight</h4>
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    {product.variants.map((v, idx) => (
+                      <button 
+                        key={idx}
+                        onClick={() => { setSelectedVariant(v); setQuantity(1); }}
+                        style={{ 
+                          padding: '8px 16px', 
+                          border: selectedVariant?.weight === v.weight ? '2px solid var(--color-primary)' : '1px solid #d1d5db', 
+                          background: selectedVariant?.weight === v.weight ? '#fef3c7' : 'white',
+                          color: selectedVariant?.weight === v.weight ? '#92400e' : '#4b5563',
+                          borderRadius: '8px', 
+                          fontWeight: 600, 
+                          cursor: 'pointer',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        {v.weight}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Advanced Specs (SKU, Weight) */}
               <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', fontSize: '14px', color: '#4b5563' }}>
-                {product.weight && <div><strong>Weight/Vol:</strong> {product.weight}</div>}
-                {product.sku && <div><strong>SKU:</strong> {product.sku}</div>}
+                {displayWeight && !product.variants?.length && <div><strong>Weight/Vol:</strong> {displayWeight}</div>}
+                {displaySku && <div><strong>SKU:</strong> {displaySku}</div>}
               </div>
 
               {/* Highlights */}
@@ -233,7 +277,7 @@ const ProductDetail = () => {
               </p>
 
               <div className="detail-stock-status">
-                {product.stock_quantity > 0 ? (
+                {displayStock > 0 ? (
                   <>
                     <Check size={18} color="#2d7a5c" /> <span>In Stock & Ready to Ship</span>
                   </>
@@ -243,7 +287,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Add to Cart Area */}
-              {product.stock_quantity > 0 && (
+              {displayStock > 0 && (
                 <div className="detail-action-area">
                   <div className="quantity-selector">
                     <button onClick={() => handleQuantityChange('decrement')}>-</button>

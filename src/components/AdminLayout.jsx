@@ -1,7 +1,7 @@
 import { Navigate, Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
-import { LogOut, LayoutDashboard, Package, Image, ShoppingCart, Users, Tag, Settings, ChevronRight } from 'lucide-react';
+import { LogOut, LayoutDashboard, Package, Image, ShoppingCart, Users, Tag, Settings, ChevronRight, ClipboardList } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const NAV_ITEMS = [
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: '/admin/orders',   label: 'Orders',      icon: <ShoppingCart size={18}/> },
   { to: '/admin/customers',label: 'Customers',   icon: <Users size={18}/> },
   { to: '/admin/products', label: 'Products',    icon: <Package size={18}/> },
+  { to: '/admin/inventory',label: 'Inventory',   icon: <ClipboardList size={18}/> },
   { to: '/admin/banners',  label: 'Banners',     icon: <Image size={18}/> },
   { to: '/admin/coupons',  label: 'Coupons',     icon: <Tag size={18}/> },
   { to: '/admin/settings', label: 'Settings',    icon: <Settings size={18}/> },

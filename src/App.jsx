@@ -26,6 +26,7 @@ import ManageOrders from './pages/admin/ManageOrders';
 import ManageCustomers from './pages/admin/ManageCustomers';
 import ManageCoupons from './pages/admin/ManageCoupons';
 import StoreSettings from './pages/admin/StoreSettings';
+import ManageInventory from './pages/admin/ManageInventory';
 import AdminAuth from './pages/admin/AdminAuth';
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<ManageProducts />} />
+          <Route path="inventory" element={<ManageInventory />} />
           <Route path="banners" element={<ManageBanners />} />
           <Route path="orders" element={<ManageOrders />} />
           <Route path="customers" element={<ManageCustomers />} />

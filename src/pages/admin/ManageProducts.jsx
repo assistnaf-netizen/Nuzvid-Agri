@@ -21,7 +21,7 @@ const ManageProducts = () => {
   const [newProduct, setNewProduct] = useState({
     title: '', price: '', mrp: '', category: '', 
     sku: '', weight: '', stock_quantity: 10, highlights: '', description: '', 
-    isNew: false, sale: false
+    isNew: false, sale: false, hasVariants: false, variants: []
   });
 
   const [existingImages, setExistingImages] = useState([]);
@@ -50,7 +50,9 @@ const ManageProducts = () => {
         highlights: p.highlights || [],
         description: p.description,
         isNew: p.is_featured,
-        sale: p.is_featured
+        sale: p.is_featured,
+        variants: p.variants || [],
+        hasVariants: p.variants && p.variants.length > 0
       })));
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -131,7 +133,8 @@ const ManageProducts = () => {
         highlights: highlightsArray,
         description: newProduct.description,
         in_stock: parseInt(newProduct.stock_quantity || 0) > 0,
-        is_featured: newProduct.isNew || newProduct.sale
+        is_featured: newProduct.isNew || newProduct.sale,
+        variants: newProduct.hasVariants ? newProduct.variants : []
       };
 
       if (isEditing) {
@@ -166,7 +169,9 @@ const ManageProducts = () => {
       highlights: (product.highlights || []).join('\n'),
       description: product.description || '',
       isNew: product.isNew,
-      sale: product.sale
+      sale: product.sale,
+      hasVariants: product.hasVariants || false,
+      variants: product.variants || []
     });
     setExistingImages(product.images || (product.image ? [product.image] : []));
     setImageFiles([]);
@@ -184,7 +189,7 @@ const ManageProducts = () => {
     setNewProduct({ 
       title: '', price: '', mrp: '', category: '', 
       sku: '', weight: '', stock_quantity: 10, highlights: '', description: '', 
-      isNew: false, sale: false 
+      isNew: false, sale: false, hasVariants: false, variants: []
     });
     setExistingImages([]);
     setImageFiles([]);
@@ -249,22 +254,60 @@ const ManageProducts = () => {
           </div>
 
           {/* SECTION: PRICING & INVENTORY */}
-          <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '8px', display: 'grid', gap: '15px', gridTemplateColumns: '1fr 1fr 1fr' }}>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <h3 style={{ margin: '0 0 15px', fontSize: '15px', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '1px' }}>Pricing & Inventory</h3>
+          <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '8px', display: 'grid', gap: '15px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0, fontSize: '15px', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '1px' }}>Pricing & Inventory</h3>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 600, color: '#3b82f6' }}>
+                <input type="checkbox" checked={newProduct.hasVariants} onChange={e => setNewProduct({...newProduct, hasVariants: e.target.checked})} />
+                This product has multiple variants (e.g., sizes, weights)
+              </label>
             </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '14px' }}>Selling Price (₹) *</label>
-              <input type="number" required style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '14px' }}>MRP (₹) - Optional</label>
-              <input type="number" style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={newProduct.mrp} onChange={e => setNewProduct({...newProduct, mrp: e.target.value})} />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '14px' }}>Stock Quantity</label>
-              <input type="number" min="0" required style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={newProduct.stock_quantity} onChange={e => setNewProduct({...newProduct, stock_quantity: e.target.value})} />
-            </div>
+
+            {!newProduct.hasVariants ? (
+              <div style={{ display: 'grid', gap: '15px', gridTemplateColumns: '1fr 1fr 1fr' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '14px' }}>Selling Price (₹) *</label>
+                  <input type="number" required style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '14px' }}>MRP (₹) - Optional</label>
+                  <input type="number" style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={newProduct.mrp} onChange={e => setNewProduct({...newProduct, mrp: e.target.value})} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '14px' }}>Stock Quantity</label>
+                  <input type="number" min="0" required style={{ width: '100%', padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={newProduct.stock_quantity} onChange={e => setNewProduct({...newProduct, stock_quantity: e.target.value})} />
+                </div>
+              </div>
+            ) : (
+              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '15px' }}>
+                {newProduct.variants.map((variant, index) => (
+                  <div key={index} style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr auto', gap: '10px', alignItems: 'end', marginBottom: '10px', background: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '12px' }}>Variant Name (e.g. 500g) *</label>
+                      <input required style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={variant.weight} onChange={e => { const v = [...newProduct.variants]; v[index].weight = e.target.value; setNewProduct({...newProduct, variants: v}); }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '12px' }}>Price (₹) *</label>
+                      <input type="number" required style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={variant.price} onChange={e => { const v = [...newProduct.variants]; v[index].price = e.target.value; setNewProduct({...newProduct, variants: v}); }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '12px' }}>MRP (₹)</label>
+                      <input type="number" style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={variant.mrp} onChange={e => { const v = [...newProduct.variants]; v[index].mrp = e.target.value; setNewProduct({...newProduct, variants: v}); }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '12px' }}>SKU</label>
+                      <input style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={variant.sku} onChange={e => { const v = [...newProduct.variants]; v[index].sku = e.target.value; setNewProduct({...newProduct, variants: v}); }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600, fontSize: '12px' }}>Stock *</label>
+                      <input type="number" required style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} value={variant.stock_quantity} onChange={e => { const v = [...newProduct.variants]; v[index].stock_quantity = e.target.value; setNewProduct({...newProduct, variants: v}); }} />
+                    </div>
+                    <button type="button" onClick={() => { const v = newProduct.variants.filter((_, i) => i !== index); setNewProduct({...newProduct, variants: v}); }} style={{ padding: '8px', background: '#fef2f2', color: '#ef4444', border: '1px solid #fca5a5', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                  </div>
+                ))}
+                <button type="button" onClick={() => setNewProduct({...newProduct, variants: [...newProduct.variants, { weight: '', price: '', mrp: '', sku: '', stock_quantity: 10 }]})} style={{ padding: '10px 15px', background: 'white', border: '1px dashed #3b82f6', color: '#3b82f6', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}><Plus size={16} /> Add Variant</button>
+              </div>
+            )}
           </div>
 
           {/* SECTION: IMAGES */}
