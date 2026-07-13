@@ -102,15 +102,18 @@ const ManageBanners = () => {
   };
 
   const addBanner = () => {
-    if (!newBanner.desktop || !newBanner.mobile) {
-      toast.error('Please upload both Desktop and Mobile banner images');
+    const finalDesktop = newBanner.desktop || newBanner.mobile;
+    const finalMobile = newBanner.mobile || newBanner.desktop;
+
+    if (!finalDesktop) {
+      toast.error('Please upload at least one banner image');
       return;
     }
     if (banners.length >= 5) {
       toast.error('You can only have up to 5 banners');
       return;
     }
-    setBanners([...banners, newBanner]);
+    setBanners([...banners, { desktop: finalDesktop, mobile: finalMobile }]);
     setNewBanner({ desktop: '', mobile: '' });
   };
 
@@ -202,7 +205,7 @@ const ManageBanners = () => {
               </div>
             </div>
 
-            <button type="button" onClick={addBanner} className="btn-primary" disabled={isUploading || !newBanner.desktop || !newBanner.mobile} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <button type="button" onClick={addBanner} className="btn-primary" disabled={isUploading || (!newBanner.desktop && !newBanner.mobile)} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <Plus size={18} /> Add Banner Pair
             </button>
           </div>
