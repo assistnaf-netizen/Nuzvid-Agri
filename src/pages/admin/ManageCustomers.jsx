@@ -1,28 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Mail, Phone, Users, TrendingUp, Award, UserCheck, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { supabase } from '../../lib/supabase';
 import './admin.css';
 
-const MOCK_CUSTOMERS = [
-  { id: 'CUST-001', name: 'Rahul Sharma',   avatar: 'RS', email: 'rahul.s@example.com',   phone: '+91 98765 43210', orders: 5,  spent: 12500, joined: '2023-08-15', status: 'VIP' },
-  { id: 'CUST-002', name: 'Priya Patel',    avatar: 'PP', email: 'priya.p@example.com',   phone: '+91 98765 43211', orders: 1,  spent: 7200,  joined: '2024-10-20', status: 'New' },
-  { id: 'CUST-003', name: 'Amit Singh',     avatar: 'AS', email: 'amit.s@example.com',    phone: '+91 98765 43212', orders: 12, spent: 45000, joined: '2022-01-10', status: 'VIP' },
-  { id: 'CUST-004', name: 'Sneha Reddy',    avatar: 'SR', email: 'sneha.r@example.com',   phone: '+91 98765 43213', orders: 3,  spent: 8500,  joined: '2024-05-05', status: 'Regular' },
-  { id: 'CUST-005', name: 'Vikram Mehta',   avatar: 'VM', email: 'vikram.m@example.com',  phone: '+91 98765 43214', orders: 2,  spent: 1800,  joined: '2024-09-12', status: 'Regular' },
-  { id: 'CUST-006', name: 'Ananya Rao',     avatar: 'AR', email: 'ananya.r@example.com',  phone: '+91 98765 43215', orders: 8,  spent: 32000, joined: '2023-03-22', status: 'VIP' },
-  { id: 'CUST-007', name: 'Karan Malhotra', avatar: 'KM', email: 'karan.m@example.com',   phone: '+91 98765 43216', orders: 0,  spent: 0,     joined: '2024-10-28', status: 'New' },
-];
-
 const AVATAR_COLORS = ['#d68d3c', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#f59e0b', '#06b6d4'];
-const MAX_SPENT = Math.max(...MOCK_CUSTOMERS.map(c => c.spent));
 
 const ManageCustomers = () => {
+  const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [maxSpent, setMaxSpent] = useState(0);
 
-  const filtered = MOCK_CUSTOMERS.filter(c => {
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async () => {
+    try {
+      const { data: profiles, error: pError } = await supabase.from('profiles').select('*');
+      if (pError) throw pError;
+      
+      const { data: orders, error: oError } = await supabase.from('orders').select('user_id, total_amount, customer_name, customer_email, customer_phone');
+      if (oError) throw oError;
+
+      const customerMap = {};
+
+      profiles.forEach(p => {
+        customerMap[p.id] = {
+          id: p.id,
+          name: p.full_name || 'Guest User',
+          avatar: p.full_name ? p.full_name.substring(0, 2).toUpperCase() : 'G',
+          email: 'Registered User',
+          phone: p.phone || '-',
+          orders: 0,
+          spent: 0,
+          joined: new Date(p.created_at).toLocaleDateString(),
+          status: 'New'
+        };
+      });
+
+      orders.forEach(o => {
+        const uid = o.user_id || o.customer_email;
+        if (!customerMap[uid]) {
+          customerMap[uid] = {
+            id: uid,
+            name: o.customer_name || 'Guest',
+            avatar: o.customer_name ? o.customer_name.substring(0, 2).toUpperCase() : 'G',
+            email: o.customer_email || '',
+            phone: o.customer_phone || '-',
+            orders: 0,
+            spent: 0,
+            joined: 'Unknown',
+            status: 'New'
+          };
+        }
+        
+        customerMap[uid].orders += 1;
+        customerMap[uid].spent += Number(o.total_amount);
+        if (o.customer_email) {
+          customerMap[uid].email = o.customer_email;
+        }
+      });
+
+      let localMaxSpent = 0;
+      const formatted = Object.values(customerMap).map(c => {
+        if (c.spent > 10000 || c.orders >= 5) c.status = 'VIP';
+        else if (c.orders > 0) c.status = 'Regular';
+        
+        if (c.spent > localMaxSpent) localMaxSpent = c.spent;
+        return c;
+      });
+
+      setMaxSpent(localMaxSpent || 1);
+      setCustomers(formatted);
+    } catch (err) {
+      toast.error('Failed to load customers');
+    }
+  };
+
+  const filtered = customers.filter(c => {
     const matchSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         c.phone.includes(searchTerm);
@@ -31,10 +90,10 @@ const ManageCustomers = () => {
   });
 
   const stats = [
-    { label: 'Total Customers', value: MOCK_CUSTOMERS.length,                                 icon: <Users size={22}/>,     color: '#3b82f6', bg: '#eff6ff',  accent: '#3b82f6' },
-    { label: 'VIP Customers',   value: MOCK_CUSTOMERS.filter(c=>c.status==='VIP').length,     icon: <Award size={22}/>,     color: '#d68d3c', bg: '#fff7ed',  accent: '#d68d3c' },
-    { label: 'New This Month',  value: MOCK_CUSTOMERS.filter(c=>c.status==='New').length,     icon: <UserCheck size={22}/>, color: '#10b981', bg: '#ecfdf5',  accent: '#10b981' },
-    { label: 'Avg. Spend',      value: `₹${Math.round(MOCK_CUSTOMERS.reduce((a,c)=>a+c.spent,0)/MOCK_CUSTOMERS.length).toLocaleString()}`, icon: <TrendingUp size={22}/>, color: '#8b5cf6', bg: '#f5f3ff', accent: '#8b5cf6' },
+    { label: 'Total Customers', value: customers.length,                                 icon: <Users size={22}/>,     color: '#3b82f6', bg: '#eff6ff',  accent: '#3b82f6' },
+    { label: 'VIP Customers',   value: customers.filter(c=>c.status==='VIP').length,     icon: <Award size={22}/>,     color: '#d68d3c', bg: '#fff7ed',  accent: '#d68d3c' },
+    { label: 'New This Month',  value: customers.filter(c=>c.status==='New').length,     icon: <UserCheck size={22}/>, color: '#10b981', bg: '#ecfdf5',  accent: '#10b981' },
+    { label: 'Avg. Spend',      value: `₹${Math.round(customers.reduce((a,c)=>a+c.spent,0)/(customers.length || 1)).toLocaleString()}`, icon: <TrendingUp size={22}/>, color: '#8b5cf6', bg: '#f5f3ff', accent: '#8b5cf6' },
   ];
 
   const statusBadge = { VIP: 'admin-badge-yellow', Regular: 'admin-badge-blue', New: 'admin-badge-green' };
@@ -44,7 +103,7 @@ const ManageCustomers = () => {
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Customers</h1>
-          <p className="admin-page-subtitle">{MOCK_CUSTOMERS.length} registered customers · {MOCK_CUSTOMERS.filter(c=>c.status==='VIP').length} VIP members</p>
+          <p className="admin-page-subtitle">{customers.length} registered customers · {customers.filter(c=>c.status==='VIP').length} VIP members</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button className="admin-btn-secondary" onClick={() => toast.success('Exporting...')}><Download size={16}/>Export</button>
@@ -118,8 +177,8 @@ const ManageCustomers = () => {
                   <td style={{ fontWeight: 700, color: '#d68d3c' }}>₹{c.spent.toLocaleString()}</td>
                   <td style={{ width: '120px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div className="admin-progress-bar" style={{ flex: 1 }}>
-                        <div className="admin-progress-fill" style={{ width: `${spendPct}%`, background: '#d68d3c' }}></div>
+                      <div className="admin-progress-bar">
+                        <div className="admin-progress-fill" style={{ width: `${(c.spent / maxSpent) * 100}%`, background: AVATAR_COLORS[i % AVATAR_COLORS.length] }}></div>
                       </div>
                       <span style={{ fontSize: '12px', color: '#6b7280', minWidth: '32px' }}>{Math.round(spendPct)}%</span>
                     </div>

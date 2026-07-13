@@ -33,22 +33,76 @@ const Checkout = () => {
 
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [appliedCouponId, setAppliedCouponId] = useState(null);
 
   const total = totalAmount;
   const shippingCost = total > 1000 ? 0 : 50;
   const finalAmount = total + shippingCost - discount;
 
-  const handleApplyCoupon = () => {
-    if (couponCode.toUpperCase() === 'WELCOME10') {
-      const discountAmount = Math.floor(total * 0.1);
+  const handleApplyCoupon = async () => {
+    if (!couponCode) return;
+    try {
+      const { data, error } = await supabase.from('coupons').select('*').eq('code', couponCode.toUpperCase()).single();
+      
+      if (error || !data) {
+        setDiscount(0);
+        setAppliedCouponId(null);
+        toast.error('Invalid coupon code.');
+        return;
+      }
+      
+      if (data.status !== 'Active') {
+        setDiscount(0);
+        setAppliedCouponId(null);
+        toast.error('This coupon is no longer active.');
+        return;
+      }
+      
+      if (new Date(data.expiry) < new Date()) {
+        setDiscount(0);
+        setAppliedCouponId(null);
+        toast.error('This coupon has expired.');
+        return;
+      }
+      
+      if (total < data.min_spend) {
+        setDiscount(0);
+        setAppliedCouponId(null);
+        toast.error(`Minimum spend of ₹${data.min_spend} required.`);
+        return;
+      }
+      
+      if (data.usage_count >= data.max_usage) {
+        setDiscount(0);
+        setAppliedCouponId(null);
+        toast.error('This coupon has reached its maximum usage limit.');
+        return;
+      }
+
+      let discountAmount = 0;
+      if (data.type === 'Percentage') {
+        discountAmount = Math.floor(total * (data.value / 100));
+      } else if (data.type === 'Fixed Amount') {
+        discountAmount = data.value;
+      } else if (data.type === 'Free Shipping') {
+        discountAmount = shippingCost;
+      }
+
+      // Ensure discount doesn't exceed total minus shipping if not free shipping
+      if (data.type !== 'Free Shipping' && discountAmount > total) {
+        discountAmount = total;
+      }
+
       setDiscount(discountAmount);
-      toast.success('Coupon applied successfully! 10% off.');
-    } else if (couponCode.toUpperCase() === 'FLAT100') {
-      setDiscount(100);
-      toast.success('Coupon applied successfully! ₹100 off.');
-    } else {
+      setAppliedCouponId(data.id);
+      
+      const offText = data.type === 'Percentage' ? `${data.value}%` : data.type === 'Fixed Amount' ? `₹${data.value}` : 'Free Shipping';
+      toast.success(`Coupon applied! ${offText} off.`);
+
+    } catch (err) {
       setDiscount(0);
-      toast.error('Invalid or expired coupon code.');
+      setAppliedCouponId(null);
+      toast.error('Failed to validate coupon.');
     }
   };
 
@@ -159,6 +213,22 @@ const Checkout = () => {
       const { error: itemsError } = await supabase.from('order_items').insert(itemsToInsert);
       if (itemsError) throw itemsError;
       
+      if (appliedCouponId) {
+        const { data: couponData } = await supabase.from('coupons').select('usage_count').eq('id', appliedCouponId).single();
+        if (couponData) {
+          await supabase.from('coupons').update({ usage_count: couponData.usage_count + 1 }).eq('id', appliedCouponId);
+        }
+      }
+
+      // Deduct inventory stock
+      for (const item of cartItems) {
+        const { data: productData } = await supabase.from('products').select('stock').eq('id', item.id).single();
+        if (productData && productData.stock !== null && productData.stock !== undefined) {
+          const newStock = Math.max(0, productData.stock - item.quantity);
+          await supabase.from('products').update({ stock: newStock }).eq('id', item.id);
+        }
+      }
+
       return true;
     } catch (err) {
       console.error('Failed to save order:', err);

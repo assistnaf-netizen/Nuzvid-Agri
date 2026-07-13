@@ -40,8 +40,25 @@ const MyAccount = () => {
   useEffect(() => {
     if (user) {
       fetchOrders();
+      fetchProfile();
     }
   }, [user]);
+
+  const fetchProfile = async () => {
+    try {
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      if (data && !error) {
+        setProfile(prev => ({
+          ...prev,
+          fullName: data.full_name || prev.fullName,
+          phone: data.phone || prev.phone,
+          address: data.address || prev.address
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to fetch profile', err);
+    }
+  };
 
   const fetchOrders = async () => {
     try {
@@ -97,9 +114,21 @@ const MyAccount = () => {
   }
 
   const handleSave = async () => {
-    setEditing(false);
-    toast.success('Profile updated successfully!');
-    // When DB is connected: await supabase.from('profiles').upsert({ id: user.id, ...profile });
+    try {
+      const { error } = await supabase.from('profiles').upsert({
+        id: user.id,
+        full_name: profile.fullName,
+        phone: profile.phone,
+        address: profile.address,
+        created_at: new Date()
+      });
+      if (error) throw error;
+      setEditing(false);
+      toast.success('Profile updated successfully!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update profile');
+    }
   };
 
   const handlePasswordChange = async (e) => {

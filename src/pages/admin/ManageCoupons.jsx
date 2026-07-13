@@ -1,39 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tag, Plus, Trash2, Copy, ToggleLeft, ToggleRight, Percent, DollarSign, Truck, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { supabase } from '../../lib/supabase';
 import './admin.css';
-
-const INITIAL_COUPONS = [
-  { id: '1', code: 'WELCOME10',  type: 'Percentage',   value: 10,  minSpend: 500,  expiry: '2024-12-31', status: 'Active',  usage: 45,  maxUsage: 200  },
-  { id: '2', code: 'DIWALI500',  type: 'Fixed Amount',  value: 500, minSpend: 3000, expiry: '2024-11-15', status: 'Expired', usage: 120, maxUsage: 120  },
-  { id: '3', code: 'FREESHIP',   type: 'Free Shipping', value: 0,   minSpend: 1000, expiry: '2024-12-31', status: 'Active',  usage: 310, maxUsage: 1000 },
-  { id: '4', code: 'SUMMER20',   type: 'Percentage',   value: 20,  minSpend: 800,  expiry: '2025-03-31', status: 'Active',  usage: 8,   maxUsage: 500  },
-  { id: '5', code: 'FLAT100',    type: 'Fixed Amount',  value: 100, minSpend: 500,  expiry: '2025-01-15', status: 'Active',  usage: 55,  maxUsage: 300  },
-];
 
 const TYPE_ICON = { 'Percentage': <Percent size={16}/>, 'Fixed Amount': <DollarSign size={16}/>, 'Free Shipping': <Truck size={16}/> };
 const TYPE_COLOR = { 'Percentage': '#8b5cf6', 'Fixed Amount': '#3b82f6', 'Free Shipping': '#10b981' };
 const TYPE_BG    = { 'Percentage': '#f5f3ff',  'Fixed Amount': '#eff6ff',  'Free Shipping': '#ecfdf5' };
 
 const ManageCoupons = () => {
-  const [coupons, setCoupons] = useState(INITIAL_COUPONS);
+  const [coupons, setCoupons] = useState([]);
   const [activeFilter, setActiveFilter] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentCoupon, setCurrentCoupon] = useState({ code: '', type: 'Percentage', value: '', minSpend: '', expiry: '', maxUsage: '' });
+
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
+  const fetchCoupons = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('coupons')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (error) throw error;
+
+      const formatted = data.map(c => ({
+        id: c.id,
+        code: c.code,
+        type: c.type,
+        value: Number(c.value),
+        minSpend: Number(c.min_spend),
+        expiry: c.expiry,
+        status: c.status,
+        usage: c.usage_count,
+        maxUsage: c.max_usage
+      }));
+      setCoupons(formatted);
+    } catch (err) {
+      toast.error('Failed to load coupons');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleOpenModal = () => {
     setCurrentCoupon({ code: '', type: 'Percentage', value: '', minSpend: '', expiry: '', maxUsage: '' });
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    setCoupons(coupons.filter(c => c.id !== id));
-    toast.success('Coupon deleted');
+  const handleDelete = async (id) => {
+    try {
+      const { error } = await supabase.from('coupons').delete().eq('id', id);
+      if (error) throw error;
+      setCoupons(coupons.filter(c => c.id !== id));
+      toast.success('Coupon deleted');
+    } catch (err) {
+      toast.error('Failed to delete coupon');
+    }
   };
 
-  const handleToggle = (id) => {
-    setCoupons(coupons.map(c => c.id === id ? { ...c, status: c.status === 'Active' ? 'Disabled' : 'Active' } : c));
+  const handleToggle = async (id) => {
+    const coupon = coupons.find(c => c.id === id);
+    if (!coupon) return;
+    
+    const newStatus = coupon.status === 'Active' ? 'Disabled' : 'Active';
+    try {
+      const { error } = await supabase.from('coupons').update({ status: newStatus }).eq('id', id);
+      if (error) throw error;
+      setCoupons(coupons.map(c => c.id === id ? { ...c, status: newStatus } : c));
+      toast.success(`Coupon ${newStatus}`);
+    } catch (err) {
+      toast.error('Failed to toggle coupon');
+    }
   };
 
   const handleCopy = (code) => {
@@ -212,10 +256,32 @@ const ManageCoupons = () => {
 
             <div className="admin-modal-footer" style={{ borderTop: '1px solid #e5e7eb', paddingTop: '16px', marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button className="admin-btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-              <button className="admin-btn-primary" onClick={() => {
-                setCoupons([{ id: Date.now().toString(), ...currentCoupon, status: 'Active', usage: 0 }, ...coupons]);
-                setIsModalOpen(false);
-                toast.success('Coupon created!');
+              <button className="admin-btn-primary" onClick={async () => {
+                if (!currentCoupon.code || !currentCoupon.expiry || !currentCoupon.maxUsage) {
+                  toast.error('Please fill required fields');
+                  return;
+                }
+                try {
+                  const { error } = await supabase.from('coupons').insert([{
+                    code: currentCoupon.code,
+                    type: currentCoupon.type,
+                    value: currentCoupon.type === 'Free Shipping' ? 0 : Number(currentCoupon.value),
+                    min_spend: Number(currentCoupon.minSpend || 0),
+                    expiry: currentCoupon.expiry,
+                    status: 'Active',
+                    max_usage: Number(currentCoupon.maxUsage),
+                    usage_count: 0
+                  }]);
+                  
+                  if (error) throw error;
+                  
+                  toast.success('Coupon created!');
+                  setIsModalOpen(false);
+                  fetchCoupons();
+                } catch (err) {
+                  console.error(err);
+                  toast.error(err.message || 'Failed to create coupon');
+                }
               }}>Save Coupon</button>
             </div>
           </motion.div>
