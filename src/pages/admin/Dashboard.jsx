@@ -43,12 +43,12 @@ const Dashboard = () => {
 
       if (ordersError) throw ordersError;
 
-      // Fetch Profiles
+      // Fetch Profiles - gracefully handle RLS errors
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select('id');
 
-      if (profilesError) throw profilesError;
+      const validProfiles = profilesData || [];
 
       // Fetch Products
       const { data: productsData, error: productsError } = await supabase
@@ -63,7 +63,7 @@ const Dashboard = () => {
       
       // Try to count unique customers from orders if profiles is small
       const uniqueCustomers = new Set(ordersData.map(o => o.customer_email || o.user_id));
-      const totalCustomers = Math.max(profilesData.length, uniqueCustomers.size);
+      const totalCustomers = Math.max(validProfiles.length, uniqueCustomers.size);
       
       const totalProducts = productsData.length;
 

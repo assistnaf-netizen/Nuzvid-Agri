@@ -21,14 +21,14 @@ const ManageCustomers = () => {
   const fetchCustomers = async () => {
     try {
       const { data: profiles, error: pError } = await supabase.from('profiles').select('*');
-      if (pError) throw pError;
+      const validProfiles = profiles || [];
       
       const { data: orders, error: oError } = await supabase.from('orders').select('user_id, total_amount, customer_name, customer_email, customer_phone');
       if (oError) throw oError;
 
       const customerMap = {};
 
-      profiles.forEach(p => {
+      validProfiles.forEach(p => {
         customerMap[p.id] = {
           id: p.id,
           name: p.full_name || 'Guest User',
