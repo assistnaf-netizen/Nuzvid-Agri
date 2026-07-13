@@ -28,6 +28,7 @@ export const WishlistProvider = ({ children }) => {
   }, [user]);
 
   const fetchWishlistFromDb = async () => {
+    if (!user?.id || user?.role === 'admin') return;
     try {
       const { data, error } = await supabase
         .from('wishlist_items')

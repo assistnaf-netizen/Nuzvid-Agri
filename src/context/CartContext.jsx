@@ -29,6 +29,7 @@ export const CartProvider = ({ children }) => {
   }, [user]);
 
   const fetchCartFromDb = async () => {
+    if (!user?.id || user?.role === 'admin') return;
     try {
       const { data, error } = await supabase
         .from('cart_items')
