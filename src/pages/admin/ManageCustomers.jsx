@@ -22,8 +22,7 @@ const ManageCustomers = () => {
     try {
       const { data: profiles, error: pError } = await supabase.from('profiles').select('*');
       const validProfiles = profiles || [];
-      
-      const { data: orders, error: oError } = await supabase.from('orders').select('user_id, total_amount, customer_name, customer_email, customer_phone');
+      const { data: orders, error: oError } = await supabase.from('orders').select('*');
       if (oError) throw oError;
 
       const customerMap = {};
