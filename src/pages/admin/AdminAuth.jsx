@@ -37,7 +37,16 @@ const AdminAuth = () => {
     <div className="admin-auth-wrapper">
       <div className="admin-auth-card">
         
-        {/* Left Side: Form */}
+        {/* Left Side: Image (Swapped to Left) */}
+        <div className="admin-image-side">
+          <img 
+            src="/about-family.png" 
+            alt="Agriculture Farm" 
+            className="side-image"
+          />
+        </div>
+
+        {/* Right Side: Form (Swapped to Right) */}
         <div className="admin-form-side">
           <div className="brand-logo">
             <img 
@@ -98,15 +107,6 @@ const AdminAuth = () => {
           </p>
         </div>
 
-        {/* Right Side: Image */}
-        <div className="admin-image-side">
-          <img 
-            src="/about-family.png" 
-            alt="Agriculture Farm" 
-            className="side-image"
-          />
-        </div>
-
       </div>
 
       <style>{`
@@ -115,27 +115,26 @@ const AdminAuth = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #FDF9F3; /* Very light warm background */
-          padding: 20px;
+          background: #FFFFFF;
+          padding: 0;
           font-family: 'Inter', sans-serif;
         }
 
         .admin-auth-card {
           display: flex;
           flex-direction: column;
-          width: 100%;
-          max-width: 1000px;
+          width: 100vw;
+          height: 100vh;
           background: #FFFFFF;
-          border-radius: 24px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+          border-radius: 0;
+          box-shadow: none;
           overflow: hidden;
-          border: 2px solid #064E3B; /* Dark green outer border */
+          border: none;
         }
 
         @media (min-width: 768px) {
           .admin-auth-card {
             flex-direction: row;
-            height: 650px;
           }
         }
 
