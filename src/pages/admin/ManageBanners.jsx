@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, Monitor, Smartphone } from 'lucide-react';
+import { Plus, Trash2, Monitor, Smartphone, UploadCloud } from 'lucide-react';
 
 const ManageBanners = () => {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [newBanner, setNewBanner] = useState({ desktop: '', mobile: '' });
 
   const defaultBanners = [{ 
@@ -47,6 +48,37 @@ const ManageBanners = () => {
     }
   };
 
+  const handleImageUpload = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `banner_${type}_${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(filePath);
+
+      setNewBanner(prev => ({ ...prev, [type]: publicUrlData.publicUrl }));
+      toast.success(`${type === 'desktop' ? 'Desktop' : 'Mobile'} image uploaded!`);
+    } catch (error) {
+      toast.error('Image upload failed. Ensure storage is configured.');
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+      e.target.value = ''; // Reset input
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     const bannersStr = JSON.stringify(banners);
@@ -71,7 +103,7 @@ const ManageBanners = () => {
 
   const addBanner = () => {
     if (!newBanner.desktop || !newBanner.mobile) {
-      toast.error('Please provide both Desktop and Mobile banner URLs');
+      toast.error('Please upload both Desktop and Mobile banner images');
       return;
     }
     if (banners.length >= 5) {
@@ -97,34 +129,80 @@ const ManageBanners = () => {
         
         {banners.length < 5 && (
           <div style={{ marginBottom: '40px', padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '8px', border: '1px dashed #ccc' }}>
-            <h3 style={{ marginBottom: '15px', fontSize: '16px' }}>Add New Banner Slide ({banners.length}/5)</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+            <h3 style={{ marginBottom: '15px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              Add New Banner Slide ({banners.length}/5)
+              {isUploading && <span style={{ fontSize: '14px', color: '#666', fontStyle: 'italic' }}>- Uploading image...</span>}
+            </h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
+              {/* Desktop Upload */}
               <div>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
-                  <Monitor size={16} /> Desktop Image URL
+                  <Monitor size={16} /> Desktop Image (Landscape)
                 </label>
-                <input 
-                  type="url" 
-                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }} 
-                  value={newBanner.desktop} 
-                  onChange={e => setNewBanner({...newBanner, desktop: e.target.value})} 
-                  placeholder="https://..."
-                />
+                {!newBanner.desktop ? (
+                  <div style={{ border: '2px dashed #ddd', borderRadius: '4px', padding: '20px', textAlign: 'center', backgroundColor: '#fff' }}>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      id="upload-desktop"
+                      onChange={(e) => handleImageUpload(e, 'desktop')}
+                      style={{ display: 'none' }}
+                      disabled={isUploading}
+                    />
+                    <label htmlFor="upload-desktop" style={{ cursor: isUploading ? 'not-allowed' : 'pointer', color: '#666', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                      <UploadCloud size={24} />
+                      <span style={{ fontSize: '13px' }}>Click to upload desktop image</span>
+                    </label>
+                  </div>
+                ) : (
+                  <div style={{ position: 'relative', border: '1px solid #ddd', borderRadius: '4px', overflow: 'hidden' }}>
+                    <img src={newBanner.desktop} alt="Desktop Preview" style={{ width: '100%', height: '120px', objectFit: 'cover', display: 'block' }} />
+                    <button 
+                      onClick={() => setNewBanner({...newBanner, desktop: ''})}
+                      style={{ position: 'absolute', top: '5px', right: '5px', background: '#fff', color: '#ff6b6b', border: 'none', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                )}
               </div>
+
+              {/* Mobile Upload */}
               <div>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
-                  <Smartphone size={16} /> Mobile Image URL
+                  <Smartphone size={16} /> Mobile Image (Portrait)
                 </label>
-                <input 
-                  type="url" 
-                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }} 
-                  value={newBanner.mobile} 
-                  onChange={e => setNewBanner({...newBanner, mobile: e.target.value})} 
-                  placeholder="https://..."
-                />
+                {!newBanner.mobile ? (
+                  <div style={{ border: '2px dashed #ddd', borderRadius: '4px', padding: '20px', textAlign: 'center', backgroundColor: '#fff' }}>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      id="upload-mobile"
+                      onChange={(e) => handleImageUpload(e, 'mobile')}
+                      style={{ display: 'none' }}
+                      disabled={isUploading}
+                    />
+                    <label htmlFor="upload-mobile" style={{ cursor: isUploading ? 'not-allowed' : 'pointer', color: '#666', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                      <UploadCloud size={24} />
+                      <span style={{ fontSize: '13px' }}>Click to upload mobile image</span>
+                    </label>
+                  </div>
+                ) : (
+                  <div style={{ position: 'relative', border: '1px solid #ddd', borderRadius: '4px', overflow: 'hidden' }}>
+                    <img src={newBanner.mobile} alt="Mobile Preview" style={{ width: '100%', height: '120px', objectFit: 'cover', display: 'block' }} />
+                    <button 
+                      onClick={() => setNewBanner({...newBanner, mobile: ''})}
+                      style={{ position: 'absolute', top: '5px', right: '5px', background: '#fff', color: '#ff6b6b', border: 'none', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-            <button type="button" onClick={addBanner} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+
+            <button type="button" onClick={addBanner} className="btn-primary" disabled={isUploading || !newBanner.desktop || !newBanner.mobile} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <Plus size={18} /> Add Banner Pair
             </button>
           </div>
@@ -166,7 +244,7 @@ const ManageBanners = () => {
           )}
         </div>
         
-        <button onClick={handleSave} className="btn-primary" disabled={saving} style={{ width: '100%', fontSize: '16px', padding: '12px', marginTop: '20px' }}>
+        <button onClick={handleSave} className="btn-primary" disabled={saving || isUploading} style={{ width: '100%', fontSize: '16px', padding: '12px', marginTop: '20px' }}>
           {saving ? 'Saving to Database...' : 'Save All Changes'}
         </button>
       </div>
