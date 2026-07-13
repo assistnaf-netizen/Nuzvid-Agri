@@ -101,7 +101,7 @@ const AdminAuth = () => {
         {/* Right Side: Image */}
         <div className="admin-image-side">
           <img 
-            src="https://images.unsplash.com/photo-1592982537447-6f296b02a632?q=80&w=2938&auto=format&fit=crop" 
+            src="/about-family.png" 
             alt="Agriculture Farm" 
             className="side-image"
           />
