@@ -11,7 +11,10 @@ import './Home.css';
 const Home = () => {
   useSEO({ title: 'Home', description: 'Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table.' });
   const [activeTab, setActiveTab] = useState('wood-pressed-oils');
-  const [heroBanners, setHeroBanners] = useState(['https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977']);
+  const [heroBanners, setHeroBanners] = useState([{
+    desktop: 'https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977',
+    mobile: 'https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977'
+  }]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
@@ -42,14 +45,22 @@ const Home = () => {
     const fetchBanners = async () => {
       try {
         const { data } = await supabase.from('site_settings').select('value').eq('key', 'hero_banners').single();
-        if (data?.value) setHeroBanners(JSON.parse(data.value));
-        else {
+        if (data?.value) {
+          const parsed = JSON.parse(data.value);
+          setHeroBanners(parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b));
+        } else {
           const localBanners = localStorage.getItem('hero_banners');
-          if (localBanners) setHeroBanners(JSON.parse(localBanners));
+          if (localBanners) {
+            const parsed = JSON.parse(localBanners);
+            setHeroBanners(parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b));
+          }
         }
       } catch (error) {
         const localBanners = localStorage.getItem('hero_banners');
-        if (localBanners) setHeroBanners(JSON.parse(localBanners));
+        if (localBanners) {
+          const parsed = JSON.parse(localBanners);
+          setHeroBanners(parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b));
+        }
       }
     };
     fetchBanners();
@@ -141,9 +152,12 @@ const Home = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2, ease: "easeInOut" }}
-            className="hero-background"
-            style={{ backgroundImage: `url(${heroBanners[currentSlide]})` }}
-          />
+            className="hero-background-wrapper"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+          >
+            <div className="hero-background desktop-bg" style={{ backgroundImage: `url(${heroBanners[currentSlide]?.desktop})` }} />
+            <div className="hero-background mobile-bg" style={{ backgroundImage: `url(${heroBanners[currentSlide]?.mobile})` }} />
+          </motion.div>
         </AnimatePresence>
 
         {heroBanners.length > 1 && (

@@ -38,6 +38,23 @@
   left: 0;
 }
 
+.desktop-bg {
+  display: block;
+}
+
+.mobile-bg {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-bg {
+    display: none;
+  }
+  .mobile-bg {
+    display: block;
+  }
+}
+
 .hero-dots {
   position: absolute;
   bottom: 30px;
