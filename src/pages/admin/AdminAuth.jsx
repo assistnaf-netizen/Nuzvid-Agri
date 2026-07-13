@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import { Lock, Mail, ArrowLeft, ShieldCheck, Sprout, Quote } from 'lucide-react';
+import { Lock, Mail, ArrowLeft, ShieldCheck, Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const AdminAuth = () => {
@@ -50,8 +50,11 @@ const AdminAuth = () => {
         <div className="admin-auth-overlay"></div>
         <div className="admin-auth-left-content">
           <div className="admin-auth-logo">
-            <Sprout size={40} color="#10b981" />
-            <span>Nuzvid Agri Farms</span>
+            <img 
+              src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
+              alt="Nuzvid Agri Farms" 
+              style={{ width: '220px', objectFit: 'contain', filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.5))' }}
+            />
           </div>
           
           <div className="admin-auth-greeting">
@@ -77,7 +80,7 @@ const AdminAuth = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            <Quote size={24} color="rgba(255,255,255,0.4)" style={{ marginBottom: '10px' }}/>
+            <Quote size={24} color="#facc15" style={{ marginBottom: '10px' }}/>
             <p>"{randomQuote}"</p>
           </motion.div>
         </div>
@@ -97,7 +100,7 @@ const AdminAuth = () => {
 
           <div className="admin-auth-header">
             <div className="admin-auth-icon">
-              <ShieldCheck size={32} color="#10b981" />
+              <ShieldCheck size={32} color="#ef4444" />
             </div>
             <h2>Admin Portal</h2>
             <p>Please authenticate to continue</p>
@@ -143,12 +146,12 @@ const AdminAuth = () => {
         </motion.div>
       </div>
 
-      <style>{`
+      <style>{\
         .admin-auth-container {
           display: flex;
           min-height: 100vh;
           font-family: 'Inter', sans-serif;
-          background: #f8fafc;
+          background: #121212;
         }
 
         .admin-auth-left {
@@ -171,7 +174,7 @@ const AdminAuth = () => {
         .admin-auth-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(16, 185, 129, 0.7) 100%);
+          background: linear-gradient(135deg, rgba(220, 38, 38, 0.85) 0%, rgba(234, 179, 8, 0.7) 100%);
           backdrop-filter: blur(3px);
         }
 
@@ -190,9 +193,6 @@ const AdminAuth = () => {
           display: flex;
           align-items: center;
           gap: 12px;
-          font-size: 24px;
-          font-weight: 700;
-          letter-spacing: -0.5px;
         }
 
         .admin-auth-greeting {
@@ -205,21 +205,22 @@ const AdminAuth = () => {
           margin: 0 0 16px 0;
           line-height: 1.1;
           letter-spacing: -1px;
+          color: #ffffff;
         }
 
         .admin-auth-greeting p {
           font-size: 18px;
-          color: rgba(255, 255, 255, 0.8);
+          color: rgba(255, 255, 255, 0.9);
           max-width: 400px;
           line-height: 1.6;
           margin: 0;
         }
 
         .admin-auth-quote {
-          background: rgba(0, 0, 0, 0.2);
+          background: rgba(0, 0, 0, 0.3);
           padding: 24px;
           border-radius: 16px;
-          border-left: 4px solid #10b981;
+          border-left: 4px solid #facc15;
           max-width: 450px;
           backdrop-filter: blur(10px);
         }
@@ -229,7 +230,7 @@ const AdminAuth = () => {
           font-size: 15px;
           line-height: 1.6;
           font-style: italic;
-          color: rgba(255, 255, 255, 0.9);
+          color: rgba(255, 255, 255, 0.95);
         }
 
         .admin-auth-right {
@@ -238,12 +239,17 @@ const AdminAuth = () => {
           align-items: center;
           justify-content: center;
           padding: 40px;
-          background: #ffffff;
+          background: #18181b;
         }
 
         .admin-auth-form-wrapper {
           width: 100%;
           max-width: 400px;
+          background: #27272a;
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          border: 1px solid #3f3f46;
         }
 
         .back-btn {
@@ -252,45 +258,46 @@ const AdminAuth = () => {
           gap: 8px;
           background: transparent;
           border: none;
-          color: #64748b;
+          color: #a1a1aa;
           font-weight: 500;
           font-size: 14px;
           cursor: pointer;
-          margin-bottom: 40px;
+          margin-bottom: 30px;
           padding: 0;
           transition: color 0.2s;
         }
 
         .back-btn:hover {
-          color: #0f172a;
+          color: #f4f4f5;
         }
 
         .admin-auth-header {
           text-align: center;
-          margin-bottom: 40px;
+          margin-bottom: 30px;
         }
 
         .admin-auth-icon {
           width: 64px;
           height: 64px;
-          background: #ecfdf5;
+          background: rgba(239, 68, 68, 0.1);
           border-radius: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
           margin: 0 auto 20px;
+          border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
         .admin-auth-header h2 {
           font-size: 28px;
           font-weight: 700;
-          color: #0f172a;
+          color: #f4f4f5;
           margin: 0 0 8px 0;
           letter-spacing: -0.5px;
         }
 
         .admin-auth-header p {
-          color: #64748b;
+          color: #a1a1aa;
           margin: 0;
           font-size: 15px;
         }
@@ -310,42 +317,46 @@ const AdminAuth = () => {
           top: 50%;
           left: 16px;
           transform: translateY(-50%);
-          color: #94a3b8;
+          color: #71717a;
         }
 
         .input-group input {
           width: 100%;
           padding: 16px 16px 16px 48px;
-          border: 1px solid #e2e8f0;
+          border: 1px solid #3f3f46;
           border-radius: 12px;
           font-size: 15px;
-          color: #0f172a;
-          background: #f8fafc;
+          color: #f4f4f5;
+          background: #18181b;
           transition: all 0.2s ease;
           outline: none;
         }
 
         .input-group input:focus {
-          border-color: #10b981;
-          background: #ffffff;
-          box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+          border-color: #ef4444;
+          background: #18181b;
+          box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+        }
+        
+        .input-group input::placeholder {
+          color: #71717a;
         }
 
         .admin-submit-btn {
           width: 100%;
           padding: 16px;
-          background: #10b981;
-          color: white;
+          background: linear-gradient(90deg, #ef4444, #facc15);
+          color: #000;
           border: none;
           border-radius: 12px;
           font-size: 16px;
-          font-weight: 600;
+          font-weight: 700;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           margin-top: 10px;
-          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+          box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
         }
 
         .admin-submit-btn:disabled {
@@ -354,20 +365,20 @@ const AdminAuth = () => {
         }
 
         .admin-auth-footer {
-          margin-top: 30px;
+          margin-top: 25px;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
           font-size: 12px;
-          color: #94a3b8;
+          color: #71717a;
         }
 
         .spinner {
           width: 22px;
           height: 22px;
-          border: 3px solid rgba(255,255,255,0.3);
-          border-top-color: white;
+          border: 3px solid rgba(0,0,0,0.2);
+          border-top-color: #000;
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
@@ -375,7 +386,7 @@ const AdminAuth = () => {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
-      `}</style>
+      \}</style>
     </div>
   );
 };
