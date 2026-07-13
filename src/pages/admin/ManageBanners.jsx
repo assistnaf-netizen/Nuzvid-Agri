@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, Monitor, Smartphone, UploadCloud } from 'lucide-react';
+import { Plus, Trash2, Monitor, Smartphone, UploadCloud, Save } from 'lucide-react';
 
 const ManageBanners = () => {
   const [banners, setBanners] = useState([]);
@@ -247,8 +247,35 @@ const ManageBanners = () => {
           )}
         </div>
         
-        <button onClick={handleSave} className="btn-primary" disabled={saving || isUploading} style={{ width: '100%', fontSize: '16px', padding: '12px', marginTop: '20px' }}>
-          {saving ? 'Saving to Database...' : 'Save All Changes'}
+        <button 
+          onClick={handleSave} 
+          disabled={saving || isUploading} 
+          style={{ 
+            width: '100%', 
+            fontSize: '16px', 
+            padding: '14px', 
+            marginTop: '30px',
+            backgroundColor: (saving || isUploading) ? '#ccc' : '#27130F',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: (saving || isUploading) ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            fontWeight: '600',
+            transition: 'background-color 0.2s',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+          }}
+        >
+          {saving ? (
+            <>Saving to Database...</>
+          ) : (
+            <>
+              <Save size={20} /> Save All Changes
+            </>
+          )}
         </button>
       </div>
     </div>
