@@ -105,12 +105,12 @@ const Header = () => {
               </Link>
             )}
 
-            <Link to="/wishlist" className="icon-btn cart-btn" aria-label="Wishlist">
+            <Link to="/wishlist" className="icon-btn" aria-label="Wishlist">
               <Heart size={22} />
               {/* If you wanted a count: wishlistItems.length > 0 && <span className="cart-count">{wishlistItems.length}</span> */}
             </Link>
 
-            <Link to="/cart" className="icon-btn cart-btn" aria-label="Shopping Cart">
+            <Link to="/cart" className="icon-btn" aria-label="Shopping Cart">
               <ShoppingCart size={22} />
               {cartItems.reduce((acc, item) => acc + item.quantity, 0) > 0 && (
                 <span className="cart-count">
