@@ -307,11 +307,11 @@
 
 @media (max-width: 992px) {
   .desktop-nav { display: none; }
-  .shop-now-btn { display: none; }
+  .shop-now-btn { display: none !important; }
   .mobile-menu-toggle { display: block; }
   .mobile-nav.open { display: block; }
   .top-bar { display: none; }
-  .nav-actions { gap: 5px; }
-  .icon-btn { min-width: 36px; height: 36px; padding: 0 5px; }
-  .logo-img { max-width: 110px; }
+  .nav-actions { gap: 4px; }
+  .icon-btn { min-width: 32px; height: 32px; padding: 0 4px; }
+  .logo-img { max-width: 105px; }
 }

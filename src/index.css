@@ -144,6 +144,12 @@ button {
   padding: 0 20px;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+}
+
 /* Utilities */
 .text-center { text-align: center; }
 .mt-2 { margin-top: 2rem; }
