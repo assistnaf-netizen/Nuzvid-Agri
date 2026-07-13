@@ -7,6 +7,7 @@ import { Truck, CreditCard, CheckCircle, ShieldCheck, MapPin, Loader2, ArrowLeft
 import toast from 'react-hot-toast';
 import useSEO from '../hooks/useSEO';
 import { initializeRazorpayPayment } from '../lib/razorpay';
+import { supabase } from '../lib/supabase';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -126,6 +127,46 @@ const Checkout = () => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
+  const saveOrderToDatabase = async (orderId, paymentMethodStr, paymentIdStr = null, paymentStatusStr) => {
+    try {
+      const { data: orderData, error: orderError } = await supabase.from('orders').insert([{
+        user_id: user.id,
+        display_id: orderId,
+        status: 'Pending',
+        payment_method: paymentMethodStr,
+        payment_id: paymentIdStr,
+        payment_status: paymentStatusStr,
+        total_amount: finalAmount,
+        shipping_address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+        customer_name: `${formData.firstName} ${formData.lastName}`,
+        customer_email: formData.email,
+        customer_phone: formData.phone
+      }]).select();
+
+      if (orderError) throw orderError;
+      
+      const realOrderId = orderData[0].id;
+
+      const itemsToInsert = cartItems.map(item => ({
+        order_id: realOrderId,
+        product_id: item.id,
+        quantity: item.quantity,
+        price_at_time: item.price,
+        product_title: item.title,
+        product_image: item.image
+      }));
+
+      const { error: itemsError } = await supabase.from('order_items').insert(itemsToInsert);
+      if (itemsError) throw itemsError;
+      
+      return true;
+    } catch (err) {
+      console.error('Failed to save order:', err);
+      toast.error('Order processed but failed to save to database. Please contact support.');
+      return false;
+    }
+  };
+
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -149,7 +190,8 @@ const Checkout = () => {
             description: `Order ${orderId}`,
             address: shippingAddress,
           },
-          (response) => {
+          async (response) => {
+            await saveOrderToDatabase(orderId, 'Razorpay UPI/Card', response.razorpay_payment_id, 'Paid');
             toast.success('Payment successful!');
             clearCart();
             setLoading(false);
@@ -174,18 +216,17 @@ const Checkout = () => {
       }
     } else {
       // Cash on Delivery
-      setTimeout(() => {
-        clearCart();
-        setLoading(false);
-        navigate('/order-success', { 
-          state: { 
-            orderId, 
-            total: finalAmount,
-            address: shippingAddress,
-            paymentMethod: 'Cash on Delivery'
-          } 
-        });
-      }, 2000);
+      await saveOrderToDatabase(orderId, 'Cash on Delivery', null, 'COD');
+      clearCart();
+      setLoading(false);
+      navigate('/order-success', { 
+        state: { 
+          orderId, 
+          total: finalAmount,
+          address: shippingAddress,
+          paymentMethod: 'Cash on Delivery'
+        } 
+      });
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Package, MapPin, Phone, Mail, Edit3, Save, LogOut, ChevronRight, ShoppingBag, Heart, Lock, Key } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -7,33 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import useSEO from '../hooks/useSEO';
 import './Account.css';
-
-const MOCK_ORDERS = [
-  { 
-    id: 'ORD-2024-1054', date: '2024-10-27', total: 3500, status: 'Delivered', items: 1, 
-    productName: 'Premium Banganapalli Mangoes', address: '123 Farm Road, Vijayawada, AP',
-    paymentMethod: 'UPI (Google Pay)', trackingId: 'AWB987654321', 
-    orderItems: [{ name: 'Premium Banganapalli Mangoes', qty: 1, price: 3500, image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?w=800&q=80' }]
-  },
-  { 
-    id: 'ORD-2024-1053', date: '2024-10-26', total: 7200, status: 'Shipped', items: 3, 
-    productName: 'Organic Cashew Nuts (+2 items)', address: '45 Green Valley, Hyderabad, TG',
-    paymentMethod: 'Credit Card ending in 4242', trackingId: 'AWB123456789',
-    orderItems: [
-      { name: 'Organic Cashew Nuts', qty: 2, price: 2000, image: 'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=800&q=80' },
-      { name: 'Pure Honey', qty: 1, price: 3200, image: 'https://images.unsplash.com/photo-1587049352847-4d4b126a7e0d?w=800&q=80' }
-    ]
-  },
-  { 
-    id: 'ORD-2024-1052', date: '2024-10-24', total: 1800, status: 'Processing', items: 2, 
-    productName: 'Fresh Alphonso Mangoes (+1 item)', address: '123 Farm Road, Vijayawada, AP',
-    paymentMethod: 'Cash on Delivery', trackingId: 'Pending',
-    orderItems: [
-      { name: 'Fresh Alphonso Mangoes', qty: 1, price: 1000, image: 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=800&q=80' },
-      { name: 'Cold Pressed Groundnut Oil', qty: 1, price: 800, image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800&q=80' }
-    ]
-  },
-];
 
 const STATUS_COLORS = {
   Delivered:  { bg: '#ecfdf5', color: '#10b981' },
@@ -49,6 +22,8 @@ const MyAccount = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [editing, setEditing] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState([]);
+  
   const [profile, setProfile] = useState({
     fullName: user?.user_metadata?.full_name || 'Guest User',
     email: user?.email || '',
@@ -61,6 +36,52 @@ const MyAccount = () => {
     new: '',
     confirm: ''
   });
+
+  useEffect(() => {
+    if (user) {
+      fetchOrders();
+    }
+  }, [user]);
+
+  const fetchOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*, order_items(*)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+        
+      if (error) throw error;
+
+      const formatted = data.map(o => {
+        const firstItem = o.order_items?.[0];
+        const extraItems = o.order_items?.length > 1 ? ` (+${o.order_items.length - 1} items)` : '';
+        const productName = firstItem ? `${firstItem.product_title}${extraItems}` : 'Order';
+        
+        return {
+          id: o.display_id,
+          date: new Date(o.created_at).toLocaleDateString(),
+          total: Number(o.total_amount),
+          status: o.status,
+          items: o.order_items ? o.order_items.length : 0,
+          productName,
+          address: o.shipping_address,
+          paymentMethod: o.payment_method,
+          trackingId: o.status === 'Shipped' || o.status === 'Delivered' ? 'AWB...' : 'Pending',
+          orderItems: o.order_items?.map(item => ({
+            name: item.product_title,
+            qty: item.quantity,
+            price: Number(item.price_at_time),
+            image: item.product_image
+          })) || []
+        };
+      });
+      
+      setOrders(formatted);
+    } catch (err) {
+      console.error('Failed to fetch user orders', err);
+    }
+  };
 
   if (!user) {
     return (
@@ -193,12 +214,12 @@ const MyAccount = () => {
               <div className="account-stats-row">
                 <div className="account-stat">
                   <ShoppingBag size={22} color="#d68d3c"/>
-                  <div className="account-stat-value">{MOCK_ORDERS.length}</div>
+                  <div className="account-stat-value">{orders.length}</div>
                   <div className="account-stat-label">Total Orders</div>
                 </div>
                 <div className="account-stat">
                   <span style={{ fontSize: '22px' }}>₹</span>
-                  <div className="account-stat-value">{MOCK_ORDERS.reduce((a,o) => a+o.total, 0).toLocaleString()}</div>
+                  <div className="account-stat-value">{orders.reduce((a,o) => a+o.total, 0).toLocaleString()}</div>
                   <div className="account-stat-label">Total Spent</div>
                 </div>
                 <div className="account-stat">
@@ -217,7 +238,14 @@ const MyAccount = () => {
               </div>
 
               <div className="orders-list">
-                {MOCK_ORDERS.map(order => {
+                {orders.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>
+                    <Package size={48} color="#d1d5db" style={{ margin: '0 auto 16px' }} />
+                    <p>You haven't placed any orders yet.</p>
+                    <Link to="/products" className="account-gate-btn" style={{ display: 'inline-block', marginTop: '16px' }}>Start Shopping</Link>
+                  </div>
+                ) : (
+                  orders.map(order => {
                   const sc = STATUS_COLORS[order.status] || {};
                   return (
                     <div key={order.id} className="order-row">
@@ -237,7 +265,7 @@ const MyAccount = () => {
                       <button onClick={() => setSelectedOrder(order)} className="order-view-btn">View →</button>
                     </div>
                   );
-                })}
+                }))}
               </div>
 
               {/* Order Details Modal */}

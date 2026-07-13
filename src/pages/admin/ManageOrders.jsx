@@ -1,18 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Eye, Download, Filter, ShoppingCart, Clock, CheckCircle, Truck, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { supabase } from '../../lib/supabase';
 import './admin.css';
-
-const MOCK_ORDERS = [
-  { id: 'ORD-2024-1054', customer: 'Rahul Sharma',  avatar: 'RS', email: 'rahul@example.com', date: '2024-10-27', total: 3500,  paymentStatus: 'Paid',       status: 'Delivered',  items: 1 },
-  { id: 'ORD-2024-1053', customer: 'Priya Patel',   avatar: 'PP', email: 'priya@example.com', date: '2024-10-27', total: 7200,  paymentStatus: 'COD',        status: 'Pending',    items: 3 },
-  { id: 'ORD-2024-1052', customer: 'Amit Singh',    avatar: 'AS', email: 'amit@example.com',  date: '2024-10-26', total: 1800,  paymentStatus: 'Paid',       status: 'Shipped',    items: 2 },
-  { id: 'ORD-2024-1051', customer: 'Sneha Reddy',   avatar: 'SR', email: 'sneha@example.com', date: '2024-10-26', total: 4500,  paymentStatus: 'Paid',       status: 'Processing', items: 1 },
-  { id: 'ORD-2024-1050', customer: 'Vikram Mehta',  avatar: 'VM', email: 'vikram@example.com',date: '2024-10-25', total: 950,   paymentStatus: 'COD',        status: 'Pending',    items: 2 },
-  { id: 'ORD-2024-1049', customer: 'Ananya Rao',    avatar: 'AR', email: 'ananya@example.com',date: '2024-10-24', total: 12500, paymentStatus: 'Paid',       status: 'Delivered',  items: 5 },
-  { id: 'ORD-2024-1048', customer: 'Karan Malhotra',avatar: 'KM', email: 'karan@example.com', date: '2024-10-24', total: 2200,  paymentStatus: 'Paid',       status: 'Shipped',    items: 1 },
-];
 
 const STATUS_CONFIG = {
   Delivered:  { badge: 'admin-badge-green',  icon: <CheckCircle size={11}/> },
@@ -29,14 +20,64 @@ const PAYMENT_CONFIG = {
 const AVATAR_COLORS = ['#d68d3c', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#f59e0b', '#06b6d4'];
 
 const ManageOrders = () => {
-  const [orders, setOrders] = useState(MOCK_ORDERS);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const handleStatusChange = (id, newStatus) => {
-    setOrders(orders.map(o => o.id === id ? { ...o, status: newStatus } : o));
-    toast.success(`Order ${id} → ${newStatus}`);
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*, order_items(*)')
+        .order('created_at', { ascending: false });
+        
+      if (error) throw error;
+
+      const formatted = data.map(o => ({
+        id: o.display_id,
+        db_id: o.id,
+        customer: o.customer_name,
+        avatar: o.customer_name.substring(0, 2).toUpperCase(),
+        email: o.customer_email,
+        date: new Date(o.created_at).toLocaleDateString(),
+        total: Number(o.total_amount),
+        paymentStatus: o.payment_status,
+        status: o.status,
+        items: o.order_items ? o.order_items.length : 0,
+        rawItems: o.order_items || []
+      }));
+      
+      setOrders(formatted);
+    } catch (err) {
+      toast.error('Failed to fetch orders');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    const order = orders.find(o => o.id === id);
+    if (!order) return;
+    
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', order.db_id);
+        
+      if (error) throw error;
+      
+      setOrders(orders.map(o => o.id === id ? { ...o, status: newStatus } : o));
+      toast.success(`Order ${id} → ${newStatus}`);
+    } catch (err) {
+      toast.error('Failed to update status');
+    }
   };
 
   const filters = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered'];
@@ -204,9 +245,25 @@ const ManageOrders = () => {
 
               <div>
                 <h4 style={{ margin: '0 0 12px', fontSize: '14px', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '1px' }}>Items ({selectedOrder.items})</h4>
-                <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', color: '#6b7280', fontSize: '14px' }}>
-                  <p style={{ margin: 0 }}>Item details will be loaded from database.</p>
-                  <p style={{ margin: '4px 0 0' }}>Currently displaying aggregate count: {selectedOrder.items} items.</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {selectedOrder.rawItems && selectedOrder.rawItems.length > 0 ? (
+                    selectedOrder.rawItems.map(item => (
+                      <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
+                        <img src={item.product_image} alt={item.product_title} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }} />
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 600, color: '#1a1d2e', fontSize: '14px' }}>{item.product_title}</div>
+                          <div style={{ color: '#6b7280', fontSize: '13px' }}>Qty: {item.quantity} × ₹{Number(item.price_at_time).toLocaleString()}</div>
+                        </div>
+                        <div style={{ fontWeight: 700, color: '#1a1d2e' }}>
+                          ₹{(item.quantity * Number(item.price_at_time)).toLocaleString()}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', color: '#6b7280', fontSize: '14px' }}>
+                      <p style={{ margin: 0 }}>No items found for this order.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
