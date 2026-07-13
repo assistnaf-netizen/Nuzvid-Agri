@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -146,7 +146,7 @@ const AdminAuth = () => {
         </motion.div>
       </div>
 
-      <style>{\
+      <style>{`
         .admin-auth-container {
           display: flex;
           min-height: 100vh;
@@ -386,7 +386,7 @@ const AdminAuth = () => {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
-      \}</style>
+      `}</style>
     </div>
   );
 };
