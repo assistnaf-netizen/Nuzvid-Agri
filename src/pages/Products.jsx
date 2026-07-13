@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FaEye, FaShoppingCart, FaHeart } from 'react-icons/fa';
-import { products } from '../data/products';
+import { Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import useSEO from '../hooks/useSEO';
 import './Products.css';
@@ -14,6 +15,30 @@ const Products = () => {
   const [sortOrder, setSortOrder] = useState('featured');
   const [inStockOnly, setInStockOnly] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase.from('products').select('*');
+      if (data) {
+        setProducts(data.map(p => ({
+          id: p.id,
+          title: p.name,
+          price: p.price,
+          mrp: p.original_price,
+          category: p.category,
+          image: p.image_url,
+          hoverImage: p.image_url,
+          description: p.description,
+          isNew: p.is_featured,
+          sale: p.is_featured
+        })));
+      }
+      setLoading(false);
+    };
+    fetchProducts();
+  }, []);
 
   const location = useLocation();
 
@@ -178,7 +203,12 @@ const Products = () => {
 
           {/* Grid */}
           <div className="products-grid">
-            {filteredProducts.length > 0 ? (
+            {loading ? (
+              <div style={{ padding: '40px', textAlign: 'center', gridColumn: '1 / -1' }}>
+                <Loader2 size={40} style={{ animation: 'spin 1s linear infinite', margin: '0 auto', color: '#d68d3c' }} />
+                <p style={{ marginTop: '16px' }}>Loading products...</p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
               filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))

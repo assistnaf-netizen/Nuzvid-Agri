@@ -5,7 +5,6 @@ import { FaArrowRight, FaArrowLeft, FaChevronLeft, FaChevronRight, FaStar } from
 import { Leaf, Truck, ShieldCheck, Award } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { products } from '../data/products';
 import useSEO from '../hooks/useSEO';
 import './Home.css';
 
@@ -14,6 +13,30 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState('wood-pressed-oils');
   const [heroBanners, setHeroBanners] = useState(['https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977']);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase.from('products').select('*');
+      if (data) {
+        setProducts(data.map(p => ({
+          id: p.id,
+          title: p.name,
+          price: p.price,
+          mrp: p.original_price,
+          category: p.category,
+          image: p.image_url,
+          hoverImage: p.image_url,
+          description: p.description,
+          isNew: p.is_featured,
+          sale: p.is_featured
+        })));
+      }
+      setLoadingProducts(false);
+    };
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -223,7 +246,11 @@ const Home = () => {
           </div>
 
           <div className="product-grid">
-            {filteredProducts.length > 0 ? (
+            {loadingProducts ? (
+               <div style={{ padding: '40px', textAlign: 'center', gridColumn: '1 / -1' }}>
+                 <p>Loading products...</p>
+               </div>
+            ) : filteredProducts.length > 0 ? (
               filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))

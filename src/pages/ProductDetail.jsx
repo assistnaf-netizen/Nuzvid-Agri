@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, ShoppingBag, Heart, Check, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { products } from '../data/products';
+import { supabase } from '../lib/supabase';
+import { Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import useSEO from '../hooks/useSEO';
 import './ProductDetail.css';
@@ -12,6 +13,8 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -39,23 +42,67 @@ const ProductDetail = () => {
   });
 
   useEffect(() => {
-    // Scroll to top when loading a new product
     window.scrollTo(0, 0);
-    const foundProduct = products.find(p => p.id === parseInt(id));
-    setProduct(foundProduct);
+    const fetchProduct = async () => {
+      setLoading(true);
+      const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
+      if (data) {
+        const foundProduct = {
+          id: data.id,
+          title: data.name,
+          price: data.price,
+          mrp: data.original_price,
+          category: data.category,
+          image: data.image_url,
+          hoverImage: data.image_url,
+          description: data.description,
+          isNew: data.is_featured,
+          sale: data.is_featured,
+          rating: 5.0,
+          reviews: 12
+        };
+        setProduct(foundProduct);
 
-    if (foundProduct) {
-      let recentlyViewed = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
-      // Remove if exists to push it to the top
-      recentlyViewed = recentlyViewed.filter(pId => pId !== foundProduct.id);
-      recentlyViewed.unshift(foundProduct.id);
-      // Keep only last 4
-      if (recentlyViewed.length > 4) recentlyViewed.pop();
-      localStorage.setItem('recently_viewed', JSON.stringify(recentlyViewed));
-    }
+        let recentlyViewed = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
+        recentlyViewed = recentlyViewed.filter(pId => pId !== foundProduct.id);
+        recentlyViewed.unshift(foundProduct.id);
+        if (recentlyViewed.length > 4) recentlyViewed.pop();
+        localStorage.setItem('recently_viewed', JSON.stringify(recentlyViewed));
+
+        // Fetch related products
+        const { data: relatedData } = await supabase.from('products').select('*').eq('category', data.category).neq('id', data.id).limit(4);
+        if (relatedData) {
+          setRelatedProducts(relatedData.map(rp => ({
+             id: rp.id,
+             title: rp.name,
+             price: rp.price,
+             mrp: rp.original_price,
+             category: rp.category,
+             image: rp.image_url,
+             hoverImage: rp.image_url,
+             description: rp.description,
+             isNew: rp.is_featured,
+             sale: rp.is_featured,
+             rating: 5.0,
+             reviews: 12
+          })));
+        }
+      }
+      setLoading(false);
+    };
+    fetchProduct();
   }, [id]);
 
-  if (!product) {
+  if (loading) {
+    return (
+      <div className="product-not-found" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <Loader2 size={40} style={{ animation: 'spin 1s linear infinite', color: '#d68d3c', marginBottom: '20px' }} />
+        <h2>Loading product...</h2>
+      </div>
+    );
+  }
+
+  if (!product && !loading) {
     return (
       <div className="product-not-found">
         <h2>Product not found</h2>
@@ -278,7 +325,7 @@ const ProductDetail = () => {
         <div className="related-products-section" style={{ marginTop: '60px', borderTop: '1px solid #e5e7eb', paddingTop: '40px', marginBottom: '80px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 800, textAlign: 'center', marginBottom: '30px' }}>You May Also Like</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '24px' }}>
-            {products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 4).map(relatedProduct => (
+            {relatedProducts.map(relatedProduct => (
               <div key={relatedProduct.id} style={{ width: '100%', maxWidth: '280px' }}>
                 <ProductCard product={relatedProduct} />
               </div>
