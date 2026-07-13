@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import { Lock, Mail, ArrowLeft, ShieldCheck, Quote } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const AdminAuth = () => {
   const [email, setEmail] = useState('');
@@ -35,83 +33,30 @@ const AdminAuth = () => {
     }, 1500);
   };
 
-  const quotes = [
-    "To plant a garden is to believe in tomorrow.",
-    "Agriculture is our wisest pursuit, because it will in the end contribute most to real wealth, good morals, and happiness.",
-    "The ultimate goal of farming is not the growing of crops, but the cultivation and perfection of human beings."
-  ];
-  
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-
   return (
-    <div className="admin-auth-container">
-      {/* Left Panel - Branding & Greetings */}
-      <div className="admin-auth-left">
-        <div className="admin-auth-overlay"></div>
-        <div className="admin-auth-left-content">
-          <div className="admin-auth-logo">
+    <div className="admin-auth-wrapper">
+      <div className="admin-auth-card">
+        
+        {/* Left Side: Form */}
+        <div className="admin-form-side">
+          <div className="brand-logo">
             <img 
               src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
               alt="Nuzvid Agri Farms" 
-              style={{ width: '220px', objectFit: 'contain', filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.5))' }}
             />
           </div>
-          
-          <div className="admin-auth-greeting">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              Welcome back, Admin.
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Securely manage your inventory, process orders, and oversee your agricultural operations from your dashboard.
-            </motion.p>
+
+          <div className="auth-headings">
+            <h1>Welcome Back!</h1>
+            <p>Please Log in to your admin account.</p>
           </div>
 
-          <motion.div 
-            className="admin-auth-quote"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            <Quote size={24} color="#D68D3C" style={{ marginBottom: '10px' }}/>
-            <p>"{randomQuote}"</p>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Right Panel - Login Form */}
-      <div className="admin-auth-right">
-        <motion.div 
-          className="admin-auth-form-wrapper"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <button className="back-btn" onClick={() => navigate('/')}>
-            <ArrowLeft size={16} /> Back to Store
-          </button>
-
-          <div className="admin-auth-header">
-            <div className="admin-auth-icon">
-              <ShieldCheck size={32} color="#D68D3C" />
-            </div>
-            <h2>Admin Portal</h2>
-            <p>Please authenticate to continue</p>
-          </div>
-
-          <form onSubmit={handleAdminLogin} className="admin-auth-form">
+          <form onSubmit={handleAdminLogin} className="auth-form">
             <div className="input-group">
-              <Mail className="input-icon" size={20} />
+              <label>Email Address</label>
               <input 
                 type="email" 
-                placeholder="Admin Email" 
+                placeholder="admin@nuzvidagrifarms.com" 
                 required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -119,269 +64,268 @@ const AdminAuth = () => {
             </div>
 
             <div className="input-group">
-              <Lock className="input-icon" size={20} />
+              <label>Password</label>
               <input 
                 type="password" 
-                placeholder="Passkey" 
+                placeholder="••••••••" 
                 required 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
-            <motion.button 
-              type="submit" 
-              className="admin-submit-btn"
-              disabled={loading}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {loading ? <div className="spinner"></div> : 'Secure Login'}
-            </motion.button>
+            <div className="form-options">
+              <label className="checkbox-container">
+                <input type="checkbox" />
+                <span className="checkmark"></span>
+                Remember me
+              </label>
+              <span className="forgot-password">Forgot password?</span>
+            </div>
+
+            <div className="form-actions">
+              <button type="submit" className="btn-login" disabled={loading}>
+                {loading ? <div className="spinner"></div> : 'Login'}
+              </button>
+              <button type="button" className="btn-create" onClick={() => navigate('/')}>
+                Back to Store
+              </button>
+            </div>
           </form>
 
-          <div className="admin-auth-footer">
-            <Lock size={12} /> Protected by SSL Encryption
-          </div>
-        </motion.div>
+          <p className="terms-text">
+            By logging in you agree to our term and that you have read our data policy.
+          </p>
+        </div>
+
+        {/* Right Side: Image */}
+        <div className="admin-image-side">
+          <img 
+            src="https://images.unsplash.com/photo-1592982537447-6f296b02a632?q=80&w=2938&auto=format&fit=crop" 
+            alt="Agriculture Farm" 
+            className="side-image"
+          />
+        </div>
+
       </div>
 
       <style>{`
-        .admin-auth-container {
-          display: flex;
+        .admin-auth-wrapper {
           min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #FDF9F3; /* Very light warm background */
+          padding: 20px;
           font-family: 'Inter', sans-serif;
-          background: #F4F1EA;
         }
 
-        .admin-auth-left {
-          flex: 1;
-          display: none;
-          position: relative;
-          background-image: url('https://images.unsplash.com/photo-1592982537447-6f296b02a632?q=80&w=2938&auto=format&fit=crop');
-          background-size: cover;
-          background-position: center;
+        .admin-auth-card {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          max-width: 1000px;
+          background: #FFFFFF;
+          border-radius: 24px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
           overflow: hidden;
+          border: 2px solid #064E3B; /* Dark green outer border */
         }
 
-        @media (min-width: 900px) {
-          .admin-auth-left {
-            display: flex;
-            max-width: 60%;
+        @media (min-width: 768px) {
+          .admin-auth-card {
+            flex-direction: row;
+            height: 650px;
           }
         }
 
-        .admin-auth-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(60, 28, 20, 0.9) 0%, rgba(179, 139, 109, 0.75) 100%);
-          backdrop-filter: blur(2px);
-        }
-
-        .admin-auth-left-content {
-          position: relative;
-          z-index: 10;
+        /* Form Side */
+        .admin-form-side {
+          flex: 1;
+          padding: 40px;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          padding: 60px;
-          color: white;
-          width: 100%;
-        }
-
-        .admin-auth-logo {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .admin-auth-greeting {
-          margin-top: -80px;
-        }
-
-        .admin-auth-greeting h1 {
-          font-size: 48px;
-          font-weight: 800;
-          margin: 0 0 16px 0;
-          line-height: 1.1;
-          letter-spacing: -1px;
-          color: #ffffff;
-        }
-
-        .admin-auth-greeting p {
-          font-size: 18px;
-          color: rgba(255, 255, 255, 0.9);
-          max-width: 400px;
-          line-height: 1.6;
-          margin: 0;
-        }
-
-        .admin-auth-quote {
-          background: rgba(0, 0, 0, 0.3);
-          padding: 24px;
-          border-radius: 16px;
-          border-left: 4px solid #D68D3C;
-          max-width: 450px;
-          backdrop-filter: blur(10px);
-        }
-
-        .admin-auth-quote p {
-          margin: 0;
-          font-size: 15px;
-          line-height: 1.6;
-          font-style: italic;
-          color: rgba(255, 255, 255, 0.95);
-        }
-
-        .admin-auth-right {
-          flex: 1;
-          display: flex;
-          align-items: center;
           justify-content: center;
-          padding: 40px;
-          background: #F4F1EA;
         }
 
-        .admin-auth-form-wrapper {
-          width: 100%;
-          max-width: 400px;
-          background: #FFFFFF;
-          padding: 40px;
-          border-radius: 20px;
-          box-shadow: 0 16px 48px rgba(60, 28, 20, 0.08);
-          border: 1px solid rgba(60, 28, 20, 0.05);
+        @media (min-width: 768px) {
+          .admin-form-side {
+            padding: 60px 80px;
+          }
         }
 
-        .back-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: transparent;
-          border: none;
-          color: #a1a1aa;
-          font-weight: 500;
-          font-size: 14px;
-          cursor: pointer;
-          margin-bottom: 30px;
-          padding: 0;
-          transition: color 0.2s;
+        .brand-logo {
+          margin-bottom: 40px;
         }
 
-        .back-btn:hover {
-          color: #3C1C14;
+        .brand-logo img {
+          height: 50px;
+          object-fit: contain;
         }
 
-        .admin-auth-header {
-          text-align: center;
+        .auth-headings {
           margin-bottom: 30px;
         }
 
-        .admin-auth-icon {
-          width: 64px;
-          height: 64px;
-          background: rgba(214, 141, 60, 0.1);
-          border-radius: 16px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 20px;
-          border: 1px solid rgba(214, 141, 60, 0.2);
-        }
-
-        .admin-auth-header h2 {
-          font-size: 28px;
+        .auth-headings h1 {
+          font-size: 32px;
           font-weight: 700;
-          color: #3C1C14;
+          color: #111827;
           margin: 0 0 8px 0;
-          letter-spacing: -0.5px;
         }
 
-        .admin-auth-header p {
-          color: #a1a1aa;
-          margin: 0;
+        .auth-headings p {
+          color: #6B7280;
           font-size: 15px;
+          margin: 0;
         }
 
-        .admin-auth-form {
+        .auth-form {
           display: flex;
           flex-direction: column;
           gap: 20px;
         }
 
         .input-group {
-          position: relative;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
         }
 
-        .input-icon {
-          position: absolute;
-          top: 50%;
-          left: 16px;
-          transform: translateY(-50%);
-          color: #71717a;
+        .input-group label {
+          font-size: 13px;
+          font-weight: 500;
+          color: #374151;
         }
 
         .input-group input {
-          width: 100%;
-          padding: 16px 16px 16px 48px;
-          border: 1px solid #e2e8f0;
-          border-radius: 12px;
+          padding: 12px 16px;
+          border: 1px solid #D1D5DB;
+          border-radius: 8px;
           font-size: 15px;
-          color: #3C1C14;
-          background: #F4F1EA;
-          transition: all 0.2s ease;
+          color: #111827;
           outline: none;
+          transition: border-color 0.2s;
         }
 
         .input-group input:focus {
-          border-color: #D68D3C;
-          background: #FFFFFF;
-          box-shadow: 0 0 0 4px rgba(214, 141, 60, 0.15);
-        }
-        
-        .input-group input::placeholder {
-          color: #94a3b8;
+          border-color: #059669; /* Green focus */
+          box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
         }
 
-        .admin-submit-btn {
-          width: 100%;
-          padding: 16px;
-          background: #3C1C14;
-          color: #FFFFFF;
-          border: none;
-          border-radius: 12px;
-          font-size: 16px;
-          font-weight: 700;
+        .form-options {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 4px;
+        }
+
+        .checkbox-container {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 13px;
+          color: #4B5563;
           cursor: pointer;
+        }
+
+        .checkbox-container input {
+          accent-color: #059669;
+          width: 16px;
+          height: 16px;
+        }
+
+        .forgot-password {
+          font-size: 13px;
+          color: #EF4444; /* Red color for forgot password */
+          cursor: pointer;
+          font-weight: 500;
+        }
+
+        .forgot-password:hover {
+          text-decoration: underline;
+        }
+
+        .form-actions {
+          display: flex;
+          gap: 16px;
+          margin-top: 10px;
+        }
+
+        .btn-login {
+          flex: 1;
+          background: #0F766E; /* Teal/Green color matching reference */
+          color: white;
+          border: none;
+          padding: 14px;
+          border-radius: 8px;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-top: 10px;
-          box-shadow: 0 4px 15px rgba(60, 28, 20, 0.2);
-          transition: all 0.2s ease;
         }
 
-        .admin-submit-btn:disabled {
+        .btn-login:hover:not(:disabled) {
+          background: #0F5A55;
+        }
+
+        .btn-login:disabled {
           opacity: 0.7;
           cursor: not-allowed;
         }
 
-        .admin-auth-footer {
-          margin-top: 25px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
+        .btn-create {
+          flex: 1;
+          background: transparent;
+          color: #374151;
+          border: 1px solid #D1D5DB;
+          padding: 14px;
+          border-radius: 8px;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .btn-create:hover {
+          background: #F3F4F6;
+        }
+
+        .terms-text {
+          margin-top: 40px;
           font-size: 12px;
-          color: #71717a;
+          color: #9CA3AF;
+          line-height: 1.5;
+        }
+
+        /* Image Side */
+        .admin-image-side {
+          flex: 1;
+          display: none;
+        }
+
+        @media (min-width: 768px) {
+          .admin-image-side {
+            display: block;
+          }
+        }
+
+        .side-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
 
         .spinner {
-          width: 22px;
-          height: 22px;
-          border: 3px solid rgba(0,0,0,0.2);
-          border-top-color: #000;
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-top-color: #fff;
           border-radius: 50%;
-          animation: spin 1s linear infinite;
+          animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
