@@ -53,15 +53,18 @@ const ProductCard = ({ product }) => {
       <div className="product-info">
         <h3 className="product-title">{product.title}</h3>
         <div className="product-rating">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={14}
-              fill={i < Math.floor(product.rating) ? "var(--color-secondary)" : "none"}
-              color={i < Math.floor(product.rating) ? "var(--color-secondary)" : "#ccc"}
-            />
-          ))}
-          <span className="review-count">({product.reviews})</span>
+          {[...Array(5)].map((_, i) => {
+            const ratingValue = product.rating ?? 5;
+            return (
+              <Star
+                key={i}
+                size={14}
+                fill={i < Math.floor(ratingValue) ? "#FFC107" : "none"}
+                color={i < Math.floor(ratingValue) ? "#FFC107" : "#ccc"}
+              />
+            );
+          })}
+          <span className="review-count">({product.reviews ?? 0})</span>
         </div>
         <div className="product-price-wrapper">
           {product.mrp && product.mrp > product.price && (
