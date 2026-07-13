@@ -72,30 +72,33 @@ const Cart = () => {
           <div className="cart-items-section">
             <motion.div variants={containerVariants} initial="hidden" animate="visible">
               <AnimatePresence>
-                {cartItems.map(item => (
-                  <motion.div key={item.id} className="cart-item-card" variants={itemVariants} exit="exit">
+                {cartItems.map(item => {
+                  const itemId = item.cartItemId || item.id;
+                  return (
+                  <motion.div key={itemId} className="cart-item-card" variants={itemVariants} exit="exit">
                     <img src={item.image} alt={item.title} className="cart-item-image" />
                     
                     <div className="cart-item-details">
                       <h3>{item.title}</h3>
+                      {item.weight && <span style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }}>Size/Weight: {item.weight}</span>}
                       <p className="cart-item-price">₹{item.price}</p>
                     </div>
                     
                     <div className="cart-quantity-controls">
-                      <button className="qty-btn" onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                      <button className="qty-btn" onClick={() => updateQuantity(itemId, item.quantity - 1)}>-</button>
                       <span className="qty-display">{item.quantity}</span>
-                      <button className="qty-btn" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                      <button className="qty-btn" onClick={() => updateQuantity(itemId, item.quantity + 1)}>+</button>
                     </div>
                     
                     <div className="cart-item-total">
                       ₹{item.price * item.quantity}
                     </div>
                     
-                    <button className="cart-remove-btn" onClick={() => removeFromCart(item.id)} title="Remove Item">
+                    <button className="cart-remove-btn" onClick={() => removeFromCart(itemId)} title="Remove Item">
                       <Trash2 size={22} />
                     </button>
                   </motion.div>
-                ))}
+                )})}
               </AnimatePresence>
             </motion.div>
           </div>

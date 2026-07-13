@@ -130,14 +130,14 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart({
-        ...product,
-        price: selectedVariant ? selectedVariant.price : product.price,
-        weight: selectedVariant ? selectedVariant.weight : product.weight,
-        sku: selectedVariant ? selectedVariant.sku : product.sku
-      });
-    }
+    const finalWeight = selectedVariant ? selectedVariant.weight : product.weight;
+    addToCart({
+      ...product,
+      cartItemId: `${product.id}-${finalWeight || 'base'}`,
+      price: selectedVariant ? selectedVariant.price : product.price,
+      weight: finalWeight,
+      sku: selectedVariant ? selectedVariant.sku : product.sku
+    }, quantity);
   };
 
   const displayPrice = selectedVariant ? selectedVariant.price : product.price;
