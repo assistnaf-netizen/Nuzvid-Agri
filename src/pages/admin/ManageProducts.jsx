@@ -120,19 +120,31 @@ const ManageProducts = () => {
       const mainImageUrl = finalImages.length > 0 ? finalImages[0] : '';
       const highlightsArray = newProduct.highlights ? newProduct.highlights.split('\n').filter(h => h.trim() !== '') : [];
 
+      const mainPrice = newProduct.hasVariants && newProduct.variants.length > 0 
+        ? parseFloat(newProduct.variants[0].price || 0) 
+        : parseFloat(newProduct.price || 0);
+        
+      const mainMrp = newProduct.hasVariants && newProduct.variants.length > 0
+        ? (newProduct.variants[0].mrp ? parseFloat(newProduct.variants[0].mrp) : null)
+        : (newProduct.mrp ? parseFloat(newProduct.mrp) : null);
+
+      const mainStock = newProduct.hasVariants && newProduct.variants.length > 0
+        ? parseInt(newProduct.variants[0].stock_quantity || 0)
+        : parseInt(newProduct.stock_quantity || 0);
+
       const dbPayload = {
         name: newProduct.title, 
-        price: parseFloat(newProduct.price), 
-        original_price: newProduct.mrp ? parseFloat(newProduct.mrp) : null,
+        price: mainPrice, 
+        original_price: mainMrp,
         category: newProduct.category,
         image_url: mainImageUrl,
         images: finalImages,
-        sku: newProduct.sku,
-        weight: newProduct.weight,
-        stock_quantity: parseInt(newProduct.stock_quantity || 0),
+        sku: newProduct.hasVariants ? '' : newProduct.sku,
+        weight: newProduct.hasVariants ? '' : newProduct.weight,
+        stock_quantity: mainStock,
         highlights: highlightsArray,
         description: newProduct.description,
-        in_stock: parseInt(newProduct.stock_quantity || 0) > 0,
+        in_stock: mainStock > 0,
         is_featured: newProduct.isNew || newProduct.sale,
         variants: newProduct.hasVariants ? newProduct.variants : []
       };
