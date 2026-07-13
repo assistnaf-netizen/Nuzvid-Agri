@@ -48,63 +48,65 @@ const AdminAuth = () => {
 
         {/* Right Side: Form (Swapped to Right) */}
         <div className="admin-form-side">
-          <div className="brand-logo">
-            <img 
-              src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
-              alt="Nuzvid Agri Farms" 
-            />
-          </div>
-
-          <div className="auth-headings">
-            <h1>Welcome Back!</h1>
-            <p>Please Log in to your admin account.</p>
-          </div>
-
-          <form onSubmit={handleAdminLogin} className="auth-form">
-            <div className="input-group">
-              <label>Email Address</label>
-              <input 
-                type="email" 
-                placeholder="admin@nuzvidagrifarms.com" 
-                required 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+          <div className="admin-form-content">
+            <div className="brand-logo">
+              <img 
+                src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
+                alt="Nuzvid Agri Farms" 
               />
             </div>
 
-            <div className="input-group">
-              <label>Password</label>
-              <input 
-                type="password" 
-                placeholder="••••••••" 
-                required 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            <div className="auth-headings">
+              <h1>Welcome Back!</h1>
+              <p>Please Log in to your admin account.</p>
             </div>
 
-            <div className="form-options">
-              <label className="checkbox-container">
-                <input type="checkbox" />
-                <span className="checkmark"></span>
-                Remember me
-              </label>
-              <span className="forgot-password">Forgot password?</span>
-            </div>
+            <form onSubmit={handleAdminLogin} className="auth-form">
+              <div className="input-group">
+                <label>Email Address</label>
+                <input 
+                  type="email" 
+                  placeholder="admin@nuzvidagrifarms.com" 
+                  required 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
 
-            <div className="form-actions">
-              <button type="submit" className="btn-login" disabled={loading}>
-                {loading ? <div className="spinner"></div> : 'Login'}
-              </button>
-              <button type="button" className="btn-create" onClick={() => navigate('/')}>
-                Back to Store
-              </button>
-            </div>
-          </form>
+              <div className="input-group">
+                <label>Password</label>
+                <input 
+                  type="password" 
+                  placeholder="••••••••" 
+                  required 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-          <p className="terms-text">
-            By logging in you agree to our term and that you have read our data policy.
-          </p>
+              <div className="form-options">
+                <label className="checkbox-container">
+                  <input type="checkbox" />
+                  <span className="checkmark"></span>
+                  Remember me
+                </label>
+                <span className="forgot-password">Forgot password?</span>
+              </div>
+
+              <div className="form-actions">
+                <button type="submit" className="btn-login" disabled={loading}>
+                  {loading ? <div className="spinner"></div> : 'Login'}
+                </button>
+                <button type="button" className="btn-create" onClick={() => navigate('/')}>
+                  Back to Store
+                </button>
+              </div>
+            </form>
+
+            <p className="terms-text">
+              By logging in you agree to our term and that you have read our data policy.
+            </p>
+          </div>
         </div>
 
       </div>
@@ -143,13 +145,21 @@ const AdminAuth = () => {
           flex: 1;
           padding: 40px;
           display: flex;
-          flex-direction: column;
+          align-items: center;
           justify-content: center;
+          background: #FFFFFF;
+        }
+
+        .admin-form-content {
+          width: 100%;
+          max-width: 480px;
+          display: flex;
+          flex-direction: column;
         }
 
         @media (min-width: 768px) {
           .admin-form-side {
-            padding: 60px 80px;
+            padding: 60px;
           }
         }
 
@@ -158,7 +168,8 @@ const AdminAuth = () => {
         }
 
         .brand-logo img {
-          height: 50px;
+          width: 220px;
+          max-height: 80px;
           object-fit: contain;
         }
 
@@ -203,6 +214,7 @@ const AdminAuth = () => {
           border-radius: 8px;
           font-size: 15px;
           color: #111827;
+          background: #FFFFFF;
           outline: none;
           transition: border-color 0.2s;
         }
@@ -210,6 +222,15 @@ const AdminAuth = () => {
         .input-group input:focus {
           border-color: #059669; /* Green focus */
           box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        /* Prevent auto-fill background color from ruining styling */
+        .input-group input:-webkit-autofill,
+        .input-group input:-webkit-autofill:hover, 
+        .input-group input:-webkit-autofill:focus, 
+        .input-group input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px white inset !important;
+            -webkit-text-fill-color: #111827 !important;
         }
 
         .form-options {
