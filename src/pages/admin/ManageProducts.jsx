@@ -25,7 +25,18 @@ const ManageProducts = () => {
     try {
       const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
       if (error) throw error;
-      setProducts(data || []);
+      setProducts((data || []).map(p => ({
+        id: p.id,
+        title: p.name,
+        price: p.price,
+        mrp: p.original_price,
+        category: p.category,
+        image: p.image_url,
+        hoverImage: p.image_url,
+        description: p.description,
+        isNew: p.is_featured,
+        sale: p.is_featured
+      })));
     } catch (error) {
       console.error('Error fetching products:', error);
       // Fallback for demonstration if table doesn't exist
@@ -39,23 +50,33 @@ const ManageProducts = () => {
     try {
       const { data, error } = await supabase.from('products').insert([
         { 
-          title: newProduct.title, 
+          name: newProduct.title, 
           price: parseFloat(newProduct.price), 
-          mrp: newProduct.mrp ? parseFloat(newProduct.mrp) : null,
+          original_price: newProduct.mrp ? parseFloat(newProduct.mrp) : null,
           category: newProduct.category,
-          image: newProduct.image || 'https://via.placeholder.com/150',
-          hoverImage: newProduct.hoverImage || null,
+          image_url: newProduct.image || 'https://via.placeholder.com/150',
           description: newProduct.description,
-          isNew: newProduct.isNew,
-          sale: newProduct.sale,
-          rating: 5,
-          reviews: 0
+          in_stock: true,
+          is_featured: newProduct.isNew || newProduct.sale
         }
       ]).select();
       
       if (error) throw error;
       
-      setProducts([data[0], ...products]);
+      const insertedProduct = {
+        id: data[0].id,
+        title: data[0].name,
+        price: data[0].price,
+        mrp: data[0].original_price,
+        category: data[0].category,
+        image: data[0].image_url,
+        hoverImage: data[0].image_url,
+        description: data[0].description,
+        isNew: data[0].is_featured,
+        sale: data[0].is_featured
+      };
+      
+      setProducts([insertedProduct, ...products]);
       setNewProduct({ title: '', price: '', mrp: '', category: '', image: '', hoverImage: '', description: '', isNew: false, sale: false });
       setIsAdding(false);
       toast.success('Product added successfully!');
