@@ -80,7 +80,7 @@ const AdminAuth = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            <Quote size={24} color="#facc15" style={{ marginBottom: '10px' }}/>
+            <Quote size={24} color="#D68D3C" style={{ marginBottom: '10px' }}/>
             <p>"{randomQuote}"</p>
           </motion.div>
         </div>
@@ -100,7 +100,7 @@ const AdminAuth = () => {
 
           <div className="admin-auth-header">
             <div className="admin-auth-icon">
-              <ShieldCheck size={32} color="#ef4444" />
+              <ShieldCheck size={32} color="#D68D3C" />
             </div>
             <h2>Admin Portal</h2>
             <p>Please authenticate to continue</p>
@@ -151,7 +151,7 @@ const AdminAuth = () => {
           display: flex;
           min-height: 100vh;
           font-family: 'Inter', sans-serif;
-          background: #121212;
+          background: #F4F1EA;
         }
 
         .admin-auth-left {
@@ -174,8 +174,8 @@ const AdminAuth = () => {
         .admin-auth-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(220, 38, 38, 0.85) 0%, rgba(234, 179, 8, 0.7) 100%);
-          backdrop-filter: blur(3px);
+          background: linear-gradient(135deg, rgba(60, 28, 20, 0.9) 0%, rgba(179, 139, 109, 0.75) 100%);
+          backdrop-filter: blur(2px);
         }
 
         .admin-auth-left-content {
@@ -220,7 +220,7 @@ const AdminAuth = () => {
           background: rgba(0, 0, 0, 0.3);
           padding: 24px;
           border-radius: 16px;
-          border-left: 4px solid #facc15;
+          border-left: 4px solid #D68D3C;
           max-width: 450px;
           backdrop-filter: blur(10px);
         }
@@ -239,17 +239,17 @@ const AdminAuth = () => {
           align-items: center;
           justify-content: center;
           padding: 40px;
-          background: #18181b;
+          background: #F4F1EA;
         }
 
         .admin-auth-form-wrapper {
           width: 100%;
           max-width: 400px;
-          background: #27272a;
+          background: #FFFFFF;
           padding: 40px;
           border-radius: 20px;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-          border: 1px solid #3f3f46;
+          box-shadow: 0 16px 48px rgba(60, 28, 20, 0.08);
+          border: 1px solid rgba(60, 28, 20, 0.05);
         }
 
         .back-btn {
@@ -268,7 +268,7 @@ const AdminAuth = () => {
         }
 
         .back-btn:hover {
-          color: #f4f4f5;
+          color: #3C1C14;
         }
 
         .admin-auth-header {
@@ -279,19 +279,19 @@ const AdminAuth = () => {
         .admin-auth-icon {
           width: 64px;
           height: 64px;
-          background: rgba(239, 68, 68, 0.1);
+          background: rgba(214, 141, 60, 0.1);
           border-radius: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
           margin: 0 auto 20px;
-          border: 1px solid rgba(239, 68, 68, 0.2);
+          border: 1px solid rgba(214, 141, 60, 0.2);
         }
 
         .admin-auth-header h2 {
           font-size: 28px;
           font-weight: 700;
-          color: #f4f4f5;
+          color: #3C1C14;
           margin: 0 0 8px 0;
           letter-spacing: -0.5px;
         }
@@ -323,30 +323,30 @@ const AdminAuth = () => {
         .input-group input {
           width: 100%;
           padding: 16px 16px 16px 48px;
-          border: 1px solid #3f3f46;
+          border: 1px solid #e2e8f0;
           border-radius: 12px;
           font-size: 15px;
-          color: #f4f4f5;
-          background: #18181b;
+          color: #3C1C14;
+          background: #F4F1EA;
           transition: all 0.2s ease;
           outline: none;
         }
 
         .input-group input:focus {
-          border-color: #ef4444;
-          background: #18181b;
-          box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+          border-color: #D68D3C;
+          background: #FFFFFF;
+          box-shadow: 0 0 0 4px rgba(214, 141, 60, 0.15);
         }
         
         .input-group input::placeholder {
-          color: #71717a;
+          color: #94a3b8;
         }
 
         .admin-submit-btn {
           width: 100%;
           padding: 16px;
-          background: linear-gradient(90deg, #ef4444, #facc15);
-          color: #000;
+          background: #3C1C14;
+          color: #FFFFFF;
           border: none;
           border-radius: 12px;
           font-size: 16px;
@@ -356,7 +356,8 @@ const AdminAuth = () => {
           align-items: center;
           justify-content: center;
           margin-top: 10px;
-          box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+          box-shadow: 0 4px 15px rgba(60, 28, 20, 0.2);
+          transition: all 0.2s ease;
         }
 
         .admin-submit-btn:disabled {
