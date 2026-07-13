@@ -129,6 +129,8 @@ const ProductDetail = () => {
     if (type === 'decrement' && quantity > 1) setQuantity(q => q - 1);
   };
 
+  const [addedToCart, setAddedToCart] = useState(false);
+
   const handleAddToCart = () => {
     const finalWeight = selectedVariant ? selectedVariant.weight : product.weight;
     addToCart({
@@ -138,6 +140,9 @@ const ProductDetail = () => {
       weight: finalWeight,
       sku: selectedVariant ? selectedVariant.sku : product.sku
     }, quantity);
+    
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 3000);
   };
 
   const displayPrice = selectedVariant ? selectedVariant.price : product.price;
@@ -294,8 +299,13 @@ const ProductDetail = () => {
                     <input type="text" value={quantity} readOnly />
                     <button onClick={() => handleQuantityChange('increment')}>+</button>
                   </div>
-                  <button className="btn-primary detail-add-btn" onClick={handleAddToCart}>
-                    <ShoppingBag size={20} /> Add to Cart
+                  <button 
+                    className="btn-primary detail-add-btn" 
+                    onClick={handleAddToCart}
+                    style={{ backgroundColor: addedToCart ? '#2e7d32' : '' }}
+                  >
+                    <ShoppingBag size={20} /> 
+                    {addedToCart ? 'Added to Cart!' : 'Add to Cart'}
                   </button>
                 </div>
               )}

@@ -32,7 +32,21 @@ import AdminAuth from './pages/admin/AdminAuth';
 function App() {
   return (
     <Router>
-      <Toaster position="top-center" />
+      <Toaster 
+        position="top-center" 
+        toastOptions={{
+          style: {
+            fontSize: '16px',
+            padding: '16px 24px',
+            background: '#333',
+            color: '#fff',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+          },
+          duration: 3000,
+        }}
+        containerStyle={{ zIndex: 99999 }}
+      />
       <Routes>
         {/* Client Routes with Standard Layout */}
         <Route element={<Layout />}>

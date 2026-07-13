@@ -7,6 +7,13 @@ import './ProductCard.css';
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 3000);
+  };
   
   return (
     <div className="product-card">
@@ -29,9 +36,14 @@ const ProductCard = ({ product }) => {
         )}
         
         <div className="product-actions">
-          <button className="action-btn cart-btn" onClick={() => addToCart(product)} title="Add to Cart">
+          <button 
+            className="action-btn cart-btn" 
+            onClick={handleAddToCart} 
+            title="Add to Cart"
+            style={{ backgroundColor: addedToCart ? '#2e7d32' : '', color: addedToCart ? '#fff' : '' }}
+          >
             <ShoppingBag size={18} />
-            <span>Add to Cart</span>
+            <span>{addedToCart ? 'Added!' : 'Add to Cart'}</span>
           </button>
           <Link to={`/product/${product.id}`} className="action-btn details-btn" title="View Details">
             <Eye size={18} />
