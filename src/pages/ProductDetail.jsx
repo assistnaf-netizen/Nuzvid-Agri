@@ -18,6 +18,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useSEO({
     title: product ? product.title : 'Loading Product...',
@@ -35,7 +36,7 @@ const ProductDetail = () => {
         "url": window.location.href,
         "priceCurrency": "INR",
         "price": product.price,
-        "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
         "itemCondition": "https://schema.org/NewCondition"
       }
     } : null
@@ -54,14 +55,19 @@ const ProductDetail = () => {
           mrp: data.original_price,
           category: data.category,
           image: data.image_url,
-          hoverImage: data.image_url,
+          images: data.images || (data.image_url ? [data.image_url] : []),
           description: data.description,
+          sku: data.sku,
+          weight: data.weight,
+          stock_quantity: data.stock_quantity !== null ? data.stock_quantity : 10,
+          highlights: data.highlights || [],
           isNew: data.is_featured,
           sale: data.is_featured,
           rating: 5.0,
           reviews: 12
         };
         setProduct(foundProduct);
+        setCurrentImageIndex(0);
 
         let recentlyViewed = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
         recentlyViewed = recentlyViewed.filter(pId => pId !== foundProduct.id);
@@ -112,13 +118,11 @@ const ProductDetail = () => {
   }
 
   const handleQuantityChange = (type) => {
-    if (type === 'increment') setQuantity(q => q + 1);
+    if (type === 'increment' && quantity < product.stock_quantity) setQuantity(q => q + 1);
     if (type === 'decrement' && quantity > 1) setQuantity(q => q - 1);
   };
 
   const handleAddToCart = () => {
-    // We add the product, but CartContext would need to handle quantity eventually.
-    // For now, we simulate adding the quantity.
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
@@ -144,28 +148,33 @@ const ProductDetail = () => {
           {/* Left Column: Image Gallery */}
           <div className="col-lg-6 col-md-12">
             <div className="detail-gallery">
-              <div className="detail-main-img-wrapper">
+              <div className="detail-main-img-wrapper" style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', background: 'white', marginBottom: '15px' }}>
                 {product.sale && <span className="detail-badge sale">Sale</span>}
                 {product.isNew && <span className="detail-badge new">New</span>}
                 <button 
                   className={`detail-wishlist-btn ${isWishlisted ? 'active' : ''}`}
                   onClick={() => setIsWishlisted(!isWishlisted)}
+                  style={{ position: 'absolute', right: '20px', top: '20px', zIndex: 10 }}
                 >
                   <Heart size={24} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
                 </button>
-                <img src={product.image} alt={product.title} className="detail-main-img" />
+                <img src={product.images[currentImageIndex] || product.image} alt={product.title} className="detail-main-img" style={{ width: '100%', height: '400px', objectFit: 'contain' }} />
               </div>
               
-              {/* Optional thumbnails if we had multiple images, reusing the same image for demo */}
-              <div className="detail-thumbnails">
-                <div className="thumbnail active">
-                  <img src={product.image} alt={product.title} />
-                </div>
-                {product.hoverImage && (
-                  <div className="thumbnail">
-                    <img src={product.hoverImage} alt={product.title} />
+              <div className="detail-thumbnails" style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }}>
+                {product.images.map((img, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`thumbnail ${currentImageIndex === idx ? 'active' : ''}`} 
+                    onClick={() => setCurrentImageIndex(idx)}
+                    style={{ 
+                      width: '80px', height: '80px', border: currentImageIndex === idx ? '2px solid var(--color-primary)' : '1px solid #e5e7eb',
+                      borderRadius: '8px', overflow: 'hidden', cursor: 'pointer', flexShrink: 0
+                    }}
+                  >
+                    <img src={img} alt={`${product.title} ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
-                )}
+                ))}
               </div>
             </div>
           </div>
@@ -194,30 +203,61 @@ const ProductDetail = () => {
                   <span className="detail-price-old">₹{product.mrp.toFixed(2)}</span>
                 )}
                 <span className="detail-price">₹{product.price.toFixed(2)}</span>
+                {product.mrp && product.mrp > product.price && (
+                  <span style={{ color: '#10b981', fontWeight: 'bold', marginLeft: '10px', fontSize: '14px' }}>
+                    {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+                  </span>
+                )}
               </div>
+
+              {/* Advanced Specs (SKU, Weight) */}
+              <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', fontSize: '14px', color: '#4b5563' }}>
+                {product.weight && <div><strong>Weight/Vol:</strong> {product.weight}</div>}
+                {product.sku && <div><strong>SKU:</strong> {product.sku}</div>}
+              </div>
+
+              {/* Highlights */}
+              {product.highlights && product.highlights.length > 0 && (
+                <div style={{ marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '10px' }}>Product Highlights</h4>
+                  <ul style={{ paddingLeft: '20px', margin: 0, color: '#4b5563', lineHeight: 1.6 }}>
+                    {product.highlights.map((highlight, idx) => (
+                      <li key={idx}>{highlight}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               <p className="detail-short-desc">
                 {product.description || "Premium quality product sourced directly from our farms to your home."}
               </p>
 
               <div className="detail-stock-status">
-                <Check size={18} color="#2d7a5c" /> <span>In Stock & Ready to Ship</span>
+                {product.stock_quantity > 0 ? (
+                  <>
+                    <Check size={18} color="#2d7a5c" /> <span>In Stock & Ready to Ship</span>
+                  </>
+                ) : (
+                  <span style={{ color: '#ef4444', fontWeight: 600 }}>Currently Out of Stock</span>
+                )}
               </div>
 
               {/* Add to Cart Area */}
-              <div className="detail-action-area">
-                <div className="quantity-selector">
-                  <button onClick={() => handleQuantityChange('decrement')}>-</button>
-                  <input type="text" value={quantity} readOnly />
-                  <button onClick={() => handleQuantityChange('increment')}>+</button>
+              {product.stock_quantity > 0 && (
+                <div className="detail-action-area">
+                  <div className="quantity-selector">
+                    <button onClick={() => handleQuantityChange('decrement')}>-</button>
+                    <input type="text" value={quantity} readOnly />
+                    <button onClick={() => handleQuantityChange('increment')}>+</button>
+                  </div>
+                  <button className="btn-primary detail-add-btn" onClick={handleAddToCart}>
+                    <ShoppingBag size={20} /> Add to Cart
+                  </button>
                 </div>
-                <button className="btn-primary detail-add-btn" onClick={handleAddToCart}>
-                  <ShoppingBag size={20} /> Add to Cart
-                </button>
-              </div>
+              )}
 
               {/* Guarantees */}
-              <div className="detail-guarantees">
+              <div className="detail-guarantees" style={{ marginTop: '30px' }}>
                 <div className="guarantee-item">
                   <img src="https://cdn-icons-png.flaticon.com/512/2956/2956820.png" alt="Pure" width="30"/>
                   <span>100% Pure</span>
@@ -246,14 +286,8 @@ const ProductDetail = () => {
           <div className="detail-tab-content">
             {activeTab === 'description' && (
               <div className="tab-pane active fade-in">
-                <p>Welcome to the finest quality products from Nuzvid Agri Farms. {product.description}</p>
+                <p>{product.description}</p>
                 <p>Our commitment to purity and traditional practices ensures that every product reaching your kitchen is packed with natural nutrition and authentic flavor. All our ingredients are hand-picked, organically processed, and rigorously tested to meet our premium quality standards.</p>
-                <ul>
-                  <li>100% Natural and pure.</li>
-                  <li>Sourced directly from farmers.</li>
-                  <li>No added preservatives or chemicals.</li>
-                  <li>Ethically produced with sustainable methods.</li>
-                </ul>
               </div>
             )}
             
@@ -294,17 +328,6 @@ const ProductDetail = () => {
                       <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#9ca3af' }}>2 days ago</span>
                     </div>
                     <p style={{ margin: 0, color: '#4b5563', fontSize: '14px' }}>Excellent quality! The taste is completely natural and authentic. Will definitely buy again.</p>
-                  </div>
-                  <div className="review-item" style={{ padding: '20px', background: '#f9fafb', borderRadius: '12px', marginBottom: '16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                      <div style={{ width: '40px', height: '40px', background: '#10b981', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>PP</div>
-                      <div>
-                        <div style={{ fontWeight: 700, color: '#1a1d2e' }}>Priya Patel</div>
-                        <div style={{ display: 'flex', color: '#d68d3c' }}><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} /></div>
-                      </div>
-                      <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#9ca3af' }}>1 week ago</span>
-                    </div>
-                    <p style={{ margin: 0, color: '#4b5563', fontSize: '14px' }}>Good packaging and fast delivery. Product is exactly as described.</p>
                   </div>
                 </div>
 
