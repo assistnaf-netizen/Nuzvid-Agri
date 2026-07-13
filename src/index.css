@@ -49,8 +49,13 @@ html, body {
   color: var(--color-text);
   background-color: var(--color-bg-light);
   line-height: 1.6;
-  overflow-x: hidden;
   width: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Premium text selection */
