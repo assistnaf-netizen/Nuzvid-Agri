@@ -10,6 +10,7 @@ const ManageProducts = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
   
   // New Product Form State
   const [isAdding, setIsAdding] = useState(false);
@@ -145,13 +146,14 @@ const ManageProducts = () => {
     setNewProduct({ title: '', price: '', mrp: '', category: '', image: '', hoverImage: '', description: '', isNew: false, sale: false });
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
     try {
-      const { error } = await supabase.from('products').delete().eq('id', id);
+      const { error } = await supabase.from('products').delete().eq('id', productToDelete.id);
       if (error) throw error;
-      setProducts(products.filter(p => p.id !== id));
+      setProducts(products.filter(p => p.id !== productToDelete.id));
       toast.success('Product deleted');
+      setProductToDelete(null);
     } catch (error) {
       toast.error(error.message);
     }
@@ -269,7 +271,7 @@ const ManageProducts = () => {
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button className="admin-icon-btn" onClick={() => setSelectedProduct(product)} title="View Product"><Eye size={15} /></button>
                       <button className="admin-icon-btn" style={{ color: '#3b82f6' }} onClick={() => handleEditClick(product)} title="Edit Product"><Edit2 size={15} /></button>
-                      <button className="admin-icon-btn" style={{ color: '#ef4444' }} onClick={() => handleDelete(product.id)} title="Delete Product"><Trash2 size={15} /></button>
+                      <button className="admin-icon-btn" style={{ color: '#ef4444' }} onClick={() => setProductToDelete(product)} title="Delete Product"><Trash2 size={15} /></button>
                     </div>
                   </td>
                 </motion.tr>
@@ -335,6 +337,34 @@ const ManageProducts = () => {
 
             <div className="admin-modal-footer" style={{ borderTop: '1px solid #e5e7eb', paddingTop: '16px', marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button className="admin-btn-secondary" onClick={() => setSelectedProduct(null)}>Close</button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {productToDelete && (
+        <div className="admin-modal-overlay" onClick={() => setProductToDelete(null)}>
+          <motion.div 
+            className="admin-modal"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '400px', width: '90%', textAlign: 'center' }}
+          >
+            <div className="admin-modal-body" style={{ padding: '30px 24px' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#fef2f2', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                <Trash2 size={30} />
+              </div>
+              <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 10px', color: '#1a1d2e' }}>Delete Product</h2>
+              <p style={{ margin: 0, color: '#6b7280', fontSize: '14px', lineHeight: 1.5 }}>
+                Are you sure you want to delete <strong>{productToDelete.title}</strong>? This action cannot be undone.
+              </p>
+            </div>
+            <div className="admin-modal-footer" style={{ display: 'flex', gap: '10px', justifyContent: 'center', background: '#f9fafb' }}>
+              <button className="admin-btn-secondary" onClick={() => setProductToDelete(null)} style={{ flex: 1, justifyContent: 'center' }}>Cancel</button>
+              <button className="btn-primary" style={{ background: '#ef4444', border: 'none', flex: 1, justifyContent: 'center' }} onClick={confirmDelete}>Delete</button>
             </div>
           </motion.div>
         </div>
