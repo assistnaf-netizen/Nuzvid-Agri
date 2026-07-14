@@ -47,8 +47,9 @@ const Checkout = () => {
     fetchShipping();
   }, []);
 
+  const allFreeShipping = cartItems.length > 0 && cartItems.every(item => item.isFreeShipping);
   const total = totalAmount;
-  const shippingCost = total > shippingSettings.threshold ? 0 : shippingSettings.base;
+  const shippingCost = (allFreeShipping || total > shippingSettings.threshold) ? 0 : shippingSettings.base;
   const finalAmount = total + shippingCost - discount;
 
   const handleApplyCoupon = async () => {
@@ -429,7 +430,7 @@ const Checkout = () => {
               <button type="submit" className="btn-place-order" disabled={loading}>
                 {loading ? <div className="loader-spinner"></div> : (
                   <>
-                    <CheckCircle size={20} /> Place Order - ₹{totalAmount}
+                    <CheckCircle size={20} /> Place Order - ₹{finalAmount}
                   </>
                 )}
               </button>

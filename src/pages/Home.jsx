@@ -33,7 +33,8 @@ const Home = () => {
           hoverImage: p.image_url,
           description: p.description,
           isNew: p.is_featured,
-          sale: p.is_featured
+          sale: p.is_featured,
+          isFreeShipping: p.is_free_shipping || false
         })));
       }
       setLoadingProducts(false);

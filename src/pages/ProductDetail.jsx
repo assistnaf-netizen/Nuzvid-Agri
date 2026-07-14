@@ -74,6 +74,7 @@ const ProductDetail = () => {
           variants: data.variants || [],
           isNew: data.is_featured,
           sale: data.is_featured,
+          isFreeShipping: data.is_free_shipping || false,
           rating: 5.0,
           reviews: 12
         };
@@ -103,6 +104,7 @@ const ProductDetail = () => {
              description: rp.description,
              isNew: rp.is_featured,
              sale: rp.is_featured,
+             isFreeShipping: rp.is_free_shipping || false,
              rating: 5.0,
              reviews: 12
           })));
@@ -142,12 +144,17 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     const finalWeight = selectedVariant ? selectedVariant.weight : product.weight;
+    const finalPrice = selectedVariant ? selectedVariant.price : product.price;
+    const finalMrp = selectedVariant ? selectedVariant.mrp : product.mrp;
     addToCart({
       ...product,
       cartItemId: `${product.id}-${finalWeight || 'base'}`,
-      price: selectedVariant ? selectedVariant.price : product.price,
+      price: finalPrice,
+      mrp: finalMrp,
+      image: product.image,
       weight: finalWeight,
-      sku: selectedVariant ? selectedVariant.sku : product.sku
+      sku: selectedVariant ? selectedVariant.sku : product.sku,
+      isFreeShipping: product.isFreeShipping
     }, quantity);
     
     setAddedToCart(true);

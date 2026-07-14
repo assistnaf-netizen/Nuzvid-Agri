@@ -21,7 +21,7 @@ const ManageProducts = () => {
   const [newProduct, setNewProduct] = useState({
     title: '', price: '', mrp: '', category: '', 
     sku: '', weight: '', stock_quantity: 10, highlights: '', description: '', 
-    isNew: false, sale: false, hasVariants: false, variants: []
+    isNew: false, sale: false, hasVariants: false, variants: [], isFreeShipping: false
   });
 
   const [existingImages, setExistingImages] = useState([]);
@@ -51,6 +51,7 @@ const ManageProducts = () => {
         description: p.description,
         isNew: p.is_featured,
         sale: p.is_featured,
+        isFreeShipping: p.is_free_shipping || false,
         variants: p.variants || [],
         hasVariants: p.variants && p.variants.length > 0
       })));
@@ -146,6 +147,7 @@ const ManageProducts = () => {
         description: newProduct.description,
         in_stock: mainStock > 0,
         is_featured: newProduct.isNew || newProduct.sale,
+        is_free_shipping: newProduct.isFreeShipping || false,
         variants: newProduct.hasVariants ? newProduct.variants : []
       };
 
@@ -182,6 +184,7 @@ const ManageProducts = () => {
       description: product.description || '',
       isNew: product.isNew,
       sale: product.sale,
+      isFreeShipping: product.isFreeShipping || false,
       hasVariants: product.hasVariants || false,
       variants: product.variants || []
     });
@@ -201,7 +204,7 @@ const ManageProducts = () => {
     setNewProduct({ 
       title: '', price: '', mrp: '', category: '', 
       sku: '', weight: '', stock_quantity: 10, highlights: '', description: '', 
-      isNew: false, sale: false, hasVariants: false, variants: []
+      isNew: false, sale: false, hasVariants: false, variants: [], isFreeShipping: false
     });
     setExistingImages([]);
     setImageFiles([]);
@@ -372,7 +375,7 @@ const ManageProducts = () => {
           </div>
 
           {/* SECTION: BADGES */}
-          <div style={{ display: 'flex', gap: '20px', padding: '0 10px' }}>
+          <div style={{ display: 'flex', gap: '20px', padding: '0 10px', flexWrap: 'wrap' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 600 }}>
               <input type="checkbox" checked={newProduct.isNew} onChange={e => setNewProduct({...newProduct, isNew: e.target.checked})} />
               Mark as "New Arrival"
@@ -380,6 +383,10 @@ const ManageProducts = () => {
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 600 }}>
               <input type="checkbox" checked={newProduct.sale} onChange={e => setNewProduct({...newProduct, sale: e.target.checked})} />
               Mark as "On Sale"
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 600 }}>
+              <input type="checkbox" checked={newProduct.isFreeShipping} onChange={e => setNewProduct({...newProduct, isFreeShipping: e.target.checked})} />
+              Free Shipping
             </label>
           </div>
 
