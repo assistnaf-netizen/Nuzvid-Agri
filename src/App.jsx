@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import About from './pages/About';
+import RefundPolicy from './pages/RefundPolicy';
 import Commitment from './pages/Commitment';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
@@ -56,6 +57,7 @@ function App() {
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about-us" element={<About />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/our-commitment" element={<Commitment />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />

@@ -73,7 +73,7 @@ const Footer = () => {
           <div className="footer-col">
             <h3>Customer Care</h3>
             <ul>
-              <li><Link to="#">Refund Policy</Link></li>
+              <li><Link to="/refund-policy">Refund Policy</Link></li>
               <li><Link to="#">Privacy Policy</Link></li>
               <li><Link to="#">Terms & Conditions</Link></li>
               <li><Link to="#">Cancellation Policy</Link></li>
