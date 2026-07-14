@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
-import { FaPhoneAlt, FaPlus, FaMinus } from 'react-helper-icons'; // Or basic text if missing
 import './Faqs.css';
 
 const faqsData = [
