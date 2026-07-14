@@ -62,13 +62,17 @@ const MyAccount = () => {
 
   const fetchOrders = async () => {
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*, order_items(*)')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-        
-      if (error) throw error;
+      // Use backend API (service role) to bypass RLS issues
+      const params = new URLSearchParams();
+      if (user.id) params.set('user_id', user.id);
+      else if (user.email) params.set('email', user.email);
+      
+      const res = await fetch(`/api/get-orders?${params.toString()}`);
+      const json = await res.json();
+      
+      if (!res.ok) throw new Error(json.error || 'Failed to fetch orders');
+      
+      const data = json.orders;
 
       const formatted = data.map(o => {
         const firstItem = o.order_items?.[0];
@@ -98,6 +102,7 @@ const MyAccount = () => {
     } catch (err) {
       console.error('Failed to fetch user orders', err);
     }
+
   };
 
   if (!user) {

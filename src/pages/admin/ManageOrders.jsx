@@ -32,19 +32,17 @@ const ManageOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*, order_items(*)')
-        .order('created_at', { ascending: false });
-        
-      if (error) throw error;
+      const res = await fetch('/api/get-orders?all=true');
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to fetch orders');
 
+      const data = json.orders;
       const formatted = data.map(o => ({
-        id: o.display_id,
+        id: o.display_id || o.id,
         db_id: o.id,
-        customer: o.customer_name,
-        avatar: o.customer_name.substring(0, 2).toUpperCase(),
-        email: o.customer_email,
+        customer: o.customer_name || 'Unknown',
+        avatar: (o.customer_name || 'UN').substring(0, 2).toUpperCase(),
+        email: o.customer_email || '',
         date: new Date(o.created_at).toLocaleDateString(),
         total: Number(o.total_amount),
         paymentStatus: o.payment_status,
@@ -56,6 +54,7 @@ const ManageOrders = () => {
       setOrders(formatted);
     } catch (err) {
       toast.error('Failed to fetch orders');
+      console.error(err);
     } finally {
       setLoading(false);
     }
