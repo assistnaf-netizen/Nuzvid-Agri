@@ -734,7 +734,12 @@ const MyAccount = () => {
                         <div className="price-breakdown-card">
                           {(() => {
                             const actualSubtotal = selectedOrder.orderItems?.reduce((acc, item) => acc + (Number(item.price) * item.qty), 0) || 0;
-                            const shippingFee = actualSubtotal >= 3000 ? 0 : 100;
+                            let shippingFee = actualSubtotal >= 3000 ? 0 : 100;
+                            
+                            if (selectedOrder.total === actualSubtotal || selectedOrder.total === actualSubtotal + 5) {
+                                shippingFee = 0;
+                            }
+                            
                             const expected = actualSubtotal + shippingFee;
                             
                             let deducedPlatformFee = 0;
@@ -742,16 +747,12 @@ const MyAccount = () => {
                             
                             if (selectedOrder.total > expected) {
                               deducedPlatformFee = selectedOrder.total - expected;
-                            } else if (selectedOrder.total < expected && selectedOrder.total > 10) {
+                            } else if (selectedOrder.total < expected) {
                               deducedDiscount = expected - selectedOrder.total;
-                              // Assume a base 5 platform fee is hidden in the discount for new orders
                               if (deducedDiscount % 5 !== 0 && deducedDiscount > 5) {
                                 deducedPlatformFee = 5;
                                 deducedDiscount = expected + 5 - selectedOrder.total;
                               }
-                            } else if (selectedOrder.total <= 10) {
-                               // test orders
-                               deducedDiscount = 0;
                             }
 
                             return (

@@ -36,8 +36,25 @@ const ManageOrders = () => {
   const handlePrint = (order) => {
     const printWindow = window.open('', '_blank');
     const actualSubtotal = order.rawItems?.reduce((acc, item) => acc + (Number(item.price_at_time) * item.quantity), 0) || 0;
-    const shippingFee = actualSubtotal >= 3000 ? 0 : 100;
-    const discountAmount = order.total <= 10 ? 0 : Math.max(0, actualSubtotal + shippingFee - order.total);
+    let shippingFee = actualSubtotal >= 3000 ? 0 : 100;
+    
+    if (order.total === actualSubtotal || order.total === actualSubtotal + 5) {
+        shippingFee = 0;
+    }
+    
+    const expected = actualSubtotal + shippingFee;
+    let deducedPlatformFee = 0;
+    let deducedDiscount = 0;
+    
+    if (order.total > expected) {
+      deducedPlatformFee = order.total - expected;
+    } else if (order.total < expected) {
+      deducedDiscount = expected - order.total;
+      if (deducedDiscount % 5 !== 0 && deducedDiscount > 5) {
+        deducedPlatformFee = 5;
+        deducedDiscount = expected + 5 - order.total;
+      }
+    }
 
     printWindow.document.write(`
       <html>
@@ -109,14 +126,22 @@ const ManageOrders = () => {
                   <td colspan="3" style="text-align: right; border: none; padding-top: 20px;">Subtotal:</td>
                   <td style="border: none; padding-top: 20px;">₹${actualSubtotal.toLocaleString()}</td>
                 </tr>
+                ${deducedDiscount > 0 ? `
                 <tr class="total-row">
                   <td colspan="3" style="text-align: right; border: none;">Coupon Discount:</td>
-                  <td style="border: none; color: #dc2626;">- ₹${discountAmount.toLocaleString()}</td>
+                  <td style="border: none; color: #dc2626;">- ₹${deducedDiscount.toLocaleString()}</td>
                 </tr>
+                ` : ''}
                 <tr class="total-row">
                   <td colspan="3" style="text-align: right; border: none;">Shipping:</td>
                   <td style="border: none;">₹${shippingFee.toLocaleString()}</td>
                 </tr>
+                ${deducedPlatformFee > 0 || order.total === expected ? `
+                <tr class="total-row">
+                  <td colspan="3" style="text-align: right; border: none;">Platform Fee:</td>
+                  <td style="border: none;">₹${deducedPlatformFee > 0 ? deducedPlatformFee.toLocaleString() : '0'}</td>
+                </tr>
+                ` : ''}
                 <tr class="total-row grand-total">
                   <td colspan="3" style="text-align: right; border: none;">Grand Total:</td>
                   <td style="border: none;">₹${order.total.toLocaleString()}</td>
@@ -670,8 +695,26 @@ const ManageOrders = () => {
                 <div className="price-breakdown-card">
                   {(() => {
                     const actualSubtotal = selectedOrder.rawItems?.reduce((acc, item) => acc + (Number(item.price_at_time) * item.quantity), 0) || 0;
-                    const shippingFee = actualSubtotal >= 3000 ? 0 : 100;
-                    const discountAmount = selectedOrder.total <= 10 ? 0 : Math.max(0, actualSubtotal + shippingFee - selectedOrder.total);
+                    let shippingFee = actualSubtotal >= 3000 ? 0 : 100;
+                    
+                    if (selectedOrder.total === actualSubtotal || selectedOrder.total === actualSubtotal + 5) {
+                        shippingFee = 0;
+                    }
+                    
+                    const expected = actualSubtotal + shippingFee;
+                    
+                    let deducedPlatformFee = 0;
+                    let deducedDiscount = 0;
+                    
+                    if (selectedOrder.total > expected) {
+                      deducedPlatformFee = selectedOrder.total - expected;
+                    } else if (selectedOrder.total < expected) {
+                      deducedDiscount = expected - selectedOrder.total;
+                      if (deducedDiscount % 5 !== 0 && deducedDiscount > 5) {
+                        deducedPlatformFee = 5;
+                        deducedDiscount = expected + 5 - selectedOrder.total;
+                      }
+                    }
                     
                     return (
                       <>
@@ -679,22 +722,22 @@ const ManageOrders = () => {
                           <span>Subtotal</span>
                           <span className="text-bold">₹{actualSubtotal.toLocaleString()}</span>
                         </div>
-                        <div className="breakdown-row">
-                          <span>Coupon Discount</span>
-                          <span className="text-bold text-red">- ₹{discountAmount.toLocaleString()}</span>
-                        </div>
+                        {deducedDiscount > 0 && (
+                          <div className="breakdown-row">
+                            <span>Coupon Discount</span>
+                            <span className="text-bold text-red">- ₹{deducedDiscount.toLocaleString()}</span>
+                          </div>
+                        )}
                         <div className="breakdown-row">
                           <span>Shipping Fee</span>
                           <span className="text-bold">₹{shippingFee.toLocaleString()}</span>
                         </div>
-                        <div className="breakdown-row">
-                          <span>Tax (GST Included)</span>
-                          <span className="text-bold">₹{Math.round(actualSubtotal * 0.18).toLocaleString()}</span>
-                        </div>
-                        <div className="breakdown-row">
-                          <span>Platform Fee</span>
-                          <span className="text-bold">₹0</span>
-                        </div>
+                        {(deducedPlatformFee > 0 || selectedOrder.total === expected) && (
+                          <div className="breakdown-row">
+                            <span>Platform Fee</span>
+                            <span className="text-bold">₹{deducedPlatformFee > 0 ? deducedPlatformFee.toLocaleString() : '0'}</span>
+                          </div>
+                        )}
                       </>
                     );
                   })()}
