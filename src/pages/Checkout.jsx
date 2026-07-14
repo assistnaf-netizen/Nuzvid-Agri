@@ -235,10 +235,10 @@ const Checkout = () => {
 
       // Deduct inventory stock
       for (const item of cartItems) {
-        const { data: productData } = await supabase.from('products').select('stock').eq('id', item.id).single();
-        if (productData && productData.stock !== null && productData.stock !== undefined) {
-          const newStock = Math.max(0, productData.stock - item.quantity);
-          await supabase.from('products').update({ stock: newStock }).eq('id', item.id);
+        const { data: productData } = await supabase.from('products').select('stock_quantity').eq('id', item.id).single();
+        if (productData && productData.stock_quantity !== null && productData.stock_quantity !== undefined) {
+          const newStock = Math.max(0, productData.stock_quantity - item.quantity);
+          await supabase.from('products').update({ stock_quantity: newStock }).eq('id', item.id);
         }
       }
 
@@ -264,6 +264,16 @@ const Checkout = () => {
 
     if (paymentMethod === 'card') {
       try {
+        const orderRes = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: finalAmount, receipt: orderId })
+        });
+        const orderData = await orderRes.json();
+        if (!orderRes.ok) {
+          throw new Error(orderData.error || 'Failed to create Razorpay Order');
+        }
+
         await initializeRazorpayPayment(
           {
             amount: finalAmount,
@@ -272,6 +282,7 @@ const Checkout = () => {
             name: `${formData.firstName} ${formData.lastName}`,
             description: `Order ${orderId}`,
             address: shippingAddress,
+            orderId: orderData.id,
           },
           async (response) => {
             await saveOrderToDatabase(orderId, 'Razorpay UPI/Card', response.razorpay_payment_id, 'Paid');

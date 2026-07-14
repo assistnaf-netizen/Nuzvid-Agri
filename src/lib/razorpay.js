@@ -50,7 +50,6 @@ export const initializeRazorpayPayment = async (config, onSuccess, onDismiss) =>
     name: 'Nuzvid Agri Farms',
     description: config.description || 'Order Checkout Payment',
     image: 'https://www.nuzvidagrifarms.com/cdn/shop/files/Our_Intro_1200x.jpg?v=1759857682', // logo URL
-    order_id: config.orderId || '', // optional backend order id
     handler: function (response) {
       if (onSuccess) {
         onSuccess(response);
@@ -75,6 +74,10 @@ export const initializeRazorpayPayment = async (config, onSuccess, onDismiss) =>
       color: '#3C1C14', // Brand primary color
     },
   };
+
+  if (config.orderId) {
+    options.order_id = config.orderId;
+  }
 
   const paymentObject = new window.Razorpay(options);
   paymentObject.open();
