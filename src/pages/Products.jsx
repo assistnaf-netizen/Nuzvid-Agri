@@ -53,7 +53,7 @@ const Products = () => {
       cats[p.category] = (cats[p.category] || 0) + 1;
     });
     return cats;
-  }, []);
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -95,7 +95,7 @@ const Products = () => {
     }
 
     return result;
-  }, [category, minPrice, maxPrice, sortOrder, inStockOnly]);
+  }, [products, category, minPrice, maxPrice, sortOrder, inStockOnly]);
 
   return (
     <div className="products-page">
