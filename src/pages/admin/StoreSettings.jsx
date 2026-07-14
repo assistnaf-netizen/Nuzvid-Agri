@@ -58,14 +58,14 @@ const StoreSettings = () => {
     e.preventDefault();
     
     // Save shipping settings to Supabase
-    const { error } = await supabase.from('store_settings').upsert({
-      id: 1,
+    const { error } = await supabase.from('store_settings').update({
       flat_shipping_rate: Number(settings.flatShippingRate),
       free_shipping_threshold: Number(settings.freeShippingThreshold),
       updated_at: new Date().toISOString()
-    });
+    }).eq('id', 1);
 
     if (error) {
+      console.error('Save settings error:', error);
       toast.error('Failed to save settings.');
       return;
     }
