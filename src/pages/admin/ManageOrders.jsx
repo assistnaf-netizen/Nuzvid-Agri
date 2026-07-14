@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { Search, Eye, Download, Filter, ShoppingCart, Clock, CheckCircle, Truck, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -199,7 +200,7 @@ const ManageOrders = () => {
       </div>
 
       {/* Order Detail Modal */}
-      {selectedOrder && (
+      {selectedOrder && ReactDOM.createPortal(
         <div className="admin-modal-overlay" onClick={() => setSelectedOrder(null)}>
           <motion.div
             className="admin-modal"
@@ -366,7 +367,7 @@ const ManageOrders = () => {
             </div>
           </motion.div>
         </div>
-      )}
+      , document.body)}
     </div>
   );
 };
