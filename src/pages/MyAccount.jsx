@@ -302,88 +302,94 @@ const MyAccount = () => {
                 }))}
               </div>
 
-              {/* Order Details Modal */}
-              <AnimatePresence>
-                {selectedOrder && (
-                  <div className="account-modal-overlay" onClick={() => setSelectedOrder(null)}>
-                    <motion.div 
-                      className="account-modal"
-                      onClick={e => e.stopPropagation()}
-                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                    >
-                      <div className="account-modal-header">
-                        <div>
-                          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#1a1d2e' }}>Order {selectedOrder.id}</h3>
-                          <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>Placed on {selectedOrder.date}</p>
-                        </div>
-                        <button className="account-modal-close" onClick={() => setSelectedOrder(null)}>×</button>
-                      </div>
-                      <div className="account-modal-body">
-                        {/* Order Summary Box */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px', marginBottom: '24px', padding: '20px', background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)', borderRadius: '16px', border: '1px solid #e8eaf0' }}>
-                          <div>
-                            <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Status</div>
-                            <span className="order-status-badge" style={{ background: (STATUS_COLORS[selectedOrder.status]||{}).bg, color: (STATUS_COLORS[selectedOrder.status]||{}).color, padding: '6px 14px', fontSize: '13px' }}>{selectedOrder.status}</span>
-                          </div>
-                          <div>
-                            <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Tracking Number</div>
-                            <div style={{ fontSize: '14px', fontWeight: 700, color: '#1a1d2e' }}>{selectedOrder.trackingId}</div>
-                          </div>
-                          <div>
-                            <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Total Amount</div>
-                            <div style={{ fontSize: '18px', fontWeight: 900, color: '#d68d3c' }}>₹{selectedOrder.total.toLocaleString()}</div>
-                          </div>
-                        </div>
-
-                        {/* Order Items */}
-                        <h4 style={{ fontSize: '15px', fontWeight: 800, margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <Package size={18} color="#d68d3c" /> Items in this Order
-                        </h4>
-                        <div style={{ border: '1px solid #e8eaf0', borderRadius: '16px', overflow: 'hidden', marginBottom: '28px', background: '#fff' }}>
-                          {selectedOrder.orderItems.map((item, idx) => (
-                            <div key={idx} style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: idx !== selectedOrder.orderItems.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                <img src={item.image} alt={item.name} style={{ width: '60px', height: '60px', borderRadius: '10px', objectFit: 'cover', border: '1px solid #e8eaf0' }} />
-                                <div>
-                                  <div style={{ fontWeight: 700, fontSize: '15px', color: '#1a1d2e', marginBottom: '2px' }}>{item.name}</div>
-                                  <div style={{ fontSize: '13px', color: '#6b7280' }}>Qty: {item.qty}</div>
-                                </div>
-                              </div>
-                              <div style={{ fontWeight: 800, color: '#1a1d2e' }}>₹{(item.price * item.qty).toLocaleString()}</div>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-                          {/* Shipping Address */}
-                          <div>
-                            <h4 style={{ fontSize: '13px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', margin: '0 0 12px' }}>Shipping Details</h4>
-                            <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '12px', fontSize: '14px', color: '#374151', lineHeight: 1.6, border: '1px solid #f3f4f6' }}>
-                              <strong style={{ color: '#1a1d2e' }}>{profile.fullName}</strong><br/>
-                              {selectedOrder.address}<br/>
-                              Phone: {profile.phone || 'Not provided'}
-                            </div>
-                          </div>
-
-                          {/* Payment Method */}
-                          <div>
-                            <h4 style={{ fontSize: '13px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', margin: '0 0 12px' }}>Payment Method</h4>
-                            <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '12px', fontSize: '14px', color: '#374151', lineHeight: 1.6, border: '1px solid #f3f4f6' }}>
-                              <strong style={{ color: '#1a1d2e' }}>{selectedOrder.paymentMethod}</strong><br/>
-                              <span style={{ color: '#6b7280' }}>Paid in full</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
-                )}
-              </AnimatePresence>
-
             </motion.div>
           )}
+
+          {/* Order Details Modal — rendered at page root level so it overlays correctly */}
+          <AnimatePresence>
+            {selectedOrder && (
+              <div className="account-modal-overlay" onClick={() => setSelectedOrder(null)}>
+                <motion.div 
+                  className="account-modal"
+                  onClick={e => e.stopPropagation()}
+                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                >
+                  <div className="account-modal-header">
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#1a1d2e' }}>Order {selectedOrder.id}</h3>
+                      <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>Placed on {selectedOrder.date}</p>
+                    </div>
+                    <button className="account-modal-close" onClick={() => setSelectedOrder(null)}>×</button>
+                  </div>
+                  <div className="account-modal-body">
+                    {/* Order Summary Box */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px', marginBottom: '24px', padding: '20px', background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)', borderRadius: '16px', border: '1px solid #e8eaf0' }}>
+                      <div>
+                        <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Status</div>
+                        <span className="order-status-badge" style={{ background: (STATUS_COLORS[selectedOrder.status]||{}).bg, color: (STATUS_COLORS[selectedOrder.status]||{}).color, padding: '6px 14px', fontSize: '13px' }}>{selectedOrder.status}</span>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Payment</div>
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#1a1d2e' }}>{selectedOrder.paymentMethod}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Total Amount</div>
+                        <div style={{ fontSize: '18px', fontWeight: 900, color: '#d68d3c' }}>₹{selectedOrder.total.toLocaleString()}</div>
+                      </div>
+                    </div>
+
+                    {/* Order Items */}
+                    <h4 style={{ fontSize: '15px', fontWeight: 800, margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Package size={18} color="#d68d3c" /> Items in this Order
+                    </h4>
+                    <div style={{ border: '1px solid #e8eaf0', borderRadius: '16px', overflow: 'hidden', marginBottom: '28px', background: '#fff' }}>
+                      {selectedOrder.orderItems && selectedOrder.orderItems.length > 0 ? selectedOrder.orderItems.map((item, idx) => (
+                        <div key={idx} style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: idx !== selectedOrder.orderItems.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            {item.image ? (
+                              <img src={item.image} alt={item.name} style={{ width: '60px', height: '60px', borderRadius: '10px', objectFit: 'cover', border: '1px solid #e8eaf0' }} />
+                            ) : (
+                              <div style={{ width: '60px', height: '60px', background: '#f3f4f6', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>📦</div>
+                            )}
+                            <div>
+                              <div style={{ fontWeight: 700, fontSize: '15px', color: '#1a1d2e', marginBottom: '2px' }}>{item.name}</div>
+                              <div style={{ fontSize: '13px', color: '#6b7280' }}>Qty: {item.qty} × ₹{item.price.toLocaleString()}</div>
+                            </div>
+                          </div>
+                          <div style={{ fontWeight: 800, color: '#1a1d2e' }}>₹{(item.price * item.qty).toLocaleString()}</div>
+                        </div>
+                      )) : (
+                        <div style={{ padding: '20px', textAlign: 'center', color: '#6b7280' }}>No items found</div>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+                      {/* Shipping Address */}
+                      <div>
+                        <h4 style={{ fontSize: '13px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', margin: '0 0 12px' }}>Shipping Details</h4>
+                        <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '12px', fontSize: '14px', color: '#374151', lineHeight: 1.6, border: '1px solid #f3f4f6' }}>
+                          <strong style={{ color: '#1a1d2e' }}>{profile.fullName}</strong><br/>
+                          {selectedOrder.address}<br/>
+                        </div>
+                      </div>
+                      {/* Payment Method */}
+                      <div>
+                        <h4 style={{ fontSize: '13px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', margin: '0 0 12px' }}>Payment Method</h4>
+                        <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '12px', fontSize: '14px', color: '#374151', lineHeight: 1.6, border: '1px solid #f3f4f6' }}>
+                          <strong style={{ color: '#1a1d2e' }}>{selectedOrder.paymentMethod}</strong><br/>
+                          <span style={{ color: '#6b7280' }}>Paid in full</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+
 
           {activeTab === 'address' && (
             <motion.div key="address" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
