@@ -41,9 +41,9 @@ const Footer = () => {
               <p><Mail size={16} /> assist.naf@gmail.com</p>
             </div>
             <div className="social-links">
-              <a href="#"><FaFacebook size={18} /></a>
-              <a href="#"><FaInstagram size={18} /></a>
-              <a href="#"><FaYoutube size={18} /></a>
+              <a href="https://www.facebook.com/profile.php?id=61579403908868" target="_blank" rel="noopener noreferrer"><FaFacebook size={18} /></a>
+              <a href="https://www.instagram.com/nuzvidagrifarms/" target="_blank" rel="noopener noreferrer"><FaInstagram size={18} /></a>
+              <a href="https://www.youtube.com/@NuzvidAgriFarms" target="_blank" rel="noopener noreferrer"><FaYoutube size={18} /></a>
             </div>
           </div>
 
