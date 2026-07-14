@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Package, MapPin, Phone, Mail, Edit3, Save, LogOut, ChevronRight, ShoppingBag, Heart, Lock, Key } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -305,9 +306,9 @@ const MyAccount = () => {
             </motion.div>
           )}
 
-          {/* Order Details Modal — rendered at page root level so it overlays correctly */}
+          {/* Order Details Modal — rendered via portal to document.body so position:fixed works correctly */}
           <AnimatePresence>
-            {selectedOrder && (
+            {selectedOrder && ReactDOM.createPortal(
               <div className="account-modal-overlay" onClick={() => setSelectedOrder(null)}>
                 <motion.div 
                   className="account-modal"
@@ -386,7 +387,7 @@ const MyAccount = () => {
                   </div>
                 </motion.div>
               </div>
-            )}
+            , document.body)}
           </AnimatePresence>
 
 
