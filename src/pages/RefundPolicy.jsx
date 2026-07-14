@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useSEO from '../hooks/useSEO';
-import './RefundPolicy.css';
+import './Policy.css';
 
 const RefundPolicy = () => {
   useSEO({ title: 'Refund Policy', description: 'Returns, Refunds & Exchanges Policy – Nuzvid Agri Farms' });
