@@ -196,7 +196,9 @@ const Checkout = () => {
 
   const saveOrderToDatabase = async (orderId, paymentMethodStr, paymentIdStr = null, paymentStatusStr) => {
     try {
-      const { data: orderData, error: orderError } = await supabase.from('orders').insert([{
+      console.log('[Order] Saving order to DB...', { orderId, paymentMethodStr, paymentStatusStr, finalAmount });
+      
+      const orderPayload = {
         user_id: user.id,
         display_id: orderId,
         status: 'Pending',
@@ -208,10 +210,18 @@ const Checkout = () => {
         customer_name: `${formData.firstName} ${formData.lastName}`,
         customer_email: formData.email,
         customer_phone: formData.phone
-      }]).select();
-
-      if (orderError) throw orderError;
+      };
       
+      console.log('[Order] Payload:', orderPayload);
+      
+      const { data: orderData, error: orderError } = await supabase.from('orders').insert([orderPayload]).select();
+
+      if (orderError) {
+        console.error('[Order] DB insert error:', orderError);
+        throw orderError;
+      }
+      
+      console.log('[Order] Order saved:', orderData);
       const realOrderId = orderData[0].id;
 
       const itemsToInsert = cartItems.map(item => ({
@@ -222,9 +232,14 @@ const Checkout = () => {
         product_title: item.title,
         product_image: item.image
       }));
+      
+      console.log('[Order] Inserting items:', itemsToInsert);
 
       const { error: itemsError } = await supabase.from('order_items').insert(itemsToInsert);
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        console.error('[Order] Items insert error:', itemsError);
+        throw itemsError;
+      }
       
       if (appliedCouponId) {
         const { data: couponData } = await supabase.from('coupons').select('usage_count').eq('id', appliedCouponId).single();
@@ -242,10 +257,11 @@ const Checkout = () => {
         }
       }
 
+      console.log('[Order] All done!');
       return true;
     } catch (err) {
-      console.error('Failed to save order:', err);
-      toast.error('Order processed but failed to save to database. Please contact support.');
+      console.error('[Order] Failed to save order:', err);
+      toast.error(`Order processed but failed to save: ${err.message}. Please contact support with Payment ID.`);
       return false;
     }
   };
