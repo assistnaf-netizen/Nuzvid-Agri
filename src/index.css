@@ -65,7 +65,7 @@ html, body {
 }
 
 /* Page fade-in on load */
-#root {
+.main-content {
   animation: pageFadeIn 0.5s ease forwards;
 }
 
