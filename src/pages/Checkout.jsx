@@ -196,8 +196,8 @@ const Checkout = () => {
 
   const saveOrderToDatabase = async (orderId, paymentMethodStr, paymentIdStr = null, paymentStatusStr) => {
     try {
-      console.log('[Order] Saving order to DB...', { orderId, paymentMethodStr, paymentStatusStr, finalAmount });
-      
+      console.log('[Order] Saving order via backend API...', { orderId, paymentMethodStr, paymentStatusStr, finalAmount });
+
       const orderPayload = {
         user_id: user.id,
         display_id: orderId,
@@ -211,36 +211,29 @@ const Checkout = () => {
         customer_email: formData.email,
         customer_phone: formData.phone
       };
-      
-      console.log('[Order] Payload:', orderPayload);
-      
-      const { data: orderData, error: orderError } = await supabase.from('orders').insert([orderPayload]).select();
 
-      if (orderError) {
-        console.error('[Order] DB insert error:', orderError);
-        throw orderError;
-      }
-      
-      console.log('[Order] Order saved:', orderData);
-      const realOrderId = orderData[0].id;
-
-      const itemsToInsert = cartItems.map(item => ({
-        order_id: realOrderId,
+      const itemsPayload = cartItems.map(item => ({
         product_id: item.id,
         quantity: item.quantity,
         price_at_time: item.price,
         product_title: item.title,
         product_image: item.image
       }));
-      
-      console.log('[Order] Inserting items:', itemsToInsert);
 
-      const { error: itemsError } = await supabase.from('order_items').insert(itemsToInsert);
-      if (itemsError) {
-        console.error('[Order] Items insert error:', itemsError);
-        throw itemsError;
+      const saveRes = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'save_order', orderPayload, itemsPayload })
+      });
+
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) {
+        throw new Error(saveData.error || 'Failed to save order');
       }
-      
+
+      console.log('[Order] Order saved successfully via backend:', saveData);
+
+      // Update coupon usage
       if (appliedCouponId) {
         const { data: couponData } = await supabase.from('coupons').select('usage_count').eq('id', appliedCouponId).single();
         if (couponData) {
@@ -248,23 +241,14 @@ const Checkout = () => {
         }
       }
 
-      // Deduct inventory stock
-      for (const item of cartItems) {
-        const { data: productData } = await supabase.from('products').select('stock_quantity').eq('id', item.id).single();
-        if (productData && productData.stock_quantity !== null && productData.stock_quantity !== undefined) {
-          const newStock = Math.max(0, productData.stock_quantity - item.quantity);
-          await supabase.from('products').update({ stock_quantity: newStock }).eq('id', item.id);
-        }
-      }
-
-      console.log('[Order] All done!');
       return true;
     } catch (err) {
       console.error('[Order] Failed to save order:', err);
-      toast.error(`Order processed but failed to save: ${err.message}. Please contact support with Payment ID.`);
+      toast.error(`Order processed but failed to save: ${err.message}. Please contact support with your Payment ID.`);
       return false;
     }
   };
+
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
