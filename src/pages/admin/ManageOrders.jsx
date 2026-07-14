@@ -43,7 +43,12 @@ const ManageOrders = () => {
         customer: o.customer_name || 'Unknown',
         avatar: (o.customer_name || 'UN').substring(0, 2).toUpperCase(),
         email: o.customer_email || '',
+        phone: o.customer_phone || '',
+        address: o.shipping_address || '',
+        paymentId: o.payment_id || '',
+        paymentMethod: o.payment_method || '',
         date: new Date(o.created_at).toLocaleDateString(),
+        dateTime: new Date(o.created_at).toLocaleString(),
         total: Number(o.total_amount),
         paymentStatus: o.payment_status,
         status: o.status,
@@ -202,72 +207,102 @@ const ManageOrders = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: '600px', width: '90%' }}
+            style={{ maxWidth: '680px', width: '95%', maxHeight: '90vh', overflowY: 'auto' }}
           >
-            <div className="admin-modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', paddingBottom: '16px', marginBottom: '16px' }}>
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #e5e7eb', paddingBottom: '16px', marginBottom: '20px' }}>
               <div>
-                <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0, color: '#1a1d2e' }}>Order {selectedOrder.id}</h2>
-                <p style={{ margin: 0, color: '#6b7280', fontSize: '13px' }}>{selectedOrder.date}</p>
+                <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px', color: '#1a1d2e' }}>Order {selectedOrder.id}</h2>
+                <p style={{ margin: 0, color: '#6b7280', fontSize: '13px' }}>Placed on {selectedOrder.dateTime}</p>
               </div>
-              <button onClick={() => setSelectedOrder(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#9ca3af' }}>&times;</button>
+              <button onClick={() => setSelectedOrder(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#9ca3af', lineHeight: 1 }}>&times;</button>
             </div>
 
-            <div className="admin-modal-body" style={{ display: 'grid', gap: '20px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px' }}>
-                  <h4 style={{ margin: '0 0 8px', fontSize: '14px', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '1px' }}>Customer</h4>
-                  <div style={{ fontWeight: 600, color: '#1a1d2e' }}>{selectedOrder.customer}</div>
-                  <div style={{ color: '#6b7280', fontSize: '14px' }}>{selectedOrder.email}</div>
+            <div style={{ display: 'grid', gap: '16px' }}>
+
+              {/* Customer + Contact */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '10px', border: '1px solid #e5e7eb' }}>
+                  <h4 style={{ margin: '0 0 10px', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>👤 Customer</h4>
+                  <div style={{ fontWeight: 700, color: '#1a1d2e', fontSize: '15px' }}>{selectedOrder.customer}</div>
+                  <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '4px' }}>{selectedOrder.email}</div>
+                  {selectedOrder.phone && <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '2px' }}>📞 {selectedOrder.phone}</div>}
                 </div>
-                <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px' }}>
-                  <h4 style={{ margin: '0 0 8px', fontSize: '14px', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '1px' }}>Payment</h4>
-                  <div style={{ fontWeight: 600, color: '#1a1d2e' }}>{selectedOrder.paymentStatus}</div>
-                  <div style={{ color: '#6b7280', fontSize: '14px' }}>Total: ₹{selectedOrder.total.toLocaleString()}</div>
+                <div style={{ background: '#f0fdf4', padding: '16px', borderRadius: '10px', border: '1px solid #d1fae5' }}>
+                  <h4 style={{ margin: '0 0 10px', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>💳 Payment</h4>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className={`admin-badge ${PAYMENT_CONFIG[selectedOrder.paymentStatus] || 'admin-badge-gray'}`}>{selectedOrder.paymentStatus}</span>
+                  </div>
+                  <div style={{ color: '#374151', fontSize: '13px', marginTop: '8px', fontWeight: 600 }}>Method: {selectedOrder.paymentMethod}</div>
+                  <div style={{ fontWeight: 800, color: '#10b981', fontSize: '18px', marginTop: '4px' }}>₹{selectedOrder.total.toLocaleString()}</div>
+                  {selectedOrder.paymentId && <div style={{ color: '#9ca3af', fontSize: '11px', marginTop: '4px', wordBreak: 'break-all' }}>ID: {selectedOrder.paymentId}</div>}
                 </div>
               </div>
 
-              <div>
-                <h4 style={{ margin: '0 0 12px', fontSize: '14px', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '1px' }}>Status</h4>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span className={`admin-badge ${STATUS_CONFIG[selectedOrder.status]?.badge || 'admin-badge-gray'}`} style={{ padding: '8px 16px', fontSize: '14px' }}>
+              {/* Shipping Address */}
+              {selectedOrder.address && (
+                <div style={{ background: '#fffbeb', padding: '16px', borderRadius: '10px', border: '1px solid #fde68a' }}>
+                  <h4 style={{ margin: '0 0 8px', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>📦 Shipping Address</h4>
+                  <div style={{ color: '#374151', fontSize: '14px', lineHeight: '1.5' }}>{selectedOrder.address}</div>
+                </div>
+              )}
+
+              {/* Order Status */}
+              <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '10px', border: '1px solid #e5e7eb' }}>
+                <h4 style={{ margin: '0 0 12px', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>🚚 Order Status</h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span className={`admin-badge ${STATUS_CONFIG[selectedOrder.status]?.badge || 'admin-badge-gray'}`} style={{ padding: '6px 14px', fontSize: '13px' }}>
                     {selectedOrder.status}
                   </span>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Change to:</span>
                   <select
                     value={selectedOrder.status}
                     onChange={e => handleStatusChange(selectedOrder.id, e.target.value)}
-                    style={{ padding: '8px', borderRadius: '6px', border: '1px solid #d1d5db' }}
+                    style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '13px', cursor: 'pointer' }}
                   >
                     {['Pending','Processing','Shipped','Delivered'].map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
               </div>
 
+              {/* Items */}
               <div>
-                <h4 style={{ margin: '0 0 12px', fontSize: '14px', color: '#4b5563', textTransform: 'uppercase', letterSpacing: '1px' }}>Items ({selectedOrder.items})</h4>
+                <h4 style={{ margin: '0 0 12px', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>🛒 Items Ordered ({selectedOrder.items})</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {selectedOrder.rawItems && selectedOrder.rawItems.length > 0 ? (
-                    selectedOrder.rawItems.map(item => (
-                      <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: '#f9fafb', padding: '12px', borderRadius: '8px' }}>
-                        <img src={item.product_image} alt={item.product_title} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }} />
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontWeight: 600, color: '#1a1d2e', fontSize: '14px' }}>{item.product_title}</div>
-                          <div style={{ color: '#6b7280', fontSize: '13px' }}>Qty: {item.quantity} × ₹{Number(item.price_at_time).toLocaleString()}</div>
+                    selectedOrder.rawItems.map((item, idx) => (
+                      <div key={item.id || idx} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: '#f9fafb', padding: '14px', borderRadius: '10px', border: '1px solid #e5e7eb' }}>
+                        {item.product_image ? (
+                          <img src={item.product_image} alt={item.product_title} style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }} />
+                        ) : (
+                          <div style={{ width: '56px', height: '56px', background: '#e5e7eb', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0 }}>📦</div>
+                        )}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontWeight: 700, color: '#1a1d2e', fontSize: '14px' }}>{item.product_title || 'Product'}</div>
+                          <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '3px' }}>Qty: {item.quantity} × ₹{Number(item.price_at_time).toLocaleString()}</div>
                         </div>
-                        <div style={{ fontWeight: 700, color: '#1a1d2e' }}>
+                        <div style={{ fontWeight: 800, color: '#1a1d2e', fontSize: '15px', flexShrink: 0 }}>
                           ₹{(item.quantity * Number(item.price_at_time)).toLocaleString()}
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', color: '#6b7280', fontSize: '14px' }}>
-                      <p style={{ margin: 0 }}>No items found for this order.</p>
-                    </div>
+                    <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '10px', color: '#6b7280', fontSize: '14px', textAlign: 'center' }}>No items found</div>
                   )}
                 </div>
+
+                {/* Order Total Summary */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px', paddingTop: '12px', borderTop: '2px solid #e5e7eb' }}>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#6b7280', fontSize: '13px' }}>Order Total</div>
+                    <div style={{ fontWeight: 800, color: '#1a1d2e', fontSize: '22px' }}>₹{selectedOrder.total.toLocaleString()}</div>
+                  </div>
+                </div>
               </div>
+
             </div>
 
-            <div className="admin-modal-footer" style={{ borderTop: '1px solid #e5e7eb', paddingTop: '16px', marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '16px', marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
               <button className="admin-btn-secondary" onClick={() => setSelectedOrder(null)}>Close</button>
             </div>
           </motion.div>
