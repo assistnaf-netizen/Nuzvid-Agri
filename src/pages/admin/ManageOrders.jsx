@@ -35,6 +35,10 @@ const ManageOrders = () => {
 
   const handlePrint = (order) => {
     const printWindow = window.open('', '_blank');
+    const actualSubtotal = order.rawItems?.reduce((acc, item) => acc + (Number(item.price_at_time) * item.quantity), 0) || 0;
+    const shippingFee = actualSubtotal >= 3000 ? 0 : 100;
+    const discountAmount = order.total <= 10 ? 0 : Math.max(0, actualSubtotal + shippingFee - order.total);
+
     printWindow.document.write(`
       <html>
         <head>
@@ -103,11 +107,15 @@ const ManageOrders = () => {
                 `).join('')}
                 <tr class="total-row">
                   <td colspan="3" style="text-align: right; border: none; padding-top: 20px;">Subtotal:</td>
-                  <td style="border: none; padding-top: 20px;">₹${(order.total - (order.total > 3000 ? 0 : 100)).toLocaleString()}</td>
+                  <td style="border: none; padding-top: 20px;">₹${actualSubtotal.toLocaleString()}</td>
+                </tr>
+                <tr class="total-row">
+                  <td colspan="3" style="text-align: right; border: none;">Coupon Discount:</td>
+                  <td style="border: none; color: #dc2626;">- ₹${discountAmount.toLocaleString()}</td>
                 </tr>
                 <tr class="total-row">
                   <td colspan="3" style="text-align: right; border: none;">Shipping:</td>
-                  <td style="border: none;">₹${(order.total > 3000 ? 0 : 100).toLocaleString()}</td>
+                  <td style="border: none;">₹${shippingFee.toLocaleString()}</td>
                 </tr>
                 <tr class="total-row grand-total">
                   <td colspan="3" style="text-align: right; border: none;">Grand Total:</td>
@@ -660,26 +668,36 @@ const ManageOrders = () => {
                 </div>
 
                 <div className="price-breakdown-card">
-                  <div className="breakdown-row">
-                    <span>Subtotal</span>
-                    <span className="text-bold">₹{(selectedOrder.total - (selectedOrder.total >= 3000 ? 0 : 100)).toLocaleString()}</span>
-                  </div>
-                  <div className="breakdown-row">
-                    <span>Coupon Discount</span>
-                    <span className="text-bold text-red">- ₹0</span>
-                  </div>
-                  <div className="breakdown-row">
-                    <span>Shipping Fee</span>
-                    <span className="text-bold">₹{(selectedOrder.total >= 3000 ? 0 : 100).toLocaleString()}</span>
-                  </div>
-                  <div className="breakdown-row">
-                    <span>Tax (GST Included)</span>
-                    <span className="text-bold">₹{Math.round(selectedOrder.total * 0.18).toLocaleString()}</span>
-                  </div>
-                  <div className="breakdown-row">
-                    <span>Platform Fee</span>
-                    <span className="text-bold">₹0</span>
-                  </div>
+                  {(() => {
+                    const actualSubtotal = selectedOrder.rawItems?.reduce((acc, item) => acc + (Number(item.price_at_time) * item.quantity), 0) || 0;
+                    const shippingFee = actualSubtotal >= 3000 ? 0 : 100;
+                    const discountAmount = selectedOrder.total <= 10 ? 0 : Math.max(0, actualSubtotal + shippingFee - selectedOrder.total);
+                    
+                    return (
+                      <>
+                        <div className="breakdown-row">
+                          <span>Subtotal</span>
+                          <span className="text-bold">₹{actualSubtotal.toLocaleString()}</span>
+                        </div>
+                        <div className="breakdown-row">
+                          <span>Coupon Discount</span>
+                          <span className="text-bold text-red">- ₹{discountAmount.toLocaleString()}</span>
+                        </div>
+                        <div className="breakdown-row">
+                          <span>Shipping Fee</span>
+                          <span className="text-bold">₹{shippingFee.toLocaleString()}</span>
+                        </div>
+                        <div className="breakdown-row">
+                          <span>Tax (GST Included)</span>
+                          <span className="text-bold">₹{Math.round(actualSubtotal * 0.18).toLocaleString()}</span>
+                        </div>
+                        <div className="breakdown-row">
+                          <span>Platform Fee</span>
+                          <span className="text-bold">₹0</span>
+                        </div>
+                      </>
+                    );
+                  })()}
                   <div className="breakdown-row total">
                     <span>Grand Total</span>
                     <span className="text-green text-bold">₹{selectedOrder.total.toLocaleString()}</span>
