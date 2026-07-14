@@ -17,6 +17,7 @@ const AdminAuth = () => {
     setTimeout(() => {
       if (email === 'admin@nuzvidagrifarms.com' && password === 'admin123') {
         const mockAdmin = {
+          id: '00000000-0000-0000-0000-000000000001', // Stable admin ID for DB operations
           email: email,
           user_metadata: {
             full_name: 'Farm Admin',
