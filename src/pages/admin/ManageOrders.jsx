@@ -172,12 +172,14 @@ const ManageOrders = () => {
     if (!order) return;
     
     try {
-      const { error } = await supabase
-        .from('orders')
-        .update({ status: newStatus })
-        .eq('id', order.db_id);
-        
-      if (error) throw error;
+      const res = await fetch('/api/update-order-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.db_id, status: newStatus })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update order');
+
       
       setOrders(orders.map(o => o.id === id ? { ...o, status: newStatus } : o));
       if (selectedOrder && selectedOrder.id === id) {
