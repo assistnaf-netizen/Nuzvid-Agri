@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Save, Store, Truck, CreditCard, Bell, Shield, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { supabase } from '../../lib/supabase';
 import './admin.css';
 
 const TABS = [
@@ -34,13 +35,41 @@ const StoreSettings = () => {
     lowStockThreshold: 10,
   });
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data, error } = await supabase.from('store_settings').select('*').eq('id', 1).single();
+      if (data) {
+        setSettings(prev => ({
+          ...prev,
+          flatShippingRate: data.flat_shipping_rate,
+          freeShippingThreshold: data.free_shipping_threshold
+        }));
+      }
+    };
+    fetchSettings();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setSettings(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
+    
+    // Save shipping settings to Supabase
+    const { error } = await supabase.from('store_settings').upsert({
+      id: 1,
+      flat_shipping_rate: Number(settings.flatShippingRate),
+      free_shipping_threshold: Number(settings.freeShippingThreshold),
+      updated_at: new Date().toISOString()
+    });
+
+    if (error) {
+      toast.error('Failed to save settings.');
+      return;
+    }
+
     setSaved(true);
     toast.success('Settings saved successfully!');
     setTimeout(() => setSaved(false), 3000);

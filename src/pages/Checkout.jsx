@@ -34,9 +34,21 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [appliedCouponId, setAppliedCouponId] = useState(null);
+  
+  const [shippingSettings, setShippingSettings] = useState({ base: 100, threshold: 3000 });
+
+  useEffect(() => {
+    const fetchShipping = async () => {
+      const { data } = await supabase.from('store_settings').select('flat_shipping_rate, free_shipping_threshold').eq('id', 1).single();
+      if (data) {
+        setShippingSettings({ base: data.flat_shipping_rate, threshold: data.free_shipping_threshold });
+      }
+    };
+    fetchShipping();
+  }, []);
 
   const total = totalAmount;
-  const shippingCost = total > 3000 ? 0 : 100;
+  const shippingCost = total > shippingSettings.threshold ? 0 : shippingSettings.base;
   const finalAmount = total + shippingCost - discount;
 
   const handleApplyCoupon = async () => {

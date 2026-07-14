@@ -17,9 +17,18 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(3000);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
+
+  useEffect(() => {
+    const fetchShipping = async () => {
+      const { data } = await supabase.from('store_settings').select('free_shipping_threshold').eq('id', 1).single();
+      if (data) setFreeShippingThreshold(data.free_shipping_threshold);
+    };
+    fetchShipping();
+  }, []);
 
   useSEO({
     title: product ? product.title : 'Loading Product...',
@@ -350,7 +359,7 @@ const ProductDetail = () => {
                 <h4>Shipping Information</h4>
                 <p>We process all orders within 24 hours. Standard shipping takes 3-5 business days depending on your location.</p>
                 <ul>
-                  <li>Free shipping on orders over ₹3000.</li>
+                  <li>Free shipping on orders over ₹{freeShippingThreshold}.</li>
                   <li>Tracking number provided for all orders.</li>
                   <li>Secure and eco-friendly packaging.</li>
                 </ul>
