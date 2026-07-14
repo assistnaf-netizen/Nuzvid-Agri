@@ -732,26 +732,53 @@ const MyAccount = () => {
                         </div>
 
                         <div className="price-breakdown-card">
-                          <div className="breakdown-row">
-                            <span>Subtotal</span>
-                            <span className="text-bold">₹{(selectedOrder.total - (selectedOrder.total >= 3000 ? 0 : 100)).toLocaleString()}</span>
-                          </div>
-                          <div className="breakdown-row">
-                            <span>Coupon Discount</span>
-                            <span className="text-bold text-red">- ₹0</span>
-                          </div>
-                          <div className="breakdown-row">
-                            <span>Shipping Fee</span>
-                            <span className="text-bold">₹{(selectedOrder.total >= 3000 ? 0 : 100).toLocaleString()}</span>
-                          </div>
-                          <div className="breakdown-row">
-                            <span>Tax (GST Included)</span>
-                            <span className="text-bold">₹{Math.round(selectedOrder.total * 0.18).toLocaleString()}</span>
-                          </div>
-                          <div className="breakdown-row">
-                            <span>Platform Fee</span>
-                            <span className="text-bold">₹0</span>
-                          </div>
+                          {(() => {
+                            const actualSubtotal = selectedOrder.orderItems?.reduce((acc, item) => acc + (Number(item.price) * item.qty), 0) || 0;
+                            const shippingFee = actualSubtotal >= 3000 ? 0 : 100;
+                            const expected = actualSubtotal + shippingFee;
+                            
+                            let deducedPlatformFee = 0;
+                            let deducedDiscount = 0;
+                            
+                            if (selectedOrder.total > expected) {
+                              deducedPlatformFee = selectedOrder.total - expected;
+                            } else if (selectedOrder.total < expected && selectedOrder.total > 10) {
+                              deducedDiscount = expected - selectedOrder.total;
+                              // Assume a base 5 platform fee is hidden in the discount for new orders
+                              if (deducedDiscount % 5 !== 0 && deducedDiscount > 5) {
+                                deducedPlatformFee = 5;
+                                deducedDiscount = expected + 5 - selectedOrder.total;
+                              }
+                            } else if (selectedOrder.total <= 10) {
+                               // test orders
+                               deducedDiscount = 0;
+                            }
+
+                            return (
+                              <>
+                                <div className="breakdown-row">
+                                  <span>Subtotal</span>
+                                  <span className="text-bold">₹{actualSubtotal.toLocaleString()}</span>
+                                </div>
+                                {deducedDiscount > 0 && (
+                                  <div className="breakdown-row">
+                                    <span>Coupon Discount</span>
+                                    <span className="text-bold text-red">- ₹{deducedDiscount.toLocaleString()}</span>
+                                  </div>
+                                )}
+                                <div className="breakdown-row">
+                                  <span>Shipping Fee</span>
+                                  <span className="text-bold">₹{shippingFee.toLocaleString()}</span>
+                                </div>
+                                {(deducedPlatformFee > 0 || selectedOrder.total === expected) && (
+                                  <div className="breakdown-row">
+                                    <span>Platform Fee</span>
+                                    <span className="text-bold">₹{deducedPlatformFee > 0 ? deducedPlatformFee.toLocaleString() : '0'}</span>
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
                           <div className="breakdown-row total">
                             <span>Grand Total</span>
                             <span className="text-green text-bold">₹{selectedOrder.total.toLocaleString()}</span>

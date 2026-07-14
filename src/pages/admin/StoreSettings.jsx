@@ -56,6 +56,7 @@ const StoreSettings = () => {
     flatShippingRate: 100,
     freeShippingThreshold: 3000,
     expressShippingRate: 150,
+    platformFee: 5,
     taxRate: 5,
     codEnabled: true,
     upiEnabled: true,
@@ -73,7 +74,8 @@ const StoreSettings = () => {
         setSettings(prev => ({
           ...prev,
           flatShippingRate: data.flat_shipping_rate,
-          freeShippingThreshold: data.free_shipping_threshold
+          freeShippingThreshold: data.free_shipping_threshold,
+          platformFee: data.platform_fee !== undefined ? data.platform_fee : 5
         }));
       }
     };
@@ -92,6 +94,7 @@ const StoreSettings = () => {
     const { error } = await supabase.from('store_settings').update({
       flat_shipping_rate: Number(settings.flatShippingRate),
       free_shipping_threshold: Number(settings.freeShippingThreshold),
+      platform_fee: Number(settings.platformFee),
       updated_at: new Date().toISOString()
     }).eq('id', 1);
 
@@ -161,9 +164,12 @@ const StoreSettings = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0 20px' }}>
                   <InputField label="Flat Shipping Rate" name="flatShippingRate" value={settings.flatShippingRate} onChange={handleChange} type="number" prefix="₹" />
                   <InputField label="Free Shipping Above" name="freeShippingThreshold" value={settings.freeShippingThreshold} onChange={handleChange} type="number" prefix="₹" />
-                  <InputField label="Express Shipping Rate" name="expressShippingRate" value={settings.expressShippingRate} onChange={handleChange} type="number" prefix="₹" />
+                  <InputField label="Platform Fee (Per Order)" name="platformFee" value={settings.platformFee} onChange={handleChange} type="number" prefix="₹" />
                 </div>
-                <InputField label="Default Tax Rate (%)" name="taxRate" value={settings.taxRate} onChange={handleChange} type="number" />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 20px' }}>
+                  <InputField label="Express Shipping Rate" name="expressShippingRate" value={settings.expressShippingRate} onChange={handleChange} type="number" prefix="₹" />
+                  <InputField label="Default Tax Rate (%)" name="taxRate" value={settings.taxRate} onChange={handleChange} type="number" />
+                </div>
                 <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <Shield size={20} color="#16a34a" style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>

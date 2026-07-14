@@ -38,22 +38,27 @@ const Checkout = () => {
   const [discount, setDiscount] = useState(0);
   const [appliedCouponId, setAppliedCouponId] = useState(null);
   
-  const [shippingSettings, setShippingSettings] = useState({ base: 100, threshold: 3000 });
+  const [storeSettings, setStoreSettings] = useState({ base: 100, threshold: 3000, platformFee: 5 });
 
   useEffect(() => {
-    const fetchShipping = async () => {
-      const { data } = await supabase.from('store_settings').select('flat_shipping_rate, free_shipping_threshold').eq('id', 1).single();
+    const fetchSettings = async () => {
+      const { data } = await supabase.from('store_settings').select('*').eq('id', 1).single();
       if (data) {
-        setShippingSettings({ base: data.flat_shipping_rate, threshold: data.free_shipping_threshold });
+        setStoreSettings({ 
+          base: data.flat_shipping_rate, 
+          threshold: data.free_shipping_threshold,
+          platformFee: data.platform_fee !== undefined ? data.platform_fee : 5
+        });
       }
     };
-    fetchShipping();
+    fetchSettings();
   }, []);
 
   const allFreeShipping = cartItems.length > 0 && cartItems.every(item => item.isFreeShipping);
   const total = totalAmount;
-  const shippingCost = (allFreeShipping || total > shippingSettings.threshold) ? 0 : shippingSettings.base;
-  const finalAmount = total + shippingCost - discount;
+  const shippingCost = (allFreeShipping || total > storeSettings.threshold) ? 0 : storeSettings.base;
+  const platformFee = storeSettings.platformFee;
+  const finalAmount = total + shippingCost + platformFee - discount;
 
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
@@ -499,6 +504,10 @@ const Checkout = () => {
               <div className="total-row">
                 <span>Shipping</span>
                 <span>{shippingCost === 0 ? 'Free' : `₹${shippingCost}`}</span>
+              </div>
+              <div className="total-row">
+                <span>Platform Fee</span>
+                <span>₹{platformFee}</span>
               </div>
               {discount > 0 && (
                 <div className="total-row discount-row">
