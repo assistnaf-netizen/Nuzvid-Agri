@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { Search, Eye, Download, Filter, ShoppingCart, Clock, CheckCircle, Truck, Package, Copy, Printer, RefreshCcw, User, MapPin, CreditCard, DollarSign, Phone, Mail } from 'lucide-react';
+import { Search, Eye, Download, Filter, ShoppingCart, ShoppingBag, Clock, CheckCircle, Truck, Package, Copy, Printer, RefreshCcw, User, MapPin, CreditCard, DollarSign, Phone, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
