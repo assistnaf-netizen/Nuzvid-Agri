@@ -5,6 +5,37 @@ import toast from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
 import './admin.css';
 
+const InputField = ({ label, name, type = 'text', prefix, value, onChange, ...rest }) => (
+    <div style={{ marginBottom: '20px' }}>
+      <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#374151', marginBottom: '8px', letterSpacing: '0.2px' }}>{label}</label>
+      <div style={{ position: 'relative' }}>
+        {prefix && <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#6b7280', fontSize: '14px' }}>{prefix}</span>}
+        <input
+          type={type} name={name} value={value} onChange={onChange}
+          style={{ width: '100%', padding: prefix ? '12px 14px 12px 36px' : '12px 14px', border: '1px solid #e5e7eb', borderRadius: '10px', fontSize: '14px', background: '#f9fafb', color: '#1a1d2e', outline: 'none', transition: 'all 0.2s' }}
+          onFocus={e => { e.target.style.borderColor = '#d68d3c'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(214,141,60,0.1)'; }}
+          onBlur={e => { e.target.style.borderColor = '#e5e7eb'; e.target.style.background = '#f9fafb'; e.target.style.boxShadow = 'none'; }}
+          {...rest}
+        />
+      </div>
+    </div>
+  );
+
+  const Toggle = ({ label, name, description, checked, onChange }) => (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', border: '1px solid #e5e7eb', borderRadius: '12px', background: checked ? 'rgba(214,141,60,0.04)' : 'white', marginBottom: '12px', transition: 'all 0.2s', borderColor: checked ? '#d68d3c40' : '#e5e7eb' }}>
+      <div>
+        <div style={{ fontWeight: 700, color: '#1a1d2e', fontSize: '14px' }}>{label}</div>
+        {description && <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>{description}</div>}
+      </div>
+      <label style={{ position: 'relative', display: 'inline-block', width: '48px', height: '26px', cursor: 'pointer' }}>
+        <input type="checkbox" name={name} checked={checked} onChange={onChange} style={{ opacity: 0, width: 0, height: 0 }} />
+        <span style={{ position: 'absolute', inset: 0, background: checked ? '#d68d3c' : '#d1d5db', borderRadius: '13px', transition: 'all 0.3s' }}>
+          <span style={{ position: 'absolute', width: '20px', height: '20px', background: 'white', borderRadius: '50%', top: '3px', left: checked ? '25px' : '3px', transition: 'all 0.3s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }}></span>
+        </span>
+      </label>
+    </div>
+  );
+
 const TABS = [
   { id: 'general',   label: 'General',  icon: <Store size={16}/> },
   { id: 'shipping',  label: 'Shipping', icon: <Truck size={16}/> },
@@ -75,37 +106,6 @@ const StoreSettings = () => {
     setTimeout(() => setSaved(false), 3000);
   };
 
-  const InputField = ({ label, name, type = 'text', prefix, ...rest }) => (
-    <div style={{ marginBottom: '20px' }}>
-      <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#374151', marginBottom: '8px', letterSpacing: '0.2px' }}>{label}</label>
-      <div style={{ position: 'relative' }}>
-        {prefix && <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#6b7280', fontSize: '14px' }}>{prefix}</span>}
-        <input
-          type={type} name={name} value={settings[name]} onChange={handleChange}
-          style={{ width: '100%', padding: prefix ? '12px 14px 12px 36px' : '12px 14px', border: '1px solid #e5e7eb', borderRadius: '10px', fontSize: '14px', background: '#f9fafb', color: '#1a1d2e', outline: 'none', transition: 'all 0.2s' }}
-          onFocus={e => { e.target.style.borderColor = '#d68d3c'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(214,141,60,0.1)'; }}
-          onBlur={e => { e.target.style.borderColor = '#e5e7eb'; e.target.style.background = '#f9fafb'; e.target.style.boxShadow = 'none'; }}
-          {...rest}
-        />
-      </div>
-    </div>
-  );
-
-  const Toggle = ({ label, name, description }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', border: '1px solid #e5e7eb', borderRadius: '12px', background: settings[name] ? 'rgba(214,141,60,0.04)' : 'white', marginBottom: '12px', transition: 'all 0.2s', borderColor: settings[name] ? '#d68d3c40' : '#e5e7eb' }}>
-      <div>
-        <div style={{ fontWeight: 700, color: '#1a1d2e', fontSize: '14px' }}>{label}</div>
-        {description && <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>{description}</div>}
-      </div>
-      <label style={{ position: 'relative', display: 'inline-block', width: '48px', height: '26px', cursor: 'pointer' }}>
-        <input type="checkbox" name={name} checked={settings[name]} onChange={handleChange} style={{ opacity: 0, width: 0, height: 0 }} />
-        <span style={{ position: 'absolute', inset: 0, background: settings[name] ? '#d68d3c' : '#d1d5db', borderRadius: '13px', transition: 'all 0.3s' }}>
-          <span style={{ position: 'absolute', width: '20px', height: '20px', background: 'white', borderRadius: '50%', top: '3px', left: settings[name] ? '25px' : '3px', transition: 'all 0.3s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }}></span>
-        </span>
-      </label>
-    </div>
-  );
-
   return (
     <div>
       <div className="admin-page-header">
@@ -139,13 +139,13 @@ const StoreSettings = () => {
               <>
                 <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#1a1d2e', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '8px' }}><Store size={18} color="#d68d3c"/>General Information</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 20px' }}>
-                  <InputField label="Store Name" name="storeName" />
-                  <InputField label="GSTIN Number" name="gstin" />
+                  <InputField label="Store Name" name="storeName" value={settings.storeName} onChange={handleChange} />
+                  <InputField label="GSTIN Number" name="gstin" value={settings.gstin} onChange={handleChange} />
                 </div>
-                <InputField label="Store Tagline" name="tagline" />
+                <InputField label="Store Tagline" name="tagline" value={settings.tagline} onChange={handleChange} />
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 20px' }}>
-                  <InputField label="Contact Email" name="contactEmail" type="email" />
-                  <InputField label="Contact Phone" name="contactPhone" type="tel" />
+                  <InputField label="Contact Email" name="contactEmail" value={settings.contactEmail} onChange={handleChange} type="email" />
+                  <InputField label="Contact Phone" name="contactPhone" value={settings.contactPhone} onChange={handleChange} type="tel" />
                 </div>
                 <div style={{ marginBottom: '20px' }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#374151', marginBottom: '8px' }}>Physical Address</label>
@@ -159,11 +159,11 @@ const StoreSettings = () => {
               <>
                 <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#1a1d2e', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '8px' }}><Truck size={18} color="#d68d3c"/>Shipping & Delivery</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0 20px' }}>
-                  <InputField label="Flat Shipping Rate" name="flatShippingRate" type="number" prefix="₹" />
-                  <InputField label="Free Shipping Above" name="freeShippingThreshold" type="number" prefix="₹" />
-                  <InputField label="Express Shipping Rate" name="expressShippingRate" type="number" prefix="₹" />
+                  <InputField label="Flat Shipping Rate" name="flatShippingRate" value={settings.flatShippingRate} onChange={handleChange} type="number" prefix="₹" />
+                  <InputField label="Free Shipping Above" name="freeShippingThreshold" value={settings.freeShippingThreshold} onChange={handleChange} type="number" prefix="₹" />
+                  <InputField label="Express Shipping Rate" name="expressShippingRate" value={settings.expressShippingRate} onChange={handleChange} type="number" prefix="₹" />
                 </div>
-                <InputField label="Default Tax Rate (%)" name="taxRate" type="number" />
+                <InputField label="Default Tax Rate (%)" name="taxRate" value={settings.taxRate} onChange={handleChange} type="number" />
                 <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <Shield size={20} color="#16a34a" style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
@@ -177,21 +177,21 @@ const StoreSettings = () => {
             {activeTab === 'payments' && (
               <>
                 <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#1a1d2e', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '8px' }}><CreditCard size={18} color="#d68d3c"/>Payment Methods</h2>
-                <Toggle label="Cash on Delivery (COD)" name="codEnabled" description="Allow customers to pay cash upon delivery" />
-                <Toggle label="UPI & Net Banking" name="upiEnabled" description="Accept payments via UPI, Razorpay or Stripe" />
-                <Toggle label="Credit / Debit Card" name="cardEnabled" description="Accept Visa, Mastercard and Rupay cards" />
+                <Toggle label="Cash on Delivery (COD)" name="codEnabled" checked={settings.codEnabled} onChange={handleChange} description="Allow customers to pay cash upon delivery" />
+                <Toggle label="UPI & Net Banking" name="upiEnabled" checked={settings.upiEnabled} onChange={handleChange} description="Accept payments via UPI, Razorpay or Stripe" />
+                <Toggle label="Credit / Debit Card" name="cardEnabled" checked={settings.cardEnabled} onChange={handleChange} description="Accept Visa, Mastercard and Rupay cards" />
               </>
             )}
 
             {activeTab === 'notifications' && (
               <>
                 <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#1a1d2e', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '8px' }}><Bell size={18} color="#d68d3c"/>Admin Notifications</h2>
-                <Toggle label="New Order Alerts" name="newOrderAlert" description="Get notified via email when a new order is placed" />
-                <Toggle label="Order Confirmation Emails" name="orderConfirmation" description="Automatically send confirmation emails to customers" />
-                <Toggle label="Low Stock Alerts" name="lowStockAlert" description="Get notified when a product falls below threshold" />
+                <Toggle label="New Order Alerts" name="newOrderAlert" checked={settings.newOrderAlert} onChange={handleChange} description="Get notified via email when a new order is placed" />
+                <Toggle label="Order Confirmation Emails" name="orderConfirmation" checked={settings.orderConfirmation} onChange={handleChange} description="Automatically send confirmation emails to customers" />
+                <Toggle label="Low Stock Alerts" name="lowStockAlert" checked={settings.lowStockAlert} onChange={handleChange} description="Get notified when a product falls below threshold" />
                 {settings.lowStockAlert && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
-                    <InputField label="Low Stock Threshold (units)" name="lowStockThreshold" type="number" />
+                    <InputField label="Low Stock Threshold (units)" name="lowStockThreshold" value={settings.lowStockThreshold} onChange={handleChange} type="number" />
                   </motion.div>
                 )}
               </>
