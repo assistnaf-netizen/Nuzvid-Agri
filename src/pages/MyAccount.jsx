@@ -354,7 +354,7 @@ const MyAccount = () => {
                     </div>
 
                     {/* Scrollable Body */}
-                    <div style={{ overflowY: 'auto', flex: 1, padding: '20px 24px', background: '#f8fafc', display: 'grid', gap: '14px' }}>
+                    <div style={{ overflowY: 'auto', flex: 1, minHeight: 0, padding: '20px 24px', background: '#f8fafc', display: 'flex', flexDirection: 'column', gap: '14px' }}>
 
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                         {/* Shipping Address */}
