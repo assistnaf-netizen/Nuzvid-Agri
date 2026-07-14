@@ -26,6 +26,7 @@ const ManageOrders = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [statusSuccessPopup, setStatusSuccessPopup] = useState(null);
 
   const handleCopy = (text, label) => {
     navigator.clipboard.writeText(text);
@@ -180,12 +181,15 @@ const ManageOrders = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update order');
 
-      
       setOrders(orders.map(o => o.id === id ? { ...o, status: newStatus } : o));
       if (selectedOrder && selectedOrder.id === id) {
         setSelectedOrder({ ...selectedOrder, status: newStatus });
       }
-      toast.success(`Order ${id} → ${newStatus}`);
+      
+      // Show custom animated popup instead of toast
+      setStatusSuccessPopup({ id, newStatus });
+      setTimeout(() => setStatusSuccessPopup(null), 2500);
+      
     } catch (err) {
       toast.error('Failed to update status');
     }
@@ -705,6 +709,45 @@ const ManageOrders = () => {
           </motion.div>
         </div>
       , document.body)}
+
+      {/* Animated Status Update Success Popup */}
+      {statusSuccessPopup && ReactDOM.createPortal(
+        <div className="premium-modal-overlay" style={{ zIndex: 9999999 }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: -20 }}
+            transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            style={{
+              background: '#fff',
+              padding: '30px 40px',
+              borderRadius: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)'
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.1, type: "spring" }}
+              style={{
+                width: '70px', height: '70px', borderRadius: '50%',
+                background: '#d1fae5', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: '16px'
+              }}
+            >
+              <CheckCircle size={40} color="#059669" strokeWidth={2} />
+            </motion.div>
+            <h3 style={{ margin: 0, fontSize: '22px', color: '#0f172a', fontWeight: 800 }}>Status Updated!</h3>
+            <p style={{ margin: '8px 0 0', color: '#64748b', fontSize: '15px' }}>
+              Order <strong>{statusSuccessPopup.id}</strong> is now <strong>{statusSuccessPopup.newStatus}</strong>.
+            </p>
+          </motion.div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };

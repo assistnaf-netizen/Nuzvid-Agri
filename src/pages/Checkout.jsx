@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -19,6 +20,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [completedOrderDetails, setCompletedOrderDetails] = useState(null);
   
   const [formData, setFormData] = useState({
     firstName: user?.user_metadata?.full_name?.split(' ')[0] || '',
@@ -289,15 +292,14 @@ const Checkout = () => {
             toast.success('Payment successful!');
             clearCart();
             setLoading(false);
-            navigate('/order-success', { 
-              state: { 
-                orderId, 
-                total: finalAmount,
-                address: shippingAddress,
-                paymentMethod: 'Razorpay UPI/Card',
-                paymentId: response.razorpay_payment_id
-              } 
+            setCompletedOrderDetails({ 
+              orderId, 
+              total: finalAmount,
+              address: shippingAddress,
+              paymentMethod: 'Razorpay UPI/Card',
+              paymentId: response.razorpay_payment_id
             });
+            setShowSuccessPopup(true);
           },
           () => {
             toast.error('Payment cancelled.');
@@ -313,14 +315,13 @@ const Checkout = () => {
       await saveOrderToDatabase(orderId, 'Cash on Delivery', null, 'COD');
       clearCart();
       setLoading(false);
-      navigate('/order-success', { 
-        state: { 
-          orderId, 
-          total: finalAmount,
-          address: shippingAddress,
-          paymentMethod: 'Cash on Delivery'
-        } 
+      setCompletedOrderDetails({ 
+        orderId, 
+        total: finalAmount,
+        address: shippingAddress,
+        paymentMethod: 'Cash on Delivery'
       });
+      setShowSuccessPopup(true);
     }
   };
 
@@ -518,6 +519,51 @@ const Checkout = () => {
           
         </div>
       </div>
+
+      {/* Animated Order Success Popup */}
+      {showSuccessPopup && completedOrderDetails && ReactDOM.createPortal(
+        <div className="checkout-success-overlay">
+          <motion.div 
+            className="checkout-success-modal"
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          >
+            <div className="success-modal-icon-container">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              >
+                <CheckCircle size={80} color="#10b981" strokeWidth={1.5} />
+              </motion.div>
+            </div>
+            <h2>Order Confirmed!</h2>
+            <p>Thank you for shopping with <strong>Nuzvid Agri Farms</strong>. Your order has been placed successfully.</p>
+            
+            <div className="success-modal-details">
+              <div className="success-detail-row">
+                <span>Order ID</span>
+                <strong>{completedOrderDetails.orderId}</strong>
+              </div>
+              <div className="success-detail-row">
+                <span>Total Amount</span>
+                <strong>₹{completedOrderDetails.total.toLocaleString()}</strong>
+              </div>
+              <div className="success-detail-row">
+                <span>Payment Method</span>
+                <strong>{completedOrderDetails.paymentMethod}</strong>
+              </div>
+            </div>
+
+            <div className="success-modal-actions">
+              <button className="success-action-primary" onClick={() => navigate('/account')}>Track Order</button>
+              <button className="success-action-secondary" onClick={() => navigate('/products')}>Continue Shopping</button>
+            </div>
+          </motion.div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
