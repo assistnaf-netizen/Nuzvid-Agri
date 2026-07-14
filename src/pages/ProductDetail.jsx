@@ -350,7 +350,7 @@ const ProductDetail = () => {
                 <h4>Shipping Information</h4>
                 <p>We process all orders within 24 hours. Standard shipping takes 3-5 business days depending on your location.</p>
                 <ul>
-                  <li>Free shipping on orders over ₹1000.</li>
+                  <li>Free shipping on orders over ₹3000.</li>
                   <li>Tracking number provided for all orders.</li>
                   <li>Secure and eco-friendly packaging.</li>
                 </ul>

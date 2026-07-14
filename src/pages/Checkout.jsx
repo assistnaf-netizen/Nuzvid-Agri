@@ -36,7 +36,7 @@ const Checkout = () => {
   const [appliedCouponId, setAppliedCouponId] = useState(null);
 
   const total = totalAmount;
-  const shippingCost = total > 1000 ? 0 : 50;
+  const shippingCost = total > 3000 ? 0 : 100;
   const finalAmount = total + shippingCost - discount;
 
   const handleApplyCoupon = async () => {
