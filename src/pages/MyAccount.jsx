@@ -307,88 +307,126 @@ const MyAccount = () => {
           )}
 
           {/* Order Details Modal — rendered via portal to document.body so position:fixed works correctly */}
-          <AnimatePresence>
-            {selectedOrder && ReactDOM.createPortal(
-              <div className="account-modal-overlay" onClick={() => setSelectedOrder(null)}>
-                <motion.div 
-                  className="account-modal"
-                  onClick={e => e.stopPropagation()}
-                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                >
-                  <div className="account-modal-header">
-                    <div>
-                      <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#1a1d2e' }}>Order {selectedOrder.id}</h3>
-                      <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#6b7280' }}>Placed on {selectedOrder.date}</p>
-                    </div>
-                    <button className="account-modal-close" onClick={() => setSelectedOrder(null)}>×</button>
-                  </div>
-                  <div className="account-modal-body">
-                    {/* Order Summary Box */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px', marginBottom: '24px', padding: '20px', background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)', borderRadius: '16px', border: '1px solid #e8eaf0' }}>
-                      <div>
-                        <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Status</div>
-                        <span className="order-status-badge" style={{ background: (STATUS_COLORS[selectedOrder.status]||{}).bg, color: (STATUS_COLORS[selectedOrder.status]||{}).color, padding: '6px 14px', fontSize: '13px' }}>{selectedOrder.status}</span>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Payment</div>
-                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#1a1d2e' }}>{selectedOrder.paymentMethod}</div>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', marginBottom: '6px' }}>Total Amount</div>
-                        <div style={{ fontSize: '18px', fontWeight: 900, color: '#d68d3c' }}>₹{selectedOrder.total.toLocaleString()}</div>
-                      </div>
-                    </div>
-
-                    {/* Order Items */}
-                    <h4 style={{ fontSize: '15px', fontWeight: 800, margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Package size={18} color="#d68d3c" /> Items in this Order
-                    </h4>
-                    <div style={{ border: '1px solid #e8eaf0', borderRadius: '16px', overflow: 'hidden', marginBottom: '28px', background: '#fff' }}>
-                      {selectedOrder.orderItems && selectedOrder.orderItems.length > 0 ? selectedOrder.orderItems.map((item, idx) => (
-                        <div key={idx} style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: idx !== selectedOrder.orderItems.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                            {item.image ? (
-                              <img src={item.image} alt={item.name} style={{ width: '60px', height: '60px', borderRadius: '10px', objectFit: 'cover', border: '1px solid #e8eaf0' }} />
-                            ) : (
-                              <div style={{ width: '60px', height: '60px', background: '#f3f4f6', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>📦</div>
-                            )}
-                            <div>
-                              <div style={{ fontWeight: 700, fontSize: '15px', color: '#1a1d2e', marginBottom: '2px' }}>{item.name}</div>
-                              <div style={{ fontSize: '13px', color: '#6b7280' }}>Qty: {item.qty} × ₹{item.price.toLocaleString()}</div>
-                            </div>
+          {ReactDOM.createPortal(
+            <AnimatePresence>
+              {selectedOrder && (
+                <div className="account-modal-overlay" onClick={() => setSelectedOrder(null)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                  <motion.div 
+                    className="account-modal"
+                    onClick={e => e.stopPropagation()}
+                    initial={{ opacity: 0, scale: 0.96, y: 24 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.96, y: 24 }}
+                    style={{ background: '#fff', width: '100%', maxWidth: '700px', maxHeight: '92vh', borderRadius: '20px', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 0, boxShadow: '0 25px 60px rgba(0,0,0,0.2)' }}
+                  >
+                    {/* Gradient Header */}
+                    <div style={{ background: 'linear-gradient(135deg, #1a1d2e 0%, #2d3250 100%)', padding: '24px 28px 20px', flexShrink: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                            <span style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', letterSpacing: '1px', textTransform: 'uppercase' }}>Order</span>
+                            <span className="order-status-badge" style={{ background: (STATUS_COLORS[selectedOrder.status]||{}).bg, color: (STATUS_COLORS[selectedOrder.status]||{}).color, fontSize: '11px', padding: '3px 10px' }}>{selectedOrder.status}</span>
                           </div>
-                          <div style={{ fontWeight: 800, color: '#1a1d2e' }}>₹{(item.price * item.qty).toLocaleString()}</div>
+                          <h2 style={{ margin: '0 0 4px', fontSize: '22px', fontWeight: 800, color: '#fff', letterSpacing: '-0.3px' }}>{selectedOrder.id}</h2>
+                          <p style={{ margin: 0, color: 'rgba(255,255,255,0.55)', fontSize: '13px' }}>Placed on {selectedOrder.date}</p>
                         </div>
-                      )) : (
-                        <div style={{ padding: '20px', textAlign: 'center', color: '#6b7280' }}>No items found</div>
-                      )}
+                        <button
+                          onClick={() => setSelectedOrder(null)}
+                          style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: '34px', height: '34px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', transition: 'background 0.2s', flexShrink: 0 }}
+                          onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
+                          onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+                        >×</button>
+                      </div>
+
+                      {/* Quick Stats Row */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: '20px' }}>
+                        {[
+                          { label: 'Total Amount', value: `₹${selectedOrder.total.toLocaleString()}`, accent: '#34d399' },
+                          { label: 'Items', value: `${selectedOrder.items} item${selectedOrder.items > 1 ? 's' : ''}`, accent: '#60a5fa' },
+                          { label: 'Payment', value: selectedOrder.paymentMethod, accent: '#f59e0b' },
+                        ].map(s => (
+                          <div key={s.label} style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px 14px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.label}</div>
+                            <div style={{ fontSize: '16px', fontWeight: 800, color: s.accent }}>{s.value}</div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-                      {/* Shipping Address */}
-                      <div>
-                        <h4 style={{ fontSize: '13px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', margin: '0 0 12px' }}>Shipping Details</h4>
-                        <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '12px', fontSize: '14px', color: '#374151', lineHeight: 1.6, border: '1px solid #f3f4f6' }}>
-                          <strong style={{ color: '#1a1d2e' }}>{profile.fullName}</strong><br/>
-                          {selectedOrder.address}<br/>
+                    {/* Scrollable Body */}
+                    <div style={{ overflowY: 'auto', flex: 1, padding: '20px 24px', background: '#f8fafc', display: 'grid', gap: '14px' }}>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        {/* Shipping Address */}
+                        <div style={{ background: '#fff', borderRadius: '14px', padding: '18px', border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #f59e0b, #d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>📍</div>
+                            <span style={{ fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Delivery Address</span>
+                          </div>
+                          <div style={{ fontSize: '14px', color: '#111827', fontWeight: 600, marginBottom: '4px' }}>{profile.fullName}</div>
+                          <div style={{ fontSize: '13px', color: '#6b7280', lineHeight: '1.6' }}>{selectedOrder.address}</div>
+                        </div>
+
+                        {/* Payment Info */}
+                        <div style={{ background: '#fff', borderRadius: '14px', padding: '18px', border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>💳</div>
+                            <span style={{ fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Payment Details</span>
+                          </div>
+                          <div style={{ fontSize: '24px', fontWeight: 900, color: '#10b981', marginBottom: '6px' }}>₹{selectedOrder.total.toLocaleString()}</div>
+                          <div style={{ fontSize: '13px', color: '#374151', marginBottom: '4px' }}><strong>Method:</strong> {selectedOrder.paymentMethod}</div>
+                          <div style={{ fontSize: '13px', color: '#374151', marginBottom: '4px' }}><strong>Status:</strong> Paid in full</div>
                         </div>
                       </div>
-                      {/* Payment Method */}
-                      <div>
-                        <h4 style={{ fontSize: '13px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', margin: '0 0 12px' }}>Payment Method</h4>
-                        <div style={{ padding: '16px', background: '#f9fafb', borderRadius: '12px', fontSize: '14px', color: '#374151', lineHeight: 1.6, border: '1px solid #f3f4f6' }}>
-                          <strong style={{ color: '#1a1d2e' }}>{selectedOrder.paymentMethod}</strong><br/>
-                          <span style={{ color: '#6b7280' }}>Paid in full</span>
+
+                      {/* Items */}
+                      <div style={{ background: '#fff', borderRadius: '14px', border: '1px solid #e5e7eb', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                        <div style={{ padding: '16px 18px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899, #be185d)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>🛒</div>
+                          <span style={{ fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Items Ordered ({selectedOrder.items})</span>
+                        </div>
+                        {selectedOrder.orderItems && selectedOrder.orderItems.length > 0 ? (
+                          selectedOrder.orderItems.map((item, idx) => (
+                            <div key={idx} style={{
+                              display: 'flex', alignItems: 'center', gap: '16px', padding: '14px 18px',
+                              borderBottom: idx < selectedOrder.orderItems.length - 1 ? '1px solid #f9fafb' : 'none',
+                              background: idx % 2 === 0 ? '#fff' : '#fafafa'
+                            }}>
+                              {item.image ? (
+                                <img src={item.image} alt={item.name} style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '10px', flexShrink: 0, border: '1px solid #e5e7eb' }} />
+                              ) : (
+                                <div style={{ width: '56px', height: '56px', background: '#e5e7eb', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', flexShrink: 0 }}>📦</div>
+                              )}
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontWeight: 700, color: '#111827', fontSize: '14px', marginBottom: '3px' }}>{item.name}</div>
+                                <div style={{ fontSize: '12px', color: '#9ca3af' }}>Qty: {item.qty} × ₹{item.price.toLocaleString()}</div>
+                              </div>
+                              <div style={{ fontWeight: 800, color: '#111827', fontSize: '15px', flexShrink: 0 }}>
+                                ₹{(item.price * item.qty).toLocaleString()}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div style={{ padding: '24px', textAlign: 'center', color: '#9ca3af' }}>No items found</div>
+                        )}
+                        {/* Total Footer */}
+                        <div style={{ padding: '14px 18px', background: 'linear-gradient(135deg, #1a1d2e 0%, #2d3250 100%)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px', fontWeight: 600 }}>ORDER TOTAL</span>
+                          <span style={{ color: '#34d399', fontSize: '22px', fontWeight: 900 }}>₹{selectedOrder.total.toLocaleString()}</span>
                         </div>
                       </div>
+
                     </div>
-                  </div>
-                </motion.div>
-              </div>
-            , document.body)}
-          </AnimatePresence>
+
+                    {/* Footer Actions */}
+                    <div style={{ padding: '16px 24px', background: '#fff', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
+                      <button className="account-gate-btn" style={{ borderRadius: '10px', padding: '10px 24px', fontWeight: 600, width: 'auto' }} onClick={() => setSelectedOrder(null)}>Close</button>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
+          , document.body)}
 
 
 
