@@ -180,6 +180,9 @@ const ManageOrders = () => {
       if (error) throw error;
       
       setOrders(orders.map(o => o.id === id ? { ...o, status: newStatus } : o));
+      if (selectedOrder && selectedOrder.id === id) {
+        setSelectedOrder({ ...selectedOrder, status: newStatus });
+      }
       toast.success(`Order ${id} → ${newStatus}`);
     } catch (err) {
       toast.error('Failed to update status');
@@ -558,9 +561,9 @@ const ManageOrders = () => {
                         onClick={() => handleStatusChange(selectedOrder.id, s)}
                         style={{
                           padding: '8px 18px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
-                          background: isActive ? colors[s] : bgColors[s],
-                          color: isActive ? '#fff' : colors[s],
-                          border: `2px solid ${colors[s]}`,
+                          background: isActive ? colors[s] : '#f1f5f9',
+                          color: isActive ? '#fff' : '#64748b',
+                          border: `2px solid ${isActive ? colors[s] : 'transparent'}`,
                           boxShadow: isActive ? `0 4px 12px ${colors[s]}40` : 'none'
                         }}
                       >{s}</button>
