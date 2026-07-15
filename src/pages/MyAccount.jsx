@@ -179,8 +179,11 @@ const MyAccount = () => {
     try {
       // Use backend API (service role) to bypass RLS issues
       const params = new URLSearchParams();
-      if (user.id) params.set('user_id', user.id);
-      else if (user.email) params.set('email', user.email);
+      if (user.id && user.id !== '00000000-0000-0000-0000-000000000001') {
+        params.set('user_id', user.id);
+      } else if (user.email) {
+        params.set('email', user.email);
+      }
       
       const res = await fetch(`/api/get-orders?${params.toString()}`);
       const json = await res.json();
