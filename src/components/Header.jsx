@@ -86,7 +86,7 @@ const Header = () => {
             {user ? (
               <div className="user-dropdown-container" style={{ position: 'relative' }}>
                 <button 
-                  className="icon-btn user-greeting-btn" 
+                  className="user-greeting-btn" 
                   onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
                   aria-label="User Account"
                 >
@@ -104,7 +104,7 @@ const Header = () => {
                   </span>
                 </button>
                 {isUserDropdownOpen && (
-                  <div className="user-dropdown-menu" style={{ position: 'absolute', top: '100%', right: '0', background: 'white', padding: '10px 0', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)', width: '150px', zIndex: 100 }}>
+                  <div className="user-dropdown-menu">
                     <Link to="/account" onClick={() => setIsUserDropdownOpen(false)} style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none' }}>My Account</Link>
                     <button onClick={handleLogout} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 20px', color: '#ff4d4f', border: 'none', background: 'none', cursor: 'pointer' }}>Logout</button>
                   </div>

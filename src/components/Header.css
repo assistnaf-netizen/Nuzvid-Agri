@@ -234,6 +234,19 @@
   text-overflow: ellipsis;
 }
 
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  padding: 8px 0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  width: 160px;
+  z-index: 100;
+  animation: slideDownMenu 0.2s ease forwards;
+}
+
 /* Shop Now — shimmer sweep effect */
 .shop-now-btn {
   position: relative;
@@ -343,5 +356,9 @@
     border: none;
     background: transparent;
     height: 32px;
+  }
+  
+  .user-dropdown-menu {
+    right: -64px;
   }
 }
