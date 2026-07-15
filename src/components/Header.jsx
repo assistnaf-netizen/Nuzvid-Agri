@@ -89,17 +89,20 @@ const Header = () => {
                   className="icon-btn" 
                   onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
                   aria-label="User Account"
-                  style={{ padding: '0', display: 'flex', alignItems: 'center' }}
+                  style={{ padding: '0 8px', display: 'flex', alignItems: 'center', gap: '8px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '30px', height: '40px', cursor: 'pointer', transition: 'all 0.2s' }}
                 >
                   <div style={{
-                    width: '32px', height: '32px', borderRadius: '50%',
+                    width: '28px', height: '28px', borderRadius: '50%',
                     background: 'linear-gradient(135deg, #16a34a, #15803d)',
                     color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontWeight: 'bold', fontSize: '14px', border: '2px solid #fff',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                    fontWeight: 'bold', fontSize: '13px',
+                    boxShadow: '0 2px 4px rgba(22, 163, 74, 0.2)'
                   }}>
                     {(user?.user_metadata?.full_name || user?.email || 'U').charAt(0).toUpperCase()}
                   </div>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    Hi, {(user?.user_metadata?.full_name || user?.email || '').split('@')[0]}
+                  </span>
                 </button>
                 {isUserDropdownOpen && (
                   <div className="user-dropdown-menu" style={{ position: 'absolute', top: '100%', right: '0', background: 'white', padding: '10px 0', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)', width: '150px', zIndex: 100 }}>
