@@ -38,49 +38,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
-  margin-bottom: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .loader-actual-logo {
-  width: 70%;
+  width: 75%;
   height: auto;
   object-fit: contain;
 }
 
-.loader-brand-name {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #ffffff; /* Pure white for contrast against dark bg */
-  margin: 0;
-  letter-spacing: -0.5px;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+.circular-loader-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin-bottom: 24px;
 }
 
-.loader-brand-name .highlight {
-  color: #4ade80; /* Brighter, glowing green for dark bg */
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }
 
-.loader-tagline {
-  font-size: 1.1rem;
-  color: #e2e8f0; /* Soft off-white */
-  margin-top: 8px;
-  margin-bottom: 40px;
+.loader-percentage {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4ade80; /* Bright green */
   letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 500;
-  text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
-
-.loader-progress-bar-container {
-  height: 4px;
-  background: #e2e8f0;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.loader-progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #15803d, #22c55e);
-  border-radius: 4px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  margin-top: 10px;
 }

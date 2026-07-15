@@ -4,18 +4,38 @@ import './GlobalLoader.css';
 
 const GlobalLoader = ({ onLoaded }) => {
   const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simulate initial asset loading time (at least 2 seconds for effect, or real loading logic)
-    const timer = setTimeout(() => {
-      setLoading(false);
-      if (onLoaded) {
-        setTimeout(onLoaded, 800); // Give time for exit animation to finish
+    // Animate progress from 0 to 100
+    const duration = 2000;
+    const interval = 20; // update every 20ms
+    const steps = duration / interval;
+    let currentStep = 0;
+
+    const timer = setInterval(() => {
+      currentStep++;
+      const currentProgress = Math.min(Math.round((currentStep / steps) * 100), 100);
+      setProgress(currentProgress);
+
+      if (currentStep >= steps) {
+        clearInterval(timer);
+        setTimeout(() => {
+          setLoading(false);
+          if (onLoaded) {
+            setTimeout(onLoaded, 800); // Give time for exit animation
+          }
+        }, 500); // short pause at 100%
       }
-    }, 2500);
+    }, interval);
     
-    return () => clearTimeout(timer);
+    return () => clearInterval(timer);
   }, [onLoaded]);
+
+  // Calculate SVG stroke offset for the circle
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
     <AnimatePresence>
@@ -27,50 +47,60 @@ const GlobalLoader = ({ onLoaded }) => {
           transition={{ duration: 0.8, ease: [0.6, 0.05, -0.01, 0.9] }}
         >
           <div className="global-loader-content">
+            
+            <div className="circular-loader-wrapper">
+              {/* SVG Circular Progress */}
+              <svg className="progress-ring" width="200" height="200">
+                <circle
+                  className="progress-ring-track"
+                  stroke="rgba(255, 255, 255, 0.2)"
+                  strokeWidth="6"
+                  fill="transparent"
+                  r={radius}
+                  cx="100"
+                  cy="100"
+                />
+                <circle
+                  className="progress-ring-fill"
+                  stroke="#4ade80"
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                  fill="transparent"
+                  r={radius}
+                  cx="100"
+                  cy="100"
+                  style={{
+                    strokeDasharray: circumference,
+                    strokeDashoffset: strokeDashoffset,
+                    transition: 'stroke-dashoffset 0.1s linear'
+                  }}
+                />
+              </svg>
+
+              {/* Logo in the center */}
+              <motion.div 
+                className="loader-logo-circle"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <img 
+                  src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
+                  alt="Nuzvid Agri Farms Logo" 
+                  className="loader-actual-logo"
+                />
+              </motion.div>
+            </div>
+
             <motion.div 
-              className="loader-logo-circle"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-            >
-              <img 
-                src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
-                alt="Nuzvid Agri Farms Logo" 
-                className="loader-actual-logo"
-              />
-            </motion.div>
-            
-            <motion.h1 
-              className="loader-brand-name"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-            >
-              Nuzvid <span className="highlight">Agri Farms</span>
-            </motion.h1>
-            
-            <motion.p 
-              className="loader-tagline"
+              className="loader-percentage"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
+              transition={{ delay: 0.5 }}
             >
-              Pure & Delight
-            </motion.p>
-            
-            <motion.div 
-              className="loader-progress-bar-container"
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: "200px" }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-            >
-              <motion.div 
-                className="loader-progress-bar-fill"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ delay: 0.8, duration: 1.5, ease: "easeInOut" }}
-              />
+              {progress}%
             </motion.div>
+
           </div>
         </motion.div>
       )}
