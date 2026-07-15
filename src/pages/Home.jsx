@@ -290,7 +290,7 @@ const Home = () => {
             )}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Health Basket Banner */}
       <section className="health-basket-section">
@@ -397,7 +397,7 @@ const Home = () => {
 
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Why Choose Us Section */}
       <section className="why-choose-us py-4">
