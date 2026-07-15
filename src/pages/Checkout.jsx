@@ -207,7 +207,7 @@ const Checkout = () => {
       console.log('[Order] Saving order via backend API...', { orderId, paymentMethodStr, paymentStatusStr, finalAmount });
 
       const orderPayload = {
-        user_id: user.id,
+        user_id: user?.id === '00000000-0000-0000-0000-000000000001' ? null : (user?.id || null),
         display_id: orderId,
         status: 'Pending',
         payment_method: paymentMethodStr,
