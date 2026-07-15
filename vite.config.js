@@ -6,8 +6,72 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      name: 'razorpay-api-mock',
+      name: 'api-mocks',
       configureServer(server) {
+        // --- OTP Email Mock ---
+        server.middlewares.use('/api/send-otp', async (req, res) => {
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 200;
+            res.end();
+            return;
+          }
+          if (req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => {
+              body += chunk.toString();
+            });
+            req.on('end', async () => {
+              try {
+                const { email, otp } = JSON.parse(body);
+                
+                if (email !== 'assist.naf@gmail.com') {
+                  res.statusCode = 403;
+                  res.end(JSON.stringify({ error: 'Unauthorized email' }));
+                  return;
+                }
+
+                const nodemailer = await import('nodemailer');
+
+                const transporter = nodemailer.default.createTransport({
+                  service: 'gmail',
+                  auth: {
+                    user: process.env.SMTP_USER || 'assist.naf@gmail.com',
+                    pass: process.env.SMTP_PASS
+                  }
+                });
+
+                const mailOptions = {
+                  from: `"Nuzvid Agri Farms" <${process.env.SMTP_USER || 'assist.naf@gmail.com'}>`,
+                  to: email,
+                  subject: 'Admin Login OTP - Nuzvid Agri Farms',
+                  html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px;">
+                      <h2 style="color: #2b5c3a; text-align: center;">Nuzvid Agri Farms</h2>
+                      <h3 style="text-align: center;">Admin Panel Access</h3>
+                      <p>You requested to login to the admin panel. Please use the following One-Time Password (OTP) to complete your login:</p>
+                      <div style="background-color: #f5f5f5; padding: 15px; text-align: center; border-radius: 4px; margin: 20px 0;">
+                        <h1 style="letter-spacing: 5px; margin: 0; color: #333;">${otp}</h1>
+                      </div>
+                      <p>This OTP is valid for a single use. Do not share this code with anyone.</p>
+                    </div>
+                  `
+                };
+
+                await transporter.sendMail(mailOptions);
+                
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ message: 'OTP sent successfully' }));
+              } catch (e) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ error: e.message }));
+              }
+            });
+          }
+        });
+
+        // --- Razorpay Mock ---
         server.middlewares.use('/api/create-order', async (req, res) => {
           if (req.method === 'OPTIONS') {
              res.statusCode = 200;

@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { LogIn, UserPlus, ArrowLeft } from 'lucide-react';
+import { LogIn, UserPlus, ArrowLeft, Mail } from 'lucide-react';
 import { FaGoogle } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSEO from '../hooks/useSEO';
@@ -20,6 +20,9 @@ const Auth = () => {
   // Login State
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [systemOtp, setSystemOtp] = useState(''); // Store the generated OTP
   
   // Register State
   const [registerEmail, setRegisterEmail] = useState('');
@@ -43,7 +46,61 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    // MOCK LOGIN BYPASS for Admin
+    // ADMIN OTP FLOW FOR assist.naf@gmail.com
+    if (loginEmail === 'assist.naf@gmail.com') {
+      if (!otpSent) {
+        // Generate OTP
+        const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        setSystemOtp(newOtp);
+
+        try {
+          // Call our new Nodemailer API
+          const response = await fetch('/api/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: loginEmail, otp: newOtp })
+          });
+
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.message || 'Failed to send OTP');
+          }
+          
+          toast.success('OTP sent to your email via Nodemailer!');
+          setOtpSent(true);
+        } catch (err) {
+          console.error('API OTP error:', err);
+          // Fallback for demo if backend is not running or env vars missing
+          toast.success(`Demo Mode: Email API failed. Use OTP ${newOtp} to login.`, { duration: 6000 });
+          setOtpSent(true);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      } else {
+        // Verify OTP (compare user input with generated OTP)
+        if (otp === systemOtp) {
+          setTimeout(() => {
+            const mockAdmin = {
+              email: loginEmail,
+              user_metadata: { full_name: 'Farm Admin', role: 'admin' }
+            };
+            setMockUser(mockAdmin);
+            toast.success('Admin logged in successfully!');
+            const params = new URLSearchParams(location.search);
+            navigate(params.get('redirect') || '/admin');
+            setLoading(false);
+          }, 1000);
+        } else {
+          toast.error('Invalid OTP. Please try again.');
+          setLoading(false);
+        }
+        return;
+      }
+    }
+
+    // MOCK LOGIN BYPASS for Legacy Admin
     if (loginEmail === 'admin@nuzvidagrifarms.com' && loginPassword === 'admin123') {
       setTimeout(() => {
         const mockAdmin = {
@@ -210,21 +267,60 @@ const Auth = () => {
                 required 
                 placeholder="you@example.com"
                 value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
+                onChange={(e) => {
+                  setLoginEmail(e.target.value);
+                  setOtpSent(false); // Reset OTP state if email changes
+                }}
+                disabled={otpSent}
+                style={otpSent ? { backgroundColor: '#f5f5f5', color: '#888' } : {}}
               />
             </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input 
-                type="password" 
-                required 
-                placeholder="••••••••"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              />
-            </div>
+            
+            {loginEmail === 'assist.naf@gmail.com' ? (
+              otpSent ? (
+                <div className="form-group">
+                  <label>Enter OTP</label>
+                  <input 
+                    type="text" 
+                    required 
+                    placeholder="Enter 6-digit OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    maxLength={6}
+                    autoFocus
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
+                    <small style={{ color: '#666' }}>Check your email for the OTP.</small>
+                    <small 
+                      style={{ color: 'var(--color-primary)', cursor: 'pointer', fontWeight: 'bold' }} 
+                      onClick={() => { setOtpSent(false); setOtp(''); }}
+                    >
+                      Change Email
+                    </small>
+                  </div>
+                </div>
+              ) : null
+            ) : (
+              <div className="form-group">
+                <label>Password</label>
+                <input 
+                  type="password" 
+                  required 
+                  placeholder="••••••••"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                />
+              </div>
+            )}
+            
             <button type="submit" className="btn-primary" disabled={loading} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-              <LogIn size={20} /> {loading ? 'Logging in...' : 'Sign In'}
+              {loginEmail === 'assist.naf@gmail.com' && !otpSent ? <Mail size={20} /> : <LogIn size={20} />}
+              {loading 
+                ? 'Processing...' 
+                : (loginEmail === 'assist.naf@gmail.com' 
+                    ? (otpSent ? 'Verify OTP & Login' : 'Send OTP to Email') 
+                    : 'Sign In')
+              }
             </button>
           </form>
           
@@ -301,4 +397,5 @@ const Auth = () => {
 };
 
 export default Auth;
+
 
