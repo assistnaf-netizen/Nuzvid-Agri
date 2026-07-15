@@ -193,7 +193,7 @@ const Checkout = () => {
     );
   };
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !showSuccessPopup) {
     navigate('/cart');
     return null;
   }
