@@ -89,8 +89,17 @@ const Header = () => {
                   className="icon-btn" 
                   onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
                   aria-label="User Account"
+                  style={{ padding: '0', display: 'flex', alignItems: 'center' }}
                 >
-                  <User size={22} />
+                  <div style={{
+                    width: '32px', height: '32px', borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #16a34a, #15803d)',
+                    color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: 'bold', fontSize: '14px', border: '2px solid #fff',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                  }}>
+                    {(user?.user_metadata?.full_name || user?.email || 'U').charAt(0).toUpperCase()}
+                  </div>
                 </button>
                 {isUserDropdownOpen && (
                   <div className="user-dropdown-menu" style={{ position: 'absolute', top: '100%', right: '0', background: 'white', padding: '10px 0', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)', width: '150px', zIndex: 100 }}>
