@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, ShoppingBag, Heart, Check, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabase';
+import { useWishlist } from '../context/WishlistContext';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import useSEO from '../hooks/useSEO';
@@ -12,16 +13,19 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [freeShippingThreshold, setFreeShippingThreshold] = useState(3000);
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [addedToCart, setAddedToCart] = useState(false);
+
+  const isWishlisted = product ? isInWishlist(product.id) : false;
 
   useEffect(() => {
     const fetchShipping = async () => {
@@ -190,7 +194,7 @@ const ProductDetail = () => {
                 {product.isNew && <span className="detail-badge new">New</span>}
                 <button 
                   className={`detail-wishlist-btn ${isWishlisted ? 'active' : ''}`}
-                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  onClick={() => toggleWishlist(product)}
                   style={{ position: 'absolute', right: '15px', top: '15px', zIndex: 10, background: 'rgba(255,255,255,0.8)', borderRadius: '50%', padding: '8px', border: 'none', display: 'flex' }}
                 >
                   <Heart size={20} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />

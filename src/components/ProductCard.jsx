@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Star, Heart, ShoppingBag, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  
+  const isWishlisted = isInWishlist(product.id);
   const [addedToCart, setAddedToCart] = useState(false);
 
   const handleAddToCart = () => {
@@ -24,7 +27,7 @@ const ProductCard = ({ product }) => {
         </div>
         <button 
           className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
-          onClick={() => setIsWishlisted(!isWishlisted)}
+          onClick={() => toggleWishlist(product)}
           aria-label="Add to wishlist"
         >
           <Heart size={18} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />

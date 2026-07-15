@@ -4,6 +4,7 @@ import { ShoppingCart, User, Menu, X, Search, Heart } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useWishlist } from '../context/WishlistContext';
 import './Header.css';
 
 const Header = () => {
@@ -13,6 +14,7 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { cartItems } = useCart();
+  const { wishlistItems } = useWishlist();
   const { user, isAdmin, logoutMock } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -130,7 +132,11 @@ const Header = () => {
 
             <Link to="/wishlist" className="icon-btn" aria-label="Wishlist">
               <Heart size={22} />
-              {/* If you wanted a count: wishlistItems.length > 0 && <span className="cart-count">{wishlistItems.length}</span> */}
+              {wishlistItems.length > 0 && (
+                <span className="cart-count">
+                  {wishlistItems.length}
+                </span>
+              )}
             </Link>
 
             <Link to="/cart" className="icon-btn" aria-label="Shopping Cart">
