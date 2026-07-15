@@ -69,7 +69,7 @@ const AdminLayout = () => {
         document.removeEventListener(event, resetTimer, true);
       });
     };
-  }, [user, isAdmin, handleLogout]);
+  }, [adminUser, isAdmin, handleLogout]);
 
   const isActive = (item) => item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to);
 
