@@ -86,21 +86,20 @@ const Header = () => {
             {user ? (
               <div className="user-dropdown-container" style={{ position: 'relative' }}>
                 <button 
-                  className="icon-btn" 
+                  className="icon-btn user-greeting-btn" 
                   onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
                   aria-label="User Account"
-                  style={{ padding: '0 8px', display: 'flex', alignItems: 'center', gap: '8px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '30px', height: '40px', cursor: 'pointer', transition: 'all 0.2s' }}
                 >
                   <div style={{
                     width: '28px', height: '28px', borderRadius: '50%',
                     background: 'linear-gradient(135deg, #16a34a, #15803d)',
                     color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontWeight: 'bold', fontSize: '13px',
+                    fontWeight: 'bold', fontSize: '13px', flexShrink: 0,
                     boxShadow: '0 2px 4px rgba(22, 163, 74, 0.2)'
                   }}>
                     {(user?.user_metadata?.full_name || user?.email || 'U').charAt(0).toUpperCase()}
                   </div>
-                  <span style={{ fontSize: '14px', fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <span className="user-greeting-text">
                     Hi, {(user?.user_metadata?.full_name || user?.email || '').split('@')[0]}
                   </span>
                 </button>
