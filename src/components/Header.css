@@ -247,6 +247,76 @@
   animation: slideDownMenu 0.2s ease forwards;
 }
 
+/* Search Bar */
+.search-bar-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  padding: 16px 5%;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  border-top: 1px solid #f0f0f0;
+  transform: translateY(-10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 99;
+}
+
+.search-bar-container.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-bar-form {
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 40px;
+  padding: 4px 16px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-bar-form input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px;
+  font-size: 15px;
+  color: #1e293b;
+  outline: none;
+}
+
+.search-bar-form input::placeholder {
+  color: #94a3b8;
+}
+
+.search-submit-btn,
+.search-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.search-submit-btn:hover {
+  color: var(--color-primary);
+}
+
+.search-close-btn:hover {
+  color: #ef4444;
+}
+
 /* Shop Now — shimmer sweep effect */
 .shop-now-btn {
   position: relative;

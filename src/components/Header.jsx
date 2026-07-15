@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Menu, X, Search, Heart } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
@@ -10,9 +10,12 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { cartItems } = useCart();
   const { user, isAdmin, logoutMock } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +24,15 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -79,7 +91,7 @@ const Header = () => {
 
           <div className="nav-actions">
             <Link to="/products" className="btn-primary shop-now-btn">Shop Now</Link>
-            <button className="icon-btn" aria-label="Search">
+            <button className="icon-btn" aria-label="Search" onClick={() => setIsSearchOpen(!isSearchOpen)}>
               <Search size={22} />
             </button>
             
@@ -129,14 +141,34 @@ const Header = () => {
                 </span>
               )}
             </Link>
-            <button
+            <button 
               className="icon-btn mobile-menu-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Search Bar Dropdown */}
+      <div className={`search-bar-container ${isSearchOpen ? 'open' : ''}`}>
+        <form className="search-bar-form" onSubmit={handleSearchSubmit}>
+          <input 
+            type="text" 
+            placeholder="Search for organic jaggery, honey, oils..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus
+          />
+          <button type="submit" className="search-submit-btn" aria-label="Submit Search">
+            <Search size={20} />
+          </button>
+          <button type="button" className="search-close-btn" onClick={() => setIsSearchOpen(false)} aria-label="Close Search">
+            <X size={20} />
+          </button>
+        </form>
       </div>
 
       {/* Mobile Nav */}

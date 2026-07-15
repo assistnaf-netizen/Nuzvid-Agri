@@ -58,15 +58,23 @@ const Products = () => {
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
+    
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get('search')?.toLowerCase();
+
+    // Search term filtering
+    if (searchQuery) {
+      result = result.filter(p => 
+        p.title.toLowerCase().includes(searchQuery) || 
+        (p.description && p.description.toLowerCase().includes(searchQuery)) ||
+        p.category.toLowerCase().includes(searchQuery)
+      );
+    }
 
     // Category
     if (category !== 'All') {
       result = result.filter(p => p.category === category);
     }
-
-    // Stock
-    // Since we don't have stock data in mock yet, let's assume all are in stock, or filter randomly. 
-    // We'll skip actual stock filtering until we have real DB data.
 
     // Price
     const min = parseFloat(minPrice);
@@ -96,7 +104,10 @@ const Products = () => {
     }
 
     return result;
-  }, [products, category, minPrice, maxPrice, sortOrder, inStockOnly]);
+  }, [products, category, minPrice, maxPrice, sortOrder, inStockOnly, location.search]);
+
+  const searchParams = new URLSearchParams(location.search);
+  const activeSearchQuery = searchParams.get('search');
 
   return (
     <div className="products-page">
@@ -109,7 +120,7 @@ const Products = () => {
           className="banner-img"
         />
         <div className="banner-breadcrumb-text">
-          Home &nbsp;|&nbsp; <span className="active-crumb">Products</span>
+          Home &nbsp;|&nbsp; <span className="active-crumb">{activeSearchQuery ? `Search Results for "${activeSearchQuery}"` : 'Products'}</span>
         </div>
       </div>
 
