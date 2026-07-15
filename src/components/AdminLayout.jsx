@@ -17,7 +17,7 @@ const NAV_ITEMS = [
 ];
 
 const AdminLayout = () => {
-  const { user, isAdmin, loading, logoutMock } = useAuth();
+  const { adminUser, isAdmin, loading, logoutAdmin } = useAuth();
   const location = useLocation();
 
   if (loading) return (
@@ -30,17 +30,17 @@ const AdminLayout = () => {
     </div>
   );
 
-  if (!user || !isAdmin) return <Navigate to="/admin/login" replace />;
+  if (!adminUser || !isAdmin) return <Navigate to="/admin/login" replace />;
 
   const handleLogout = useCallback(async () => {
-    logoutMock();
+    logoutAdmin();
     await supabase.auth.signOut();
     toast.success('Logged out successfully');
-  }, [logoutMock]);
+  }, [logoutAdmin]);
 
   // Auto-logout after 5 minutes of inactivity
   useEffect(() => {
-    if (!user || !isAdmin) return;
+    if (!adminUser || !isAdmin) return;
 
     let timeoutId;
 

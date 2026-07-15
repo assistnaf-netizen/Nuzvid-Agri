@@ -12,7 +12,7 @@ const AdminAuth = () => {
   const [otp, setOtp] = useState('');
   const [systemOtp, setSystemOtp] = useState('');
 
-  const { setMockUser } = useAuth();
+  const { setMockAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleAdminLogin = async (e) => {
@@ -59,7 +59,7 @@ const AdminAuth = () => {
             email: email,
             user_metadata: { full_name: 'Farm Admin', role: 'admin' }
           };
-          setMockUser(mockAdmin);
+          setMockAdmin(mockAdmin);
           toast.success('Admin access granted!');
           navigate('/admin');
           setLoading(false);

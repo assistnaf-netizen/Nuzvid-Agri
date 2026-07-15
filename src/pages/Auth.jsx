@@ -13,7 +13,7 @@ const Auth = () => {
   useSEO({ title: 'Login / Sign Up', description: 'Sign in to your Nuzvid Agri Farms account.' });
   const location = useLocation();
   const navigate = useNavigate();
-  const { setMockUser } = useAuth();
+  const { setMockUser, setMockAdmin } = useAuth();
 
   const [isLogin, setIsLogin] = useState(location.pathname === '/login');
   
@@ -94,7 +94,7 @@ const Auth = () => {
                 email: loginEmail,
                 user_metadata: { full_name: 'Farm Admin', role: 'admin' }
               };
-              setMockUser(mockAdmin);
+              setMockAdmin(mockAdmin);
               toast.success('Admin logged in successfully!');
               const params = new URLSearchParams(location.search);
               navigate(params.get('redirect') || '/admin');

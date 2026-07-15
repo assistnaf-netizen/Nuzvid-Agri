@@ -6,54 +6,77 @@ const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // Frontend User
+  const [adminUser, setAdminUser] = useState(null); // Admin User
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Expose a way to set mock user from Login.jsx
+  // Set mock user for frontend testing
   const setMockUser = (mockUser) => {
     setUser(mockUser);
-    localStorage.setItem('mock_admin', JSON.stringify(mockUser));
+    localStorage.setItem('mock_user', JSON.stringify(mockUser));
   };
 
+  // Set mock admin for admin panel
+  const setMockAdmin = (mockAdmin) => {
+    setAdminUser(mockAdmin);
+    localStorage.setItem('mock_admin', JSON.stringify(mockAdmin));
+  };
+
+  // Logout frontend user
   const logoutMock = () => {
     setUser(null);
-    localStorage.removeItem('mock_admin');
+    localStorage.removeItem('mock_user');
     localStorage.removeItem('farm_cart');
     localStorage.removeItem('farm_wishlist');
   };
 
+  // Logout admin user
+  const logoutAdmin = () => {
+    setAdminUser(null);
+    localStorage.removeItem('mock_admin');
+  };
+
   useEffect(() => {
-    // Check if we have a mock user for demo purposes
-    const mock = localStorage.getItem('mock_admin');
-    if (mock) {
-      setUser(JSON.parse(mock));
-      setLoading(false);
-      return;
+    // 1. Load Admin Session
+    const mockAdmin = localStorage.getItem('mock_admin');
+    if (mockAdmin) {
+      setAdminUser(JSON.parse(mockAdmin));
     }
 
-    // Get active session
+    // 2. Load User Session (Mock or Real)
+    const mockUserStr = localStorage.getItem('mock_user');
+    if (mockUserStr) {
+      setUser(JSON.parse(mockUserStr));
+    }
+
+    // Get active Supabase session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user ?? null);
+      if (session?.user && !mockUserStr) {
+        setUser(session.user);
+      }
       setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      setUser(session?.user ?? null);
+      if (session?.user && !localStorage.getItem('mock_user')) {
+        setUser(session.user);
+      } else if (!session?.user && !localStorage.getItem('mock_user')) {
+        setUser(null);
+      }
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  // We can add role checking logic here later (e.g., checking user metadata for admin role)
-  const isAdmin = user?.user_metadata?.role === 'admin';
+  const isAdmin = !!adminUser;
 
   return (
-    <AuthContext.Provider value={{ session, user, isAdmin, loading, setMockUser, logoutMock }}>
+    <AuthContext.Provider value={{ session, user, adminUser, isAdmin, loading, setMockUser, setMockAdmin, logoutMock, logoutAdmin }}>
       {!loading && children}
     </AuthContext.Provider>
   );
