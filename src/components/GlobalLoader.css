@@ -20,8 +20,8 @@
 }
 
 .loader-logo-circle {
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   background: white;
   border-radius: 50%;
   display: flex;
@@ -29,7 +29,12 @@
   justify-content: center;
   box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
   margin-bottom: 24px;
-  color: #16a34a; /* Earthy green */
+}
+
+.loader-actual-logo {
+  width: 70%;
+  height: auto;
+  object-fit: contain;
 }
 
 .loader-brand-name {

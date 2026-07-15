@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Leaf } from 'lucide-react';
 import './GlobalLoader.css';
 
 const GlobalLoader = ({ onLoaded }) => {
@@ -30,11 +29,15 @@ const GlobalLoader = ({ onLoaded }) => {
           <div className="global-loader-content">
             <motion.div 
               className="loader-logo-circle"
-              initial={{ scale: 0, rotate: -90 }}
-              animate={{ scale: 1, rotate: 0 }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 1, ease: "easeOut" }}
             >
-              <Leaf size={48} className="loader-icon" strokeWidth={1.5} />
+              <img 
+                src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
+                alt="Nuzvid Agri Farms Logo" 
+                className="loader-actual-logo"
+              />
             </motion.div>
             
             <motion.h1 
