@@ -47,7 +47,7 @@ const Checkout = () => {
         setStoreSettings({ 
           base: data.flat_shipping_rate, 
           threshold: data.free_shipping_threshold,
-          platformFee: data.platform_fee !== undefined ? data.platform_fee : 5
+          platformFee: data.platform_fee != null ? data.platform_fee : 5
         });
       }
     };

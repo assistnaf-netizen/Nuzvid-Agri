@@ -75,7 +75,7 @@ const StoreSettings = () => {
           ...prev,
           flatShippingRate: data.flat_shipping_rate,
           freeShippingThreshold: data.free_shipping_threshold,
-          platformFee: data.platform_fee !== undefined ? data.platform_fee : 5
+          platformFee: data.platform_fee != null ? data.platform_fee : 5
         }));
       }
     };
@@ -91,12 +91,13 @@ const StoreSettings = () => {
     e.preventDefault();
     
     // Save shipping settings to Supabase
-    const { error } = await supabase.from('store_settings').update({
+    const { error } = await supabase.from('store_settings').upsert({
+      id: 1,
       flat_shipping_rate: Number(settings.flatShippingRate),
       free_shipping_threshold: Number(settings.freeShippingThreshold),
       platform_fee: Number(settings.platformFee),
       updated_at: new Date().toISOString()
-    }).eq('id', 1);
+    });
 
     if (error) {
       console.error('Save settings error:', error);
