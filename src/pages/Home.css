@@ -1116,3 +1116,18 @@
 @media (max-width: 576px) {
   .recently-viewed-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
 }
+
+/* ============================================
+   MID BANNER SECTION
+   ============================================ */
+.mid-banner-section {
+  margin-top: -20px;
+  margin-bottom: -10px;
+}
+
+@media (max-width: 768px) {
+  .mid-banner-section {
+    margin-top: 15px;
+    margin-bottom: 25px;
+  }
+}
