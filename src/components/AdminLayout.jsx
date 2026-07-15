@@ -1,4 +1,5 @@
 import { Navigate, Outlet, Link, useLocation } from 'react-router-dom';
+import { useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { LogOut, LayoutDashboard, Package, Image, ShoppingCart, Users, Tag, Settings, ChevronRight, ClipboardList } from 'lucide-react';
@@ -31,11 +32,44 @@ const AdminLayout = () => {
 
   if (!user || !isAdmin) return <Navigate to="/admin/login" replace />;
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     logoutMock();
     await supabase.auth.signOut();
     toast.success('Logged out successfully');
-  };
+  }, [logoutMock]);
+
+  // Auto-logout after 5 minutes of inactivity
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+
+    let timeoutId;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      // Set timeout for 5 minutes (300,000 ms)
+      timeoutId = setTimeout(() => {
+        handleLogout();
+        toast('Logged out due to inactivity', { icon: '🔒' });
+      }, 5 * 60 * 1000);
+    };
+
+    // Listen to user activity events
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    
+    events.forEach(event => {
+      document.addEventListener(event, resetTimer, true);
+    });
+
+    // Initialize timer
+    resetTimer();
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach(event => {
+        document.removeEventListener(event, resetTimer, true);
+      });
+    };
+  }, [user, isAdmin, handleLogout]);
 
   const isActive = (item) => item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to);
 
