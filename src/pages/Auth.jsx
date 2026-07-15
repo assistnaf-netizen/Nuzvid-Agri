@@ -118,49 +118,48 @@ const Auth = () => {
       return;
     }
 
-    // MOCK LOGIN BYPASS for Regular User
-    if (loginEmail === 'test@nuzvidagrifarms.com' && loginPassword === 'Test@123') {
-      setTimeout(() => {
-        const mockUser = {
+    // REGULAR USER OTP FLOW (Supabase Built-in OTP)
+    if (!otpSent) {
+      try {
+        const { error } = await supabase.auth.signInWithOtp({
           email: loginEmail,
-          user_metadata: { full_name: 'Test User', role: 'user' }
-        };
-        setMockUser(mockUser);
-        toast.success('Logged in successfully!');
-        
-        const params = new URLSearchParams(location.search);
-        const redirectUrl = params.get('redirect');
-        navigate(redirectUrl || '/');
-        setLoading(false);
-      }, 1000);
-      return;
-    }
+        });
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
-        password: loginPassword,
-      });
-
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Logged in successfully!');
-        
-        const params = new URLSearchParams(location.search);
-        const redirectUrl = params.get('redirect');
-
-        if (redirectUrl) {
-          navigate(redirectUrl);
+        if (error) {
+          toast.error(error.message);
         } else {
-          navigate('/');
+          toast.success('OTP sent to your email via Supabase!');
+          setOtpSent(true);
         }
+      } catch (err) {
+        toast.error('Failed to send OTP.');
+        console.error('Supabase error:', err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      toast.error('Database connection failed. Please use dummy admin login or wait until backend is connected.');
-      console.error('Supabase error:', err);
-    } finally {
-      setLoading(false);
+    } else {
+      // Verify Supabase OTP
+      try {
+        const { data, error } = await supabase.auth.verifyOtp({
+          email: loginEmail,
+          token: otp,
+          type: 'email'
+        });
+
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success('Logged in successfully!');
+          const params = new URLSearchParams(location.search);
+          const redirectUrl = params.get('redirect');
+          navigate(redirectUrl || '/');
+        }
+      } catch (err) {
+        toast.error('Invalid OTP.');
+        console.error('Supabase error:', err);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -276,50 +275,35 @@ const Auth = () => {
               />
             </div>
             
-            {loginEmail === 'assist.naf@gmail.com' ? (
-              otpSent ? (
-                <div className="form-group">
-                  <label>Enter OTP</label>
-                  <input 
-                    type="text" 
-                    required 
-                    placeholder="Enter 6-digit OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    maxLength={6}
-                    autoFocus
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
-                    <small style={{ color: '#666' }}>Check your email for the OTP.</small>
-                    <small 
-                      style={{ color: 'var(--color-primary)', cursor: 'pointer', fontWeight: 'bold' }} 
-                      onClick={() => { setOtpSent(false); setOtp(''); }}
-                    >
-                      Change Email
-                    </small>
-                  </div>
-                </div>
-              ) : null
-            ) : (
+            {otpSent ? (
               <div className="form-group">
-                <label>Password</label>
+                <label>Enter OTP</label>
                 <input 
-                  type="password" 
+                  type="text" 
                   required 
-                  placeholder="••••••••"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Enter 6-digit OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  maxLength={6}
+                  autoFocus
                 />
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
+                  <small style={{ color: '#666' }}>Check your email for the OTP.</small>
+                  <small 
+                    style={{ color: 'var(--color-primary)', cursor: 'pointer', fontWeight: 'bold' }} 
+                    onClick={() => { setOtpSent(false); setOtp(''); }}
+                  >
+                    Change Email
+                  </small>
+                </div>
               </div>
-            )}
+            ) : null}
             
             <button type="submit" className="btn-primary" disabled={loading} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-              {loginEmail === 'assist.naf@gmail.com' && !otpSent ? <Mail size={20} /> : <LogIn size={20} />}
+              {!otpSent ? <Mail size={20} /> : <LogIn size={20} />}
               {loading 
                 ? 'Processing...' 
-                : (loginEmail === 'assist.naf@gmail.com' 
-                    ? (otpSent ? 'Verify OTP & Login' : 'Send OTP to Email') 
-                    : 'Sign In')
+                : (otpSent ? 'Verify OTP & Login' : 'Send OTP to Email')
               }
             </button>
           </form>
