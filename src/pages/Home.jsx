@@ -235,19 +235,18 @@ const Home = () => {
 
       {/* Mid Banner Section */}
       <motion.section 
-        className="mid-banner-section py-4"
+        className="mid-banner-section"
+        style={{ marginTop: '-20px', marginBottom: '-10px' }}
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="container">
-          <img 
-            src="/home-mid-banner.jpeg" 
-            alt="Nuzvid Agri Farms Highlights" 
-            style={{ width: '100%', height: 'auto', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)', display: 'block' }} 
-          />
-        </div>
+        <img 
+          src="/home-mid-banner.jpeg" 
+          alt="Nuzvid Agri Farms Highlights" 
+          style={{ width: '100%', height: 'auto', display: 'block' }} 
+        />
       </motion.section>
 
       {/* The Goodness We Share */}
