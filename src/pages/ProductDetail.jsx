@@ -21,6 +21,7 @@ const ProductDetail = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     const fetchShipping = async () => {
@@ -139,8 +140,6 @@ const ProductDetail = () => {
     if (type === 'increment' && quantity < displayStock) setQuantity(q => q + 1);
     if (type === 'decrement' && quantity > 1) setQuantity(q => q - 1);
   };
-
-  const [addedToCart, setAddedToCart] = useState(false);
 
   const handleAddToCart = () => {
     const finalWeight = selectedVariant ? selectedVariant.weight : product.weight;
