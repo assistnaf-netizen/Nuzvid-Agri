@@ -46,8 +46,15 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    // ADMIN OTP FLOW FOR assist.naf@gmail.com
-    if (loginEmail === 'assist.naf@gmail.com') {
+    const testAdminEmails = [
+      'assist.naf@gmail.com',
+      'balajiprojects049@gmail.com',
+      'balajirockzz9030@gmail.com',
+      'sarabu.balaji9985@gmail.com'
+    ];
+
+    // ADMIN OTP FLOW FOR TEST EMAILS
+    if (testAdminEmails.includes(loginEmail)) {
       if (!otpSent) {
         // Generate OTP
         const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
