@@ -78,18 +78,20 @@ const GlobalLoader = ({ onLoaded }) => {
               </svg>
 
               {/* Logo in the center */}
-              <motion.div 
-                className="loader-logo-circle"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                <img 
-                  src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
-                  alt="Nuzvid Agri Farms Logo" 
-                  className="loader-actual-logo"
-                />
-              </motion.div>
+              <div className="loader-logo-positioner">
+                <motion.div 
+                  className="loader-logo-circle"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                  <img 
+                    src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
+                    alt="Nuzvid Agri Farms Logo" 
+                    className="loader-actual-logo"
+                  />
+                </motion.div>
+              </div>
             </div>
 
             <motion.div 

@@ -30,6 +30,17 @@
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
 }
 
+.loader-logo-positioner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
 .loader-logo-circle {
   width: 140px;
   height: 140px;
@@ -39,10 +50,6 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .loader-actual-logo {
@@ -61,6 +68,10 @@
 .progress-ring {
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .loader-percentage {
