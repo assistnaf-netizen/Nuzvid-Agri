@@ -331,11 +331,11 @@ const Auth = () => {
           className="auth-overlay-panel"
           initial={false}
           animate={{
-            x: isLogin ? '0%' : '-100%',
-            borderTopLeftRadius: isLogin ? '0px' : '20px',
-            borderBottomLeftRadius: isLogin ? '0px' : '20px',
-            borderTopRightRadius: isLogin ? '20px' : '0px',
-            borderBottomRightRadius: isLogin ? '20px' : '0px',
+            x: isLogin ? '-100%' : '0%',
+            borderTopLeftRadius: isLogin ? '20px' : '0px',
+            borderBottomLeftRadius: isLogin ? '20px' : '0px',
+            borderTopRightRadius: isLogin ? '0px' : '20px',
+            borderBottomRightRadius: isLogin ? '0px' : '20px',
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
