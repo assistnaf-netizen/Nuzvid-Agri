@@ -197,13 +197,20 @@ const MyAccount = () => {
         const extraItems = o.order_items?.length > 1 ? ` (+${o.order_items.length - 1} items)` : '';
         const productName = firstItem ? `${firstItem.product_title}${extraItems}` : 'Order';
         
+        // Calculate estimated delivery date (e.g. 5 days from order date)
+        const orderDateObj = new Date(o.created_at);
+        const deliveryDateObj = new Date(orderDateObj);
+        deliveryDateObj.setDate(deliveryDateObj.getDate() + 5);
+        
         return {
           id: o.display_id,
-          date: new Date(o.created_at).toLocaleDateString(),
+          date: orderDateObj.toLocaleDateString(),
+          deliveryDate: deliveryDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
           total: Number(o.total_amount),
           status: o.status,
           items: o.order_items ? o.order_items.length : 0,
           productName,
+          productImage: firstItem ? firstItem.product_image : 'https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png',
           address: o.shipping_address,
           paymentMethod: o.payment_method,
           trackingId: o.status === 'Shipped' || o.status === 'Delivered' ? 'AWB...' : 'Pending',
@@ -406,10 +413,18 @@ const MyAccount = () => {
                         <div className="order-id">{order.id}</div>
                         <div className="order-date">Placed on {order.date}</div>
                       </div>
-                      <div className="order-product-info" style={{ flex: 1, minWidth: '200px' }}>
-                        <div style={{ fontWeight: 600, fontSize: '14px', color: '#1a1d2e', marginBottom: '4px' }}>{order.productName}</div>
-                        <div style={{ fontSize: '12px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <MapPin size={12} color="#9ca3af" /> {order.address}
+                      <div className="order-product-info" style={{ flex: 1, minWidth: '200px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <div style={{ width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e7eb', flexShrink: 0 }}>
+                          <img src={order.productImage} alt="Product Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: '15px', color: '#1a1d2e', marginBottom: '4px' }}>{order.productName}</div>
+                          <div style={{ fontSize: '12px', color: '#16a34a', fontWeight: 600, marginBottom: '2px' }}>
+                            Expected Delivery: {order.deliveryDate}
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <MapPin size={12} color="#9ca3af" /> {order.address}
+                          </div>
                         </div>
                       </div>
                       <div className="order-items-count" style={{ minWidth: '60px', textAlign: 'center' }}>{order.items} item{order.items > 1 ? 's' : ''}</div>
