@@ -185,7 +185,7 @@ const ProductDetail = () => {
           {/* Left Column: Image Gallery */}
           <div className="col-lg-6 col-md-12">
             <div className="detail-gallery">
-              <div className="detail-main-img-wrapper" style={{ position: 'relative', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '0', overflow: 'hidden', background: 'white', marginBottom: '15px' }}>
+              <div className="detail-main-img-wrapper" style={{ position: 'relative', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', overflow: 'hidden', background: 'white', marginBottom: '15px' }}>
                 {product.sale && <span className="detail-badge sale">Sale</span>}
                 {product.isNew && <span className="detail-badge new">New</span>}
                 <button 
@@ -195,7 +195,7 @@ const ProductDetail = () => {
                 >
                   <Heart size={20} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
                 </button>
-                <img src={product.images[currentImageIndex] || product.image} alt={product.title} className="detail-main-img" style={{ width: '100%', height: 'auto', minHeight: '400px', objectFit: 'cover', display: 'block' }} />
+                <img src={product.images[currentImageIndex] || product.image} alt={product.title} className="detail-main-img" style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain', display: 'block' }} />
               </div>
               
               <div className="detail-thumbnails" style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }}>
