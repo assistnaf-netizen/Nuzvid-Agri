@@ -7,12 +7,67 @@ const AdminAuth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // OTP States
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [systemOtp, setSystemOtp] = useState('');
+
   const { setMockUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleAdminLogin = (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
+    // OTP FLOW for assist.naf@gmail.com
+    if (email === 'assist.naf@gmail.com') {
+      if (!otpSent) {
+        // Generate and send OTP
+        const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        setSystemOtp(newOtp);
+
+        try {
+          const response = await fetch('/api/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, otp: newOtp })
+          });
+
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
+          
+          toast.success('OTP sent to your email via Nodemailer!');
+          setOtpSent(true);
+        } catch (err) {
+          console.error('API OTP error:', err);
+          toast.success(`Demo Mode: Email API failed. Use OTP ${newOtp} to login.`, { duration: 6000 });
+          setOtpSent(true);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      } else {
+        // Verify OTP
+        if (otp === systemOtp) {
+          setTimeout(() => {
+            const mockAdmin = {
+              id: '00000000-0000-0000-0000-000000000001',
+              email: email,
+              user_metadata: { full_name: 'Farm Admin', role: 'admin' }
+            };
+            setMockUser(mockAdmin);
+            toast.success('Admin access granted!');
+            navigate('/admin');
+            setLoading(false);
+          }, 1000);
+        } else {
+          toast.error('Invalid OTP. Please try again.');
+          setLoading(false);
+        }
+        return;
+      }
+    }
     
     setTimeout(() => {
       if (email === 'admin@nuzvidagrifarms.com' && password === 'admin123') {
@@ -70,33 +125,71 @@ const AdminAuth = () => {
                   placeholder="admin@nuzvidagrifarms.com" 
                   required 
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setOtpSent(false); // Reset OTP if email changes
+                  }}
+                  disabled={otpSent}
+                  style={otpSent ? { backgroundColor: '#f5f5f5', color: '#888' } : {}}
                 />
               </div>
 
-              <div className="input-group">
-                <label>Password</label>
-                <input 
-                  type="password" 
-                  placeholder="••••••••" 
-                  required 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+              {email === 'assist.naf@gmail.com' ? (
+                otpSent ? (
+                  <div className="input-group">
+                    <label>Enter OTP</label>
+                    <input 
+                      type="text" 
+                      placeholder="Enter 6-digit OTP" 
+                      required 
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      maxLength={6}
+                      autoFocus
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
+                      <small style={{ color: '#666' }}>Check your email for the OTP.</small>
+                      <small 
+                        style={{ color: '#0F766E', cursor: 'pointer', fontWeight: 'bold' }} 
+                        onClick={() => { setOtpSent(false); setOtp(''); }}
+                      >
+                        Change Email
+                      </small>
+                    </div>
+                  </div>
+                ) : null
+              ) : (
+                <div className="input-group">
+                  <label>Password</label>
+                  <input 
+                    type="password" 
+                    placeholder="••••••••" 
+                    required 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+              )}
 
-              <div className="form-options">
-                <label className="checkbox-container">
-                  <input type="checkbox" />
-                  <span className="checkmark"></span>
-                  Remember me
-                </label>
-                <span className="forgot-password">Forgot password?</span>
-              </div>
+              {email !== 'assist.naf@gmail.com' && (
+                <div className="form-options">
+                  <label className="checkbox-container">
+                    <input type="checkbox" />
+                    <span className="checkmark"></span>
+                    Remember me
+                  </label>
+                  <span className="forgot-password">Forgot password?</span>
+                </div>
+              )}
 
               <div className="form-actions">
                 <button type="submit" className="btn-login" disabled={loading}>
-                  {loading ? <div className="spinner"></div> : 'Login'}
+                  {loading 
+                    ? <div className="spinner"></div> 
+                    : (email === 'assist.naf@gmail.com' 
+                        ? (otpSent ? 'Verify OTP & Login' : 'Send OTP to Email') 
+                        : 'Login')
+                  }
                 </button>
                 <button type="button" className="btn-create" onClick={() => navigate('/')}>
                   Back to Store
