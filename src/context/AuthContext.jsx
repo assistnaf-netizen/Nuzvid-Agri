@@ -19,6 +19,8 @@ export const AuthProvider = ({ children }) => {
   const logoutMock = () => {
     setUser(null);
     localStorage.removeItem('mock_admin');
+    localStorage.removeItem('farm_cart');
+    localStorage.removeItem('farm_wishlist');
   };
 
   useEffect(() => {
