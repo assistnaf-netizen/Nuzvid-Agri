@@ -90,16 +90,16 @@ const StoreSettings = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     
-    // Save shipping settings to Supabase
-    const { error } = await supabase.from('store_settings').upsert({
-      id: 1,
-      flat_shipping_rate: Number(settings.flatShippingRate),
-      free_shipping_threshold: Number(settings.freeShippingThreshold),
-      platform_fee: Number(settings.platformFee),
-      updated_at: new Date().toISOString()
-    });
-
-    if (error) {
+    // Save shipping settings via API to bypass RLS
+    try {
+      const response = await fetch('/api/save-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ settings })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to save settings');
+    } catch (error) {
       console.error('Save settings error:', error);
       toast.error('Failed to save settings.');
       return;

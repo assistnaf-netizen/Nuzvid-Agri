@@ -125,6 +125,55 @@ export default defineConfig({
             });
           }
         });
+        // --- Save Settings Mock ---
+        server.middlewares.use('/api/save-settings', async (req, res) => {
+          if (req.method === 'OPTIONS') {
+             res.statusCode = 200;
+             res.end();
+             return;
+          }
+          if (req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => {
+              body += chunk.toString();
+            });
+            req.on('end', async () => {
+              try {
+                const parsedBody = JSON.parse(body);
+                const { settings } = parsedBody;
+
+                const supabaseUrl = process.env.VITE_SUPABASE_URL;
+                const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+                if (!supabaseUrl || !supabaseKey) {
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ error: 'Supabase keys missing' }));
+                  return;
+                }
+
+                const { createClient } = await import('@supabase/supabase-js');
+                const supabase = createClient(supabaseUrl, supabaseKey);
+
+                const { data, error } = await supabase.from('store_settings').upsert({
+                  id: 1,
+                  flat_shipping_rate: Number(settings.flatShippingRate),
+                  free_shipping_threshold: Number(settings.freeShippingThreshold),
+                  platform_fee: Number(settings.platformFee),
+                  updated_at: new Date().toISOString()
+                });
+
+                if (error) throw error;
+
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: true, data }));
+              } catch (e) {
+                res.statusCode = 500;
+                res.end(JSON.stringify({ error: e.message }));
+              }
+            });
+          }
+        });
       }
     }
   ],
