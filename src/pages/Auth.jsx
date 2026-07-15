@@ -46,15 +46,15 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const testAdminEmails = [
-      'assist.naf@gmail.com',
+    const testAdminEmails = ['assist.naf@gmail.com'];
+    const testUserEmails = [
       'balajiprojects049@gmail.com',
       'balajirockzz9030@gmail.com',
       'sarabu.balaji9985@gmail.com'
     ];
 
-    // ADMIN OTP FLOW FOR TEST EMAILS
-    if (testAdminEmails.includes(loginEmail)) {
+    // NODE-MAILER OTP FLOW FOR TEST EMAILS
+    if (testAdminEmails.includes(loginEmail) || testUserEmails.includes(loginEmail)) {
       if (!otpSent) {
         // Generate OTP
         const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -86,17 +86,28 @@ const Auth = () => {
         }
         return;
       } else {
-        // Verify OTP (compare user input with generated OTP)
+        // Verify OTP
         if (otp === systemOtp) {
           setTimeout(() => {
-            const mockAdmin = {
-              email: loginEmail,
-              user_metadata: { full_name: 'Farm Admin', role: 'admin' }
-            };
-            setMockUser(mockAdmin);
-            toast.success('Admin logged in successfully!');
-            const params = new URLSearchParams(location.search);
-            navigate(params.get('redirect') || '/admin');
+            if (testAdminEmails.includes(loginEmail)) {
+              const mockAdmin = {
+                email: loginEmail,
+                user_metadata: { full_name: 'Farm Admin', role: 'admin' }
+              };
+              setMockUser(mockAdmin);
+              toast.success('Admin logged in successfully!');
+              const params = new URLSearchParams(location.search);
+              navigate(params.get('redirect') || '/admin');
+            } else {
+              const mockUser = {
+                email: loginEmail,
+                user_metadata: { full_name: 'Test User', role: 'user' }
+              };
+              setMockUser(mockUser);
+              toast.success('Logged in successfully as User!');
+              const params = new URLSearchParams(location.search);
+              navigate(params.get('redirect') || '/');
+            }
             setLoading(false);
           }, 1000);
         } else {
