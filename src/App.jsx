@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
+import GlobalLoader from './components/GlobalLoader';
 import Layout from './components/Layout';
 import AdminLayout from './components/AdminLayout';
 import Home from './pages/Home';
@@ -37,9 +38,14 @@ import ManageInventory from './pages/admin/ManageInventory';
 import AdminAuth from './pages/admin/AdminAuth';
 
 function App() {
+  const [appLoaded, setAppLoaded] = useState(false);
+
   return (
-    <Router>
-      <Toaster 
+    <>
+      <GlobalLoader onLoaded={() => setAppLoaded(true)} />
+      {appLoaded && (
+        <Router>
+          <Toaster 
         position="top-center" 
         toastOptions={{
           style: {
@@ -97,7 +103,9 @@ function App() {
           <Route path="settings" element={<StoreSettings />} />
         </Route>
       </Routes>
-    </Router>
+        </Router>
+      )}
+    </>
   );
 }
 

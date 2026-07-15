@@ -1,0 +1,68 @@
+.global-loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #faf9f6; /* Soft beige/off-white */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: 'Inter', sans-serif;
+}
+
+.global-loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.loader-logo-circle {
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
+  margin-bottom: 24px;
+  color: #16a34a; /* Earthy green */
+}
+
+.loader-brand-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #3c1c14; /* Deep rich brown */
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.loader-brand-name .highlight {
+  color: #16a34a; /* Leaf green */
+}
+
+.loader-tagline {
+  font-size: 1.1rem;
+  color: #8b5a2b; /* Softer brown */
+  margin-top: 8px;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.loader-progress-bar-container {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.loader-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #15803d, #22c55e);
+  border-radius: 4px;
+}

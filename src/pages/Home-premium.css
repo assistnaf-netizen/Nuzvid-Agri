@@ -1,0 +1,72 @@
+/* Beast Mode Premium Styles for Home */
+.hover-zoom {
+  overflow: hidden;
+  position: relative;
+  border-radius: 12px;
+}
+
+.hover-zoom img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hover-zoom:hover img {
+  transform: scale(1.08);
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.8;
+  transition: opacity 0.4s ease;
+}
+
+.hover-zoom:hover .banner-overlay {
+  opacity: 1;
+}
+
+.banner-arrow-btn {
+  z-index: 2;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease !important;
+}
+
+.hover-zoom:hover .banner-arrow-btn {
+  transform: translateY(-50%) scale(1.1);
+  background: var(--color-primary);
+  color: white;
+}
+
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease !important;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(22, 163, 74, 0.15);
+  border-color: rgba(22, 163, 74, 0.3) !important;
+}
+
+/* Premium Typography for Hero Section */
+.hero-content h1 {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -1px;
+  font-weight: 800;
+  background: linear-gradient(to right, #ffffff, #e2e8f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none !important;
+  filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.6));
+}
+
+.hero-content p {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: #f8fafc !important;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.8));
+}

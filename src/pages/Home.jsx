@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSEO from '../hooks/useSEO';
 import './Home.css';
+import './Home-premium.css';
 
 const Home = () => {
   useSEO({ title: 'Home', description: 'Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table.' });
@@ -186,13 +187,20 @@ const Home = () => {
       </div>
 
       {/* Promotional Banners Section (3 Cards) */}
-      <section className="promo-banners-section py-4">
+      <motion.section 
+        className="promo-banners-section py-4"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="container">
           <div className="promo-banners-grid">
             {/* Left Large Banner */}
-            <div className="promo-banner-large">
+            <div className="promo-banner-large hover-zoom">
               <Link to="/our-commitment" className="promo-img-link">
                 <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/our_commitment_1200x.jpg?v=1759857822" alt="Our Commitment" className="promo-bg-img" />
+                <div className="banner-overlay"></div>
                 <div className="banner-arrow-btn">
                   <FaArrowRight />
                 </div>
@@ -201,18 +209,20 @@ const Home = () => {
 
             {/* Right Stacked Banners */}
             <div className="promo-banners-stacked">
-              <div className="promo-banner-small">
+              <div className="promo-banner-small hover-zoom">
                 <Link to="/about-us" className="promo-img-link">
                   <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/ABOUT_US_1200x.jpg?v=1759149023" alt="About Us" className="promo-bg-img" />
+                  <div className="banner-overlay"></div>
                   <div className="banner-arrow-btn">
                     <FaArrowRight />
                   </div>
                 </Link>
               </div>
 
-              <div className="promo-banner-small">
+              <div className="promo-banner-small hover-zoom">
                 <Link to="/our-intro" className="promo-img-link">
                   <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Our_Intro_1200x.jpg?v=1759857682" alt="Our Intro" className="promo-bg-img" />
+                  <div className="banner-overlay"></div>
                   <div className="banner-arrow-btn">
                     <FaArrowRight />
                   </div>
@@ -221,10 +231,16 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* The Goodness We Share */}
-      <section className="goodness-section py-4">
+      <motion.section 
+        className="goodness-section py-4"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="container">
           <h2 className="section-title text-center">The Goodness We Share</h2>
           <div className="tabs">
@@ -317,8 +333,48 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Features Section */}
+      <motion.section 
+        className="features-section py-4"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <div className="container">
+          <div className="features-grid">
+            <div className="feature-item hover-lift">
+              <Leaf className="feature-icon" size={32} />
+              <h4>100% Organic</h4>
+              <p>Pure & natural products from our own farms.</p>
+            </div>
+            <div className="feature-item hover-lift">
+              <Truck className="feature-icon" size={32} />
+              <h4>Fast Delivery</h4>
+              <p>Quick & safe delivery to your doorstep.</p>
+            </div>
+            <div className="feature-item hover-lift">
+              <ShieldCheck className="feature-icon" size={32} />
+              <h4>Quality Guaranteed</h4>
+              <p>Strict quality checks for your health.</p>
+            </div>
+            <div className="feature-item hover-lift">
+              <Award className="feature-icon" size={32} />
+              <h4>Premium Quality</h4>
+              <p>Best in class natural food products.</p>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
       {/* Blog & Insights */}
-      <section className="blog-insights py-4">
+      <motion.section 
+        className="blog-insights py-4"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1 }}
+      >
         <div className="container position-relative">
           <h2 className="section-title text-center text-uppercase fw-bold" style={{ letterSpacing: '2px', color: '#333' }}>BLOG & INSIGHTS<span style={{ color: '#8B4513' }}>.</span></h2>
           <div className="blog-slider-container position-relative mt-4">
