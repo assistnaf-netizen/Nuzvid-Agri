@@ -4,16 +4,17 @@ import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { Heart, ShoppingCart, Trash2, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Wishlist.css';
 
 const Wishlist = () => {
-  useSEO({ title: 'My Wishlist', description: 'View your saved products at Nuzvid Agri Farms.' });
+  
   const { wishlistItems, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
 
   return (
     <div className="wishlist-page">
+      <SEO title="My Wishlist" description="View your saved products at Nuzvid Agri Farms." />
       {/* Breadcrumb */}
       <div className="page-header">
         <div className="container">

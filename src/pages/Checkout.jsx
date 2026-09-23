@@ -6,13 +6,13 @@ import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Truck, CreditCard, CheckCircle, ShieldCheck, MapPin, Loader2, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import { initializeRazorpayPayment } from '../lib/razorpay';
 import { supabase } from '../lib/supabase';
 import './Checkout.css';
 
 const Checkout = () => {
-  useSEO({ title: 'Checkout', description: 'Complete your order securely.' });
+  
   const { cartItems, totalAmount, clearCart } = useCart();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -204,6 +204,7 @@ const Checkout = () => {
   if (authLoading) {
     return (
       <div className="checkout-page-wrapper" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh'}}>
+      <SEO title="Checkout" description="Complete your order securely." />
         <Loader2 className="spin" size={40} color="var(--color-primary)" />
       </div>
     );

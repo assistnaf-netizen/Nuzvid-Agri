@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CheckCircle, Package, MapPin, ArrowRight, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './OrderSuccess.css';
 
 const OrderSuccess = () => {
-  useSEO({ title: 'Order Confirmation', description: 'Thank you for your order from Nuzvid Agri Farms.' });
+  
   const location = useLocation();
   const orderData = location.state || {};
   const orderId = orderData.orderId || `ORD-${Date.now().toString().slice(-6)}`;
@@ -25,6 +25,7 @@ const OrderSuccess = () => {
 
   return (
     <div className="order-success-page">
+      <SEO title="Order Confirmation" description="Thank you for your order from Nuzvid Agri Farms." />
       <div className="order-success-container">
 
         {/* Success Animation */}

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Policy.css';
 
 const TermsConditions = () => {
-  useSEO({ title: 'Terms & Conditions', description: 'Terms & Conditions – Nuzvid Agri Farms' });
+  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -12,6 +12,7 @@ const TermsConditions = () => {
 
   return (
     <div className="policy-page-wrapper">
+      <SEO title="Terms & Conditions" description="Terms & Conditions – Nuzvid Agri Farms" />
       <section className="policy-hero">
         <h1>Terms & Conditions</h1>
         <div className="breadcrumb">

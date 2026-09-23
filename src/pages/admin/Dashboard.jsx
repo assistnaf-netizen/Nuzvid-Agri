@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, ShoppingCart, Users, TrendingUp, Package, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { DollarSign, ShoppingCart, Users, TrendingUp, Package, ArrowUpRight, ArrowDownRight, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
 import './admin.css';
 
 const AVATAR_COLORS = ['#d68d3c', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#f59e0b', '#06b6d4'];
+const PIE_COLORS = ['#d68d3c', '#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444'];
 
 const STATUS_CONFIG = {
   Delivered:  'admin-badge-green',
@@ -20,11 +21,13 @@ const Dashboard = () => {
     revenue: 0,
     orders: 0,
     customers: 0,
-    products: 0
+    retentionRate: 0
   });
   const [salesData, setSalesData] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const [regionData, setRegionData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const Dashboard = () => {
       // Fetch Products
       const { data: productsData, error: productsError } = await supabase
         .from('products')
-        .select('id');
+        .select('*');
 
       if (productsError) throw productsError;
 
@@ -56,17 +59,25 @@ const Dashboard = () => {
       const totalRevenue = ordersData.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
       const totalOrders = ordersData.length;
       
-      // Try to count unique customers from orders if profiles is small
-      const uniqueCustomers = new Set(ordersData.map(o => o.customer_email || o.user_id));
-      const totalCustomers = Math.max(validProfiles.length, uniqueCustomers.size);
+      const emailCounts = {};
+      ordersData.forEach(o => {
+        if (o.customer_email) {
+          emailCounts[o.customer_email] = (emailCounts[o.customer_email] || 0) + 1;
+        }
+      });
+      const uniqueCustomersFromOrders = Object.keys(emailCounts).length;
+      const totalCustomers = Math.max(validProfiles.length, uniqueCustomersFromOrders);
       
-      const totalProducts = productsData.length;
+      const returningCustomers = Object.values(emailCounts).filter(c => c > 1).length;
+      const retentionRate = uniqueCustomersFromOrders > 0 
+        ? Math.round((returningCustomers / uniqueCustomersFromOrders) * 100) 
+        : 0;
 
       setStats({
         revenue: totalRevenue,
         orders: totalOrders,
         customers: totalCustomers,
-        products: totalProducts
+        retentionRate: retentionRate
       });
 
       // 2. Calculate Sales Data (Last 7 Days)
@@ -100,17 +111,28 @@ const Dashboard = () => {
       }));
       setRecentOrders(formattedRecent);
 
-      // 4. Top Products
+      // 4. Top Products & Categories
       const productSales = {};
+      const categorySales = {};
+      
       ordersData.forEach(order => {
         if (order.order_items) {
           order.order_items.forEach(item => {
             const name = item.product_name || 'Unknown Product';
+            const price = Number(item.price || 0);
+            const qty = Number(item.quantity || 1);
+            const revenue = price * qty;
+
             if (!productSales[name]) {
               productSales[name] = { name, sales: 0, revenue: 0 };
             }
-            productSales[name].sales += item.quantity || 1;
-            productSales[name].revenue += (item.price || 0) * (item.quantity || 1);
+            productSales[name].sales += qty;
+            productSales[name].revenue += revenue;
+
+            // Categories
+            const product = productsData.find(p => p.id === item.product_id);
+            const category = product?.category || 'Uncategorized';
+            categorySales[category] = (categorySales[category] || 0) + revenue;
           });
         }
       });
@@ -125,8 +147,33 @@ const Dashboard = () => {
         ...p,
         pct: Math.round((p.revenue / maxRev) * 100)
       }));
-
       setTopProducts(formattedProducts);
+
+      const formattedCategories = Object.entries(categorySales)
+        .map(([name, value]) => ({ name, value }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 5);
+      setCategoryData(formattedCategories);
+
+      // 5. Regional Sales
+      const regionSalesMap = {};
+      ordersData.forEach(o => {
+        let region = 'Other';
+        if (o.shipping_address) {
+          const parts = o.shipping_address.split(',').map(p => p.trim());
+          if (parts.length >= 2) {
+            region = parts[parts.length - 2];
+            if (region.length > 20) region = 'Other'; 
+          }
+        }
+        regionSalesMap[region] = (regionSalesMap[region] || 0) + Number(o.total_amount || 0);
+      });
+
+      const formattedRegions = Object.entries(regionSalesMap)
+        .map(([name, sales]) => ({ name, sales }))
+        .sort((a, b) => b.sales - a.sales)
+        .slice(0, 5);
+      setRegionData(formattedRegions);
 
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -140,7 +187,7 @@ const Dashboard = () => {
     { label: 'Total Revenue', value: `₹${stats.revenue.toLocaleString()}`, change: '+12.5%', up: true, icon: <DollarSign size={22}/>, color: '#d68d3c', bg: '#fff7ed', accent: '#d68d3c' },
     { label: 'Total Orders',  value: stats.orders.toString(),        change: '+8.2%',  up: true, icon: <ShoppingCart size={22}/>, color: '#3b82f6', bg: '#eff6ff', accent: '#3b82f6' },
     { label: 'Customers',     value: stats.customers.toString(),      change: '+15.3%', up: true, icon: <Users size={22}/>, color: '#10b981', bg: '#ecfdf5', accent: '#10b981' },
-    { label: 'Active Products',value: stats.products.toString(),        change: '-2.0%',  up: false,icon: <Package size={22}/>, color: '#8b5cf6', bg: '#f5f3ff', accent: '#8b5cf6' },
+    { label: 'Retention Rate',value: `${stats.retentionRate}%`,      change: '+5.0%',  up: true, icon: <RefreshCw size={22}/>, color: '#8b5cf6', bg: '#f5f3ff', accent: '#8b5cf6' },
   ];
 
   return (
@@ -268,6 +315,59 @@ const Dashboard = () => {
                 )}
               </div>
             </motion.div>
+          </div>
+          {/* Analytics Bottom Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '24px' }}>
+            
+            {/* Revenue by Category (Pie Chart) */}
+            <motion.div className="admin-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+              <div className="admin-card-header">
+                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#1a1d2e' }}>Revenue by Category</h2>
+              </div>
+              <div className="admin-card-body" style={{ height: '300px', padding: '10px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `₹${value.toLocaleString()}`} />
+                    <Legend verticalAlign="bottom" height={36} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            {/* Revenue by Region (Bar Chart) */}
+            <motion.div className="admin-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
+              <div className="admin-card-header">
+                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#1a1d2e' }}>Top Regions by Revenue</h2>
+              </div>
+              <div className="admin-card-body" style={{ height: '300px', padding: '10px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={regionData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
+                    <XAxis type="number" axisLine={false} tickLine={false} tickFormatter={(value) => `₹${value}`} />
+                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} width={100} />
+                    <Tooltip 
+                      formatter={(value) => [`₹${value.toLocaleString()}`, 'Revenue']}
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                    />
+                    <Bar dataKey="sales" fill="#10b981" radius={[0, 4, 4, 0]} barSize={20} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
           </div>
         </>
       )}

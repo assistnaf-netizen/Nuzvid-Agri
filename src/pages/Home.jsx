@@ -5,12 +5,11 @@ import { FaArrowRight, FaArrowLeft, FaChevronLeft, FaChevronRight, FaStar } from
 import { Leaf, Truck, ShieldCheck, Award } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Home.css';
 import './Home-premium.css';
 
 const Home = () => {
-  useSEO({ title: 'Home', description: 'Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table.' });
   const [activeTab, setActiveTab] = useState('wood-pressed-oils');
   const [heroBanners, setHeroBanners] = useState([{
     desktop: 'https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977',
@@ -145,6 +144,7 @@ const Home = () => {
 
   return (
     <div className="home-page">
+      <SEO title="Home" description="Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table." />
       {/* Hero Section */}
       <section className="hero-section">
         <AnimatePresence mode="wait">

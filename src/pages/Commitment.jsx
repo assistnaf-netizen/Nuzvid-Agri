@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Commitment.css';
 
 const Commitment = () => {
-  useSEO({ title: 'Our Commitment', description: 'Learn about our dedication to organic farming, purity, and sustainability.' });
+  
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -11,6 +11,7 @@ const Commitment = () => {
 
   return (
     <div className="commitment-page-wrapper">
+      <SEO title="Our Commitment" description="Learn about our dedication to organic farming, purity, and sustainability." />
       <div className="commitment-container">
         
         {/* Top Section */}

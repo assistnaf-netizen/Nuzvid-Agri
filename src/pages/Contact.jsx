@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Contact.css';
 
 const Contact = () => {
-  useSEO({ title: 'Contact Us', description: 'Get in touch with Nuzvid Agri Farms for inquiries about our organic products, orders, or partnerships.' });
+  
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -51,6 +51,7 @@ const Contact = () => {
 
   return (
     <div className="contact-page-wrapper">
+      <SEO title="Contact Us" description="Get in touch with Nuzvid Agri Farms for inquiries about our organic products, orders, or partnerships." />
       {/* Hero Banner */}
       <section className="contact-hero">
         <motion.div 

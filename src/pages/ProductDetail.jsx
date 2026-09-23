@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase';
 import { useWishlist } from '../context/WishlistContext';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -35,27 +35,7 @@ const ProductDetail = () => {
     fetchShipping();
   }, []);
 
-  useSEO({
-    title: product ? product.title : 'Loading Product...',
-    description: product ? product.description : '',
-    image: product ? product.image : undefined,
-    type: 'product',
-    productSchema: product ? {
-      "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": product.title,
-      "image": product.image,
-      "description": product.description,
-      "offers": {
-        "@type": "Offer",
-        "url": window.location.href,
-        "priceCurrency": "INR",
-        "price": product.price,
-        "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-        "itemCondition": "https://schema.org/NewCondition"
-      }
-    } : null
-  });
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -171,6 +151,29 @@ const ProductDetail = () => {
 
   return (
     <div className="product-detail-page">
+      {product && (
+        <SEO 
+          title={product.title}
+          description={product.description}
+          image={product.image}
+          type="product"
+          productSchema={{
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": product.title,
+            "image": product.image,
+            "description": product.description,
+            "offers": {
+              "@type": "Offer",
+              "url": window.location.href,
+              "priceCurrency": "INR",
+              "price": product.price,
+              "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+              "itemCondition": "https://schema.org/NewCondition"
+            }
+          }}
+        />
+      )}
       {/* Breadcrumb */}
       <div className="detail-breadcrumb">
         <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

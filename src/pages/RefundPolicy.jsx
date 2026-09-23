@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Policy.css';
 
 const RefundPolicy = () => {
-  useSEO({ title: 'Refund Policy', description: 'Returns, Refunds & Exchanges Policy – Nuzvid Agri Farms' });
+  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -12,6 +12,7 @@ const RefundPolicy = () => {
 
   return (
     <div className="policy-page-wrapper">
+      <SEO title="Refund Policy" description="Returns, Refunds & Exchanges Policy – Nuzvid Agri Farms" />
       <section className="policy-hero">
         <h1>Refund Policy</h1>
         <div className="breadcrumb">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Faqs.css';
 
 const faqsData = [
@@ -47,7 +47,7 @@ const faqsData = [
 ];
 
 const Faqs = () => {
-  useSEO({ title: 'FAQs', description: 'Frequently Asked Questions – Nuzvid Agri Farms' });
+  
   const [activeIndex, setActiveIndex] = useState(0); // First item open by default
 
   useEffect(() => {
@@ -60,6 +60,7 @@ const Faqs = () => {
 
   return (
     <div className="faqs-page-wrapper">
+      <SEO title="FAQs" description="Frequently Asked Questions – Nuzvid Agri Farms" />
       <section className="faqs-hero">
         <h1>FAQs</h1>
         <div className="breadcrumb">

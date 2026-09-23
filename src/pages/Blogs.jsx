@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Blogs.css';
 
 const blogsData = [
@@ -67,7 +67,7 @@ const blogsData = [
 ];
 
 const Blogs = () => {
-  useSEO({ title: 'News & Blog', description: 'Read our latest blogs, updates, and news from Nuzvid Agri Farms' });
+  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -75,6 +75,7 @@ const Blogs = () => {
 
   return (
     <div className="blogs-page-wrapper">
+      <SEO title="Brown Sugar by Nuzvid Agri Farms: Pure, Wholesome Sweetness Rooted in Tradition" description="Every grain brings authentic, natural sweetness with nourishing benefits. We believe your food should be honest and pure. Our brown sugar reflects our dedication to quality, tradition, and sustainability." />
       <section className="blogs-hero">
         <h1>News & Stories</h1>
         <p>Discover our roots, traditional farming practices, and the wholesome goodness behind every Nuzvid Agri Farms product.</p>

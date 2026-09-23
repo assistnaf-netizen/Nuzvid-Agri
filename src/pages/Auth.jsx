@@ -6,11 +6,11 @@ import toast from 'react-hot-toast';
 import { LogIn, UserPlus, ArrowLeft, Mail } from 'lucide-react';
 import { FaGoogle } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Auth.css';
 
 const Auth = () => {
-  useSEO({ title: 'Login / Sign Up', description: 'Sign in to your Nuzvid Agri Farms account.' });
+  
   const location = useLocation();
   const navigate = useNavigate();
   const { setMockUser, setMockAdmin } = useAuth();
@@ -152,6 +152,7 @@ const Auth = () => {
 
   return (
     <div className="auth-page">
+      <SEO title="Login / Sign Up" description="Sign in to your Nuzvid Agri Farms account." />
       <div className={`auth-container sliding-auth ${isLogin ? 'is-login' : 'is-register'}`}>
         
         {/* Registration Form (Left Side) */}

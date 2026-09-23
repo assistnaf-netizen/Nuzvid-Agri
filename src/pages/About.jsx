@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './About.css';
 
 const About = () => {
-  useSEO({ title: 'About Us', description: 'Learn more about Nuzvid Agri Farms, our mission to provide pure, wood-pressed oils, and our commitment to sustainable farming.' });
+  
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -12,6 +12,7 @@ const About = () => {
 
   return (
     <div className="about-page-wrapper">
+      <SEO title="About Us" description="Learn more about Nuzvid Agri Farms, our mission to provide pure, wood-pressed oils, and our commitment to sustainable farming." />
       {/* Hero Banner Section */}
       <section className="about-hero" style={{ backgroundImage: "url('https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977')" }}>
         <div className="about-hero-text">

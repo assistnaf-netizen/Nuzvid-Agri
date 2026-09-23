@@ -4,11 +4,11 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Trash2, ShoppingBag, ArrowRight, ShieldCheck, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Cart.css';
 
 const Cart = () => {
-  useSEO({ title: 'Your Cart', description: 'Review the items in your shopping cart before checkout.' });
+  
   const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -43,6 +43,7 @@ const Cart = () => {
   if (cartItems.length === 0) {
     return (
       <div className="cart-page-wrapper">
+      <SEO title="Your Cart" description="Review the items in your shopping cart before checkout." />
         <div className="cart-container">
           <motion.div 
             className="cart-empty-state"

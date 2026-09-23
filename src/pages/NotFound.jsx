@@ -2,13 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Search, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './NotFound.css';
 
 const NotFound = () => {
-  useSEO({ title: 'Page Not Found', description: 'The page you are looking for does not exist.' });
+  
   return (
     <div className="not-found-page">
+      <SEO title="Page Not Found" description="The page you are looking for does not exist." />
       <div className="container text-center">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

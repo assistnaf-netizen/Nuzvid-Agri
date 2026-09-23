@@ -7,7 +7,7 @@ import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Account.css';
 
 const STATUS_COLORS = {
@@ -18,7 +18,7 @@ const STATUS_COLORS = {
 };
 
 const MyAccount = () => {
-  useSEO({ title: 'My Account', description: 'Manage your Nuzvid Agri Farms profile and orders.' });
+  
   const { user, logoutMock } = useAuth();
   const navigate = useNavigate();
   const { addToCart } = useCart();
@@ -234,6 +234,7 @@ const MyAccount = () => {
   if (!user) {
     return (
       <div className="account-gate">
+      <SEO title="My Account" description="Manage your Nuzvid Agri Farms profile and orders." />
         <div className="account-gate-content">
           <User size={64} color="#d68d3c" strokeWidth={1.5} />
           <h2>Please Login to View Your Account</h2>

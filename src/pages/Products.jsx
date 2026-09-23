@@ -4,11 +4,10 @@ import { FaEye, FaShoppingCart, FaHeart } from 'react-icons/fa';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
-import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 import './Products.css';
 
 const Products = () => {
-  useSEO({ title: 'Shop All Products', description: 'Browse our wide range of premium organic food products, cold pressed oils, and A2 Ghee.' });
   const [category, setCategory] = useState('All');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -111,6 +110,7 @@ const Products = () => {
 
   return (
     <div className="products-page">
+      <SEO title="Shop All Products" description="Browse our wide range of premium organic food products, cold pressed oils, and A2 Ghee." />
 
       {/* Banner */}
       <div className="products-banner">
