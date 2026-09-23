@@ -35,7 +35,7 @@ const ManageCustomers = () => {
           id: p.id,
           name: p.full_name || 'Guest User',
           avatar: p.full_name ? p.full_name.substring(0, 2).toUpperCase() : 'G',
-          email: 'Registered User',
+          email: p.email || 'Registered User',
           phone: p.phone || '-',
           orders: 0,
           spent: 0,
