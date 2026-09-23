@@ -45,6 +45,83 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: itemsError.message });
       }
 
+      // --- NEW NOTIFICATION LOGIC ---
+      try {
+        const nodemailer = await import('nodemailer');
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS.replace(/"/g, '') // Google App Password
+          }
+        });
+
+        const itemsList = itemsPayload.map(i => `
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">${i.product_title}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${i.quantity}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">₹${i.price_at_time}</td>
+            <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">₹${i.price_at_time * i.quantity}</td>
+          </tr>
+        `).join('');
+
+        const mailOptions = {
+          from: `"Nuzvid Agri Farms Orders" <${process.env.SMTP_USER}>`,
+          to: 'assist.naf@gmail.com',
+          subject: `New Order Received! #${orderPayload.display_id}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+              <h2 style="color: #10b981; border-bottom: 2px solid #10b981; padding-bottom: 10px;">New Order Received!</h2>
+              
+              <h3 style="background-color: #f3f4f6; padding: 10px; border-radius: 5px;">Customer Details</h3>
+              <p style="margin: 5px 0;"><strong>Name:</strong> ${orderPayload.customer_name}</p>
+              <p style="margin: 5px 0;"><strong>Email:</strong> ${orderPayload.customer_email}</p>
+              <p style="margin: 5px 0;"><strong>Phone:</strong> ${orderPayload.customer_phone}</p>
+              <p style="margin: 5px 0;"><strong>Shipping Address:</strong> ${orderPayload.shipping_address}</p>
+
+              <h3 style="background-color: #f3f4f6; padding: 10px; border-radius: 5px; margin-top: 20px;">Order Summary</h3>
+              <p style="margin: 5px 0;"><strong>Order ID:</strong> ${orderPayload.display_id}</p>
+              <p style="margin: 5px 0;"><strong>Total Amount:</strong> <span style="color: #ea580c; font-weight: bold;">₹${orderPayload.total_amount}</span></p>
+              
+              <h3 style="background-color: #f3f4f6; padding: 10px; border-radius: 5px; margin-top: 20px;">Payment Details</h3>
+              <p style="margin: 5px 0;"><strong>Method:</strong> ${orderPayload.payment_method}</p>
+              <p style="margin: 5px 0;"><strong>Status:</strong> ${orderPayload.payment_status}</p>
+              <p style="margin: 5px 0;"><strong>Transaction ID:</strong> ${orderPayload.payment_id || 'N/A'}</p>
+
+              <h3 style="background-color: #f3f4f6; padding: 10px; border-radius: 5px; margin-top: 20px;">Ordered Items</h3>
+              <table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;">
+                <thead>
+                  <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Product</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Qty</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Price</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${itemsList}
+                </tbody>
+              </table>
+              
+              <div style="margin-top: 30px; font-size: 13px; color: #666; text-align: center; border-top: 1px solid #ddd; padding-top: 15px;">
+                <p>You can view and manage this order in the Nuzvid Agri Farms Admin Panel.</p>
+              </div>
+            </div>
+          `
+        };
+
+        if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+          await transporter.sendMail(mailOptions);
+          console.log('Admin notification email sent successfully!');
+        } else {
+          console.warn('SMTP_USER and SMTP_PASS are not set. Skipping email notification.');
+        }
+      } catch (mailError) {
+        console.error('Error sending notification email:', mailError);
+        // Don't fail the order creation just because email failed
+      }
+      // ------------------------------
+
       return res.status(200).json({ success: true, orderId: realOrderId });
     }
 
