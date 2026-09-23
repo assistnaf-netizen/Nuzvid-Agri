@@ -1,8 +1,10 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  return {
   plugins: [
     react(),
     {
@@ -35,13 +37,13 @@ export default defineConfig({
                 const transporter = nodemailer.default.createTransport({
                   service: 'gmail',
                   auth: {
-                    user: process.env.SMTP_USER || 'assist.naf@gmail.com',
-                    pass: process.env.SMTP_PASS?.replace(/"/g, '')
+                    user: env.SMTP_USER || 'assist.naf@gmail.com',
+                    pass: env.SMTP_PASS?.replace(/"/g, '')
                   }
                 });
 
                 const mailOptions = {
-                  from: `"Nuzvid Agri Farms" <${process.env.SMTP_USER || 'assist.naf@gmail.com'}>`,
+                  from: `"Nuzvid Agri Farms" <${env.SMTP_USER || 'assist.naf@gmail.com'}>`,
                   to: email,
                   subject: 'Admin Login OTP - Nuzvid Agri Farms',
                   html: `
@@ -90,8 +92,8 @@ export default defineConfig({
                 if (parsedBody.action === 'save_order') {
                   const { createClient } = await import('@supabase/supabase-js');
                   const supabaseAdmin = createClient(
-                    process.env.VITE_SUPABASE_URL,
-                    process.env.SUPABASE_SERVICE_ROLE_KEY
+                    env.VITE_SUPABASE_URL,
+                    env.SUPABASE_SERVICE_ROLE_KEY
                   );
 
                   const { orderPayload, itemsPayload } = parsedBody;
@@ -115,8 +117,8 @@ export default defineConfig({
                     const transporter = nodemailer.createTransport({
                       service: 'gmail',
                       auth: {
-                        user: process.env.SMTP_USER,
-                        pass: process.env.SMTP_PASS?.replace(/"/g, '')
+                        user: env.SMTP_USER,
+                        pass: env.SMTP_PASS?.replace(/"/g, '')
                       }
                     });
 
@@ -130,12 +132,14 @@ export default defineConfig({
                     `).join('');
 
                     const mailOptions = {
-                      from: `"Nuzvid Agri Farms Orders" <${process.env.SMTP_USER}>`,
-                      to: 'assist.naf@gmail.com',
-                      subject: `New Order Received! #${orderPayload.display_id}`,
+                      from: `"Nuzvid Agri Farms Orders" <${env.SMTP_USER}>`,
+                      to: ['assist.naf@gmail.com', orderPayload.customer_email].join(', '),
+                      subject: `Order Confirmation: #${orderPayload.display_id}`,
                       html: `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-                          <h2 style="color: #10b981; border-bottom: 2px solid #10b981; padding-bottom: 10px;">New Order Received!</h2>
+                          <h2 style="color: #10b981; border-bottom: 2px solid #10b981; padding-bottom: 10px;">Order Confirmation</h2>
+                          <p>Hi <strong>${orderPayload.customer_name}</strong>,</p>
+                          <p>Thank you for your order! We have received it and it is now being processed. Here are the details:</p>
                           
                           <h3 style="background-color: #f3f4f6; padding: 10px; border-radius: 5px;">Customer Details</h3>
                           <p style="margin: 5px 0;"><strong>Name:</strong> ${orderPayload.customer_name}</p>
@@ -170,7 +174,7 @@ export default defineConfig({
                       `
                     };
 
-                    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+                    if (env.SMTP_USER && env.SMTP_PASS) {
                       await transporter.sendMail(mailOptions);
                       console.log('Local Dev: Admin notification email sent successfully!');
                     }
@@ -297,8 +301,8 @@ export default defineConfig({
 
                 const { createClient } = await import('@supabase/supabase-js');
                 const supabaseAdmin = createClient(
-                  process.env.VITE_SUPABASE_URL,
-                  process.env.SUPABASE_SERVICE_ROLE_KEY
+                  env.VITE_SUPABASE_URL,
+                  env.SUPABASE_SERVICE_ROLE_KEY
                 );
 
                 const { data, error } = await supabaseAdmin
@@ -324,8 +328,8 @@ export default defineConfig({
                     const transporter = nodemailer.createTransport({
                       service: 'gmail',
                       auth: {
-                        user: process.env.SMTP_USER,
-                        pass: process.env.SMTP_PASS?.replace(/"/g, '')
+                        user: env.SMTP_USER,
+                        pass: env.SMTP_PASS?.replace(/"/g, '')
                       }
                     });
 
@@ -343,7 +347,7 @@ export default defineConfig({
                     }
 
                     const mailOptions = {
-                      from: `"Nuzvid Agri Farms" <${process.env.SMTP_USER}>`,
+                      from: `"Nuzvid Agri Farms" <${env.SMTP_USER}>`,
                       to: orderData.customer_email,
                       subject: `Order Update: #${orderData.display_id} is now ${status}`,
                       html: `
@@ -362,7 +366,7 @@ export default defineConfig({
                       `
                     };
 
-                    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+                    if (env.SMTP_USER && env.SMTP_PASS) {
                       await transporter.sendMail(mailOptions);
                       console.log(`Local Dev: Status update email sent to ${orderData.customer_email}`);
                     }
@@ -383,5 +387,6 @@ export default defineConfig({
         });
       }
     }
-  ],
-})
+  ]
+  };
+});

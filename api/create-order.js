@@ -67,11 +67,13 @@ export default async function handler(req, res) {
 
         const mailOptions = {
           from: `"Nuzvid Agri Farms Orders" <${process.env.SMTP_USER}>`,
-          to: 'assist.naf@gmail.com',
-          subject: `New Order Received! #${orderPayload.display_id}`,
+          to: ['assist.naf@gmail.com', orderPayload.customer_email].join(', '),
+          subject: `Order Confirmation: #${orderPayload.display_id}`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-              <h2 style="color: #10b981; border-bottom: 2px solid #10b981; padding-bottom: 10px;">New Order Received!</h2>
+              <h2 style="color: #10b981; border-bottom: 2px solid #10b981; padding-bottom: 10px;">Order Confirmation</h2>
+              <p>Hi <strong>${orderPayload.customer_name}</strong>,</p>
+              <p>Thank you for your order! We have received it and it is now being processed. Here are the details:</p>
               
               <h3 style="background-color: #f3f4f6; padding: 10px; border-radius: 5px;">Customer Details</h3>
               <p style="margin: 5px 0;"><strong>Name:</strong> ${orderPayload.customer_name}</p>
