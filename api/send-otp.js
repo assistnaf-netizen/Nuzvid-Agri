@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       service: 'gmail',
       auth: {
         user: process.env.SMTP_USER || 'assist.naf@gmail.com',
-        pass: process.env.SMTP_PASS 
+        pass: process.env.SMTP_PASS?.replace(/"/g, '') 
       }
     });
 

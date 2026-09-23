@@ -36,7 +36,7 @@ export default defineConfig({
                   service: 'gmail',
                   auth: {
                     user: process.env.SMTP_USER || 'assist.naf@gmail.com',
-                    pass: process.env.SMTP_PASS
+                    pass: process.env.SMTP_PASS?.replace(/"/g, '')
                   }
                 });
 
@@ -265,6 +265,115 @@ export default defineConfig({
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ success: true, data }));
+              } catch (e) {
+                res.statusCode = 500;
+                res.end(JSON.stringify({ error: e.message }));
+              }
+            });
+          }
+        });
+
+        // --- Update Order Status Mock ---
+        server.middlewares.use('/api/update-order-status', async (req, res) => {
+          if (req.method === 'OPTIONS') {
+             res.statusCode = 200;
+             res.end();
+             return;
+          }
+          if (req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => {
+              body += chunk.toString();
+            });
+            req.on('end', async () => {
+              try {
+                const { orderId, status } = JSON.parse(body);
+
+                if (!orderId || !status) {
+                  res.statusCode = 400;
+                  res.end(JSON.stringify({ error: 'Missing orderId or status' }));
+                  return;
+                }
+
+                const { createClient } = await import('@supabase/supabase-js');
+                const supabaseAdmin = createClient(
+                  process.env.VITE_SUPABASE_URL,
+                  process.env.SUPABASE_SERVICE_ROLE_KEY
+                );
+
+                const { data, error } = await supabaseAdmin
+                  .from('orders')
+                  .update({ status })
+                  .eq('id', orderId)
+                  .select();
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                  res.statusCode = 404;
+                  res.end(JSON.stringify({ error: 'Order not found' }));
+                  return;
+                }
+
+                const orderData = data[0];
+
+                // --- EMAIL NOTIFICATION LOGIC ---
+                if (orderData.customer_email) {
+                  try {
+                    const nodemailer = await import('nodemailer');
+                    const transporter = nodemailer.createTransport({
+                      service: 'gmail',
+                      auth: {
+                        user: process.env.SMTP_USER,
+                        pass: process.env.SMTP_PASS?.replace(/"/g, '')
+                      }
+                    });
+
+                    let statusColor = '#3b82f6'; 
+                    let statusMessage = 'Your order status has been updated.';
+                    if (status === 'Shipped') {
+                      statusColor = '#f59e0b';
+                      statusMessage = 'Great news! Your order has been shipped and is on its way.';
+                    } else if (status === 'Delivered') {
+                      statusColor = '#10b981';
+                      statusMessage = 'Your order has been successfully delivered. Thank you for shopping with us!';
+                    } else if (status === 'Cancelled') {
+                      statusColor = '#ef4444';
+                      statusMessage = 'Your order has been cancelled.';
+                    }
+
+                    const mailOptions = {
+                      from: `"Nuzvid Agri Farms" <${process.env.SMTP_USER}>`,
+                      to: orderData.customer_email,
+                      subject: `Order Update: #${orderData.display_id} is now ${status}`,
+                      html: `
+                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+                          <h2 style="color: ${statusColor}; border-bottom: 2px solid ${statusColor}; padding-bottom: 10px;">Order Status Update</h2>
+                          <p>Hi <strong>${orderData.customer_name || 'Customer'}</strong>,</p>
+                          <p>${statusMessage}</p>
+                          <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid ${statusColor};">
+                            <h3 style="margin-top: 0; margin-bottom: 10px;">Order Details</h3>
+                            <p style="margin: 5px 0;"><strong>Order ID:</strong> ${orderData.display_id}</p>
+                            <p style="margin: 5px 0;"><strong>New Status:</strong> <span style="font-weight: bold; color: ${statusColor};">${status}</span></p>
+                            <p style="margin: 5px 0;"><strong>Total Amount:</strong> ₹${orderData.total_amount}</p>
+                            <p style="margin: 5px 0;"><strong>Shipping Address:</strong> ${orderData.shipping_address}</p>
+                          </div>
+                        </div>
+                      `
+                    };
+
+                    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+                      await transporter.sendMail(mailOptions);
+                      console.log(\`Local Dev: Status update email sent to \${orderData.customer_email}\`);
+                    }
+                  } catch (mailError) {
+                    console.error('Local Dev: Error sending status email:', mailError);
+                  }
+                }
+
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: true, order: orderData }));
               } catch (e) {
                 res.statusCode = 500;
                 res.end(JSON.stringify({ error: e.message }));
