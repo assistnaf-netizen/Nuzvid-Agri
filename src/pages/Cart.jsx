@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Trash2, ShoppingBag, ArrowRight, ShieldCheck, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSEO from '../hooks/useSEO';
@@ -9,7 +10,16 @@ import './Cart.css';
 const Cart = () => {
   useSEO({ title: 'Your Cart', description: 'Review the items in your shopping cart before checkout.' });
   const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
+
+  const handleProceedToCheckout = () => {
+    if (!user) {
+      navigate('/login?redirect=/checkout');
+    } else {
+      navigate('/checkout');
+    }
+  };
 
   // Scroll to top on mount
   useEffect(() => {
@@ -127,7 +137,7 @@ const Cart = () => {
                 <span>₹{totalAmount}</span>
               </div>
               
-              <button className="btn-checkout" onClick={() => navigate('/checkout')}>
+              <button className="btn-checkout" onClick={handleProceedToCheckout}>
                 Proceed to Checkout <ArrowRight size={20} />
               </button>
               

@@ -14,7 +14,7 @@ import './Checkout.css';
 const Checkout = () => {
   useSEO({ title: 'Checkout', description: 'Complete your order securely.' });
   const { cartItems, totalAmount, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState(false);
@@ -22,6 +22,14 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [completedOrderDetails, setCompletedOrderDetails] = useState(null);
+
+  // Authentication check
+  useEffect(() => {
+    if (!authLoading && !user) {
+      toast.error('Please log in to access checkout.');
+      navigate('/login?redirect=/checkout');
+    }
+  }, [user, authLoading, navigate]);
   
   const [formData, setFormData] = useState({
     firstName: user?.user_metadata?.full_name?.split(' ')[0] || '',
@@ -193,6 +201,18 @@ const Checkout = () => {
     );
   };
 
+  if (authLoading) {
+    return (
+      <div className="checkout-page-wrapper" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh'}}>
+        <Loader2 className="spin" size={40} color="var(--color-primary)" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect via useEffect
+  }
+
   if (cartItems.length === 0 && !showSuccessPopup) {
     navigate('/cart');
     return null;
@@ -260,11 +280,6 @@ const Checkout = () => {
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
-    if (!user) {
-      toast.error('You must log in to place an order.');
-      navigate('/login?redirect=/checkout');
-      return;
-    }
 
     setLoading(true);
     const orderId = `ORD-${Date.now().toString().slice(-6)}`;
@@ -355,11 +370,6 @@ const Checkout = () => {
             <form onSubmit={handlePlaceOrder}>
               
               <h3 className="checkout-section-title">Contact Information</h3>
-              {!user && (
-                <div className="checkout-guest-warning">
-                  You are checking out as a <strong>Guest</strong>. Consider logging in to track your order!
-                </div>
-              )}
               
               <div className="checkout-form-row">
                 <div className="checkout-form-group">
