@@ -234,10 +234,23 @@ const ManageProducts = () => {
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAddProduct} style={{ backgroundColor: 'white', padding: '30px', borderRadius: '12px', marginBottom: '30px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', display: 'grid', gap: '25px' }}>
-          <h2 style={{ margin: 0, fontSize: '20px', color: '#1a1d2e', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
-            {isEditing ? 'Edit Product Details' : 'Add New Product'}
-          </h2>
+        <div className="admin-modal-overlay" onClick={handleCancel}>
+          <motion.div 
+            className="admin-modal"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '900px', width: '95%', maxHeight: '90vh', overflowY: 'auto', background: 'white', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
+          >
+            <div style={{ position: 'sticky', top: 0, background: 'white', zIndex: 10, padding: '20px 30px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+               <h2 style={{ margin: 0, fontSize: '20px', color: '#1a1d2e' }}>
+                 {isEditing ? 'Edit Product Details' : 'Add New Product'}
+               </h2>
+               <button type="button" onClick={handleCancel} style={{ background: 'none', border: 'none', fontSize: '28px', cursor: 'pointer', color: '#9ca3af', lineHeight: 1 }}>&times;</button>
+            </div>
+            
+            <form onSubmit={handleAddProduct} style={{ padding: '30px', display: 'grid', gap: '25px' }}>
 
           {/* SECTION: BASIC INFO */}
           <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '8px', display: 'grid', gap: '15px', gridTemplateColumns: '1fr 1fr' }}>
@@ -398,6 +411,8 @@ const ManageProducts = () => {
             <button type="button" onClick={handleCancel} disabled={isUploading} style={{ padding: '10px 20px', background: 'white', border: '1px solid #d1d5db', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
           </div>
         </form>
+          </motion.div>
+        </div>
       )}
 
       {loading ? <p>Loading products...</p> : (
