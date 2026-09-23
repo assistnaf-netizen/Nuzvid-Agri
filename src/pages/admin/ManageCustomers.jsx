@@ -151,7 +151,7 @@ const ManageCustomers = () => {
           <tbody>
             {filtered.map((c, i) => {
               const avatarColor = AVATAR_COLORS[i % AVATAR_COLORS.length];
-              const spendPct = MAX_SPENT > 0 ? (c.spent / MAX_SPENT) * 100 : 0;
+              const spendPct = maxSpent > 0 ? (c.spent / maxSpent) * 100 : 0;
               return (
                 <motion.tr key={c.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.04 }}>
                   <td>
