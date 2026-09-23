@@ -50,11 +50,25 @@ export const AuthProvider = ({ children }) => {
       setUser(JSON.parse(mockUserStr));
     }
 
+    const syncProfile = async (sessionUser) => {
+      try {
+        await supabase.from('profiles').upsert({
+          id: sessionUser.id,
+          email: sessionUser.email,
+          full_name: sessionUser.user_metadata?.full_name || sessionUser.email.split('@')[0],
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'id' });
+      } catch (err) {
+        console.error('Failed to sync profile', err);
+      }
+    };
+
     // Get active Supabase session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session?.user && !mockUserStr) {
         setUser(session.user);
+        syncProfile(session.user);
       }
       setLoading(false);
     });
@@ -64,6 +78,7 @@ export const AuthProvider = ({ children }) => {
       setSession(session);
       if (session?.user && !localStorage.getItem('mock_user')) {
         setUser(session.user);
+        syncProfile(session.user);
       } else if (!session?.user && !localStorage.getItem('mock_user')) {
         setUser(null);
       }
