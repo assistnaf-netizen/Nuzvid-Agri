@@ -47,13 +47,16 @@ const Header = () => {
   ];
 
   const handleLogout = async () => {
-    try {
-      logoutMock();
-      await supabase.auth.signOut();
-      setIsUserDropdownOpen(false);
-      toast.success('Logged out successfully');
-    } catch (error) {
-      toast.error('Failed to log out');
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      try {
+        logoutMock();
+        await supabase.auth.signOut();
+        setIsUserDropdownOpen(false);
+        toast.success('Logged out successfully');
+      } catch (error) {
+        toast.error('Failed to log out');
+      }
     }
   };
 
