@@ -36,19 +36,14 @@ const Dashboard = () => {
       setLoading(true);
 
       // Fetch Orders
-      const { data: ordersData, error: ordersError } = await supabase
-        .from('orders')
-        .select('*, order_items(*)')
-        .order('created_at', { ascending: false });
+      const oRes = await fetch('/api/get-orders?all=true');
+      const oJson = await oRes.json();
+      const ordersData = oJson.orders || [];
 
-      if (ordersError) throw ordersError;
-
-      // Fetch Profiles - gracefully handle RLS errors
-      const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id');
-
-      const validProfiles = profilesData || [];
+      // Fetch Profiles
+      const pRes = await fetch('/api/get-profiles');
+      const pJson = await pRes.json();
+      const validProfiles = pJson.profiles || [];
 
       // Fetch Products
       const { data: productsData, error: productsError } = await supabase

@@ -20,10 +20,13 @@ const ManageCustomers = () => {
 
   const fetchCustomers = async () => {
     try {
-      const { data: profiles, error: pError } = await supabase.from('profiles').select('*');
-      const validProfiles = profiles || [];
-      const { data: orders, error: oError } = await supabase.from('orders').select('*');
-      if (oError) throw oError;
+      const pRes = await fetch('/api/get-profiles');
+      const pJson = await pRes.json();
+      const validProfiles = pJson.profiles || [];
+
+      const oRes = await fetch('/api/get-orders?all=true');
+      const oJson = await oRes.json();
+      const orders = oJson.orders || [];
 
       const customerMap = {};
 
