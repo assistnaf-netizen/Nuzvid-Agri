@@ -13,6 +13,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { cartItems } = useCart();
@@ -46,17 +47,19 @@ const Header = () => {
     { name: 'Contact', path: '/contact' },
   ];
 
-  const handleLogout = async () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      try {
-        logoutMock();
-        await supabase.auth.signOut();
-        setIsUserDropdownOpen(false);
-        toast.success('Logged out successfully');
-      } catch (error) {
-        toast.error('Failed to log out');
-      }
+  const triggerLogout = () => {
+    setIsUserDropdownOpen(false);
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = async () => {
+    try {
+      logoutMock();
+      await supabase.auth.signOut();
+      setShowLogoutConfirm(false);
+      toast.success('Logged out successfully');
+    } catch (error) {
+      toast.error('Failed to log out');
     }
   };
 
@@ -130,7 +133,7 @@ const Header = () => {
                 {isUserDropdownOpen && (
                   <div className="user-dropdown-menu">
                     <Link to="/account" onClick={() => setIsUserDropdownOpen(false)} style={{ display: 'block', padding: '10px 20px', color: '#333', textDecoration: 'none' }}>My Account</Link>
-                    <button onClick={handleLogout} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 20px', color: '#ff4d4f', border: 'none', background: 'none', cursor: 'pointer' }}>Logout</button>
+                    <button onClick={triggerLogout} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 20px', color: '#ff4d4f', border: 'none', background: 'none', cursor: 'pointer' }}>Logout</button>
                   </div>
                 )}
               </div>
@@ -208,6 +211,19 @@ const Header = () => {
           </li>
         </ul>
       </div>
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="logout-modal-overlay" onClick={() => setShowLogoutConfirm(false)}>
+          <div className="logout-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out of your account?</p>
+            <div className="logout-modal-actions">
+              <button className="cancel-btn" onClick={() => setShowLogoutConfirm(false)}>Cancel</button>
+              <button className="confirm-btn" onClick={confirmLogout}>Yes, Log Out</button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
