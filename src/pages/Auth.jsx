@@ -46,95 +46,7 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const testAdminEmails = ['assist.naf@gmail.com'];
-    const testUserEmails = [
-      'balajiprojects049@gmail.com',
-      'balajirockzz9030@gmail.com',
-      'sarabu.balaji9985@gmail.com'
-    ];
-
-    // NODE-MAILER OTP FLOW FOR TEST EMAILS
-    if (testAdminEmails.includes(loginEmail) || testUserEmails.includes(loginEmail)) {
-      if (!otpSent) {
-        // Generate OTP
-        const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-        setSystemOtp(newOtp);
-
-        try {
-          // Call our new Nodemailer API
-          const response = await fetch('/api/send-otp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: loginEmail, otp: newOtp })
-          });
-
-          const data = await response.json();
-          
-          if (!response.ok) {
-            throw new Error(data.message || 'Failed to send OTP');
-          }
-          
-          toast.success('OTP sent to your email via Nodemailer!');
-          setOtpSent(true);
-        } catch (err) {
-          console.error('API OTP error:', err);
-          // Fallback for demo if backend is not running or env vars missing
-          toast.success(`Demo Mode: Email API failed. Use OTP ${newOtp} to login.`, { duration: 6000 });
-          setOtpSent(true);
-        } finally {
-          setLoading(false);
-        }
-        return;
-      } else {
-        // Verify OTP
-        if (otp === systemOtp) {
-          setTimeout(() => {
-            if (testAdminEmails.includes(loginEmail)) {
-              const mockAdmin = {
-                email: loginEmail,
-                user_metadata: { full_name: 'Farm Admin', role: 'admin' }
-              };
-              setMockAdmin(mockAdmin);
-              toast.success('Admin logged in successfully!');
-              const params = new URLSearchParams(location.search);
-              navigate(params.get('redirect') || '/admin');
-            } else {
-              const mockUser = {
-                email: loginEmail,
-                user_metadata: { full_name: 'Test User', role: 'user' }
-              };
-              setMockUser(mockUser);
-              toast.success('Logged in successfully as User!');
-              const params = new URLSearchParams(location.search);
-              navigate(params.get('redirect') || '/');
-            }
-            setLoading(false);
-          }, 1000);
-        } else {
-          toast.error('Invalid OTP. Please try again.');
-          setLoading(false);
-        }
-        return;
-      }
-    }
-
-    // MOCK LOGIN BYPASS for Legacy Admin
-    if (loginEmail === 'admin@nuzvidagrifarms.com' && loginPassword === 'admin123') {
-      setTimeout(() => {
-        const mockAdmin = {
-          email: loginEmail,
-          user_metadata: { full_name: 'Farm Admin', role: 'admin' }
-        };
-        setMockUser(mockAdmin);
-        toast.success('Logged in successfully!');
-        
-        const params = new URLSearchParams(location.search);
-        const redirectUrl = params.get('redirect');
-        navigate(redirectUrl || '/admin');
-        setLoading(false);
-      }, 1000);
-      return;
-    }
+    const isAdmin = loginEmail === 'assist.naf@gmail.com' || loginEmail === 'admin@nuzvidagrifarms.com';
 
     // REGULAR USER OTP FLOW (Supabase Built-in OTP)
     if (!otpSent) {
@@ -146,7 +58,7 @@ const Auth = () => {
         if (error) {
           toast.error(error.message);
         } else {
-          toast.success('OTP sent to your email via Supabase!');
+          toast.success('OTP sent to your email!');
           setOtpSent(true);
         }
       } catch (err) {
@@ -168,9 +80,25 @@ const Auth = () => {
           toast.error(error.message);
         } else {
           toast.success('Logged in successfully!');
+          
+          // Mock setting user context for frontend UI
+          if (isAdmin) {
+             const mockAdmin = {
+               email: loginEmail,
+               user_metadata: { full_name: 'Farm Admin', role: 'admin' }
+             };
+             setMockAdmin(mockAdmin);
+          } else {
+             const mockUser = {
+               email: loginEmail,
+               user_metadata: { full_name: data?.user?.user_metadata?.full_name || 'User', role: 'user' }
+             };
+             setMockUser(mockUser);
+          }
+
           const params = new URLSearchParams(location.search);
           const redirectUrl = params.get('redirect');
-          navigate(redirectUrl || '/');
+          navigate(redirectUrl || (isAdmin ? '/admin' : '/'));
         }
       } catch (err) {
         toast.error('Invalid OTP.');
@@ -178,6 +106,23 @@ const Auth = () => {
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`,
+        }
+      });
+      if (error) {
+        toast.error(error.message);
+      }
+    } catch (err) {
+      console.error('Error logging in with Google', err);
+      toast.error('An error occurred during Google Login');
     }
   };
 
@@ -328,7 +273,7 @@ const Auth = () => {
           
           <div className="auth-divider">or</div>
           
-          <button type="button" className="btn-google" onClick={() => toast.error('Google login requires OAuth setup in Supabase')}>
+          <button type="button" className="btn-google" onClick={handleGoogleLogin}>
             <FaGoogle color="#DB4437" size={18} /> Continue with Google
           </button>
 
