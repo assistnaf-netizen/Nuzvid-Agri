@@ -364,7 +364,7 @@ export default defineConfig({
 
                     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
                       await transporter.sendMail(mailOptions);
-                      console.log(\`Local Dev: Status update email sent to \${orderData.customer_email}\`);
+                      console.log(`Local Dev: Status update email sent to ${orderData.customer_email}`);
                     }
                   } catch (mailError) {
                     console.error('Local Dev: Error sending status email:', mailError);
