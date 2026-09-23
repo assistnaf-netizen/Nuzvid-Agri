@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Menu, X, Search, Heart } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
+import toast from 'react-hot-toast';
+import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -45,9 +47,14 @@ const Header = () => {
   ];
 
   const handleLogout = async () => {
-    logoutMock();
-    await supabase.auth.signOut();
-    setIsUserDropdownOpen(false);
+    try {
+      logoutMock();
+      await supabase.auth.signOut();
+      setIsUserDropdownOpen(false);
+      toast.success('Logged out successfully');
+    } catch (error) {
+      toast.error('Failed to log out');
+    }
   };
 
   return (
