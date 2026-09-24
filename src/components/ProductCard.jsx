@@ -33,10 +33,10 @@ const ProductCard = ({ product }) => {
           <Heart size={18} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
         </button>
 
-        <img src={product.image} alt={product.title} className="primary-img" />
-        {product.hoverImage && (
-          <img src={product.hoverImage} alt={product.title} className="hover-img" />
-        )}
+        <img src={product.image || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image'} alt={product.title} className="primary-img" />
+        {product.hoverImage ? (
+          <img src={product.hoverImage || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image'} alt={product.title} className="hover-img" />
+        ) : null}
         
         <div className="product-actions">
           <button 

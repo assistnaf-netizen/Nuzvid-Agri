@@ -43,20 +43,34 @@ const ProductDetail = () => {
       setLoading(true);
       const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
       if (data) {
+        const getWeightValue = (weightStr) => {
+          if (!weightStr) return Number.MAX_SAFE_INTEGER;
+          const w = weightStr.toLowerCase();
+          const match = w.match(/([\d.]+)/);
+          if (!match) return Number.MAX_SAFE_INTEGER;
+          let val = parseFloat(match[1]);
+          if (w.includes('kg') || w.includes('liter') || w.includes('litre')) {
+            val *= 1000;
+          }
+          return val;
+        };
+
+        const sortedVariants = (data.variants || []).sort((a, b) => getWeightValue(a.weight) - getWeightValue(b.weight));
+
         const foundProduct = {
           id: data.id,
           title: data.name,
           price: data.price,
           mrp: data.original_price,
           category: data.category,
-          image: data.image_url,
-          images: data.images || (data.image_url ? [data.image_url] : []),
+          image: data.image_url || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image',
+          images: (data.images && data.images.length > 0) ? data.images : (data.image_url ? [data.image_url] : ['https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image']),
           description: data.description,
           sku: data.sku,
           weight: data.weight,
           stock_quantity: data.stock_quantity !== null ? data.stock_quantity : 10,
           highlights: data.highlights || [],
-          variants: data.variants || [],
+          variants: sortedVariants,
           isNew: data.is_featured,
           sale: data.is_featured,
           isFreeShipping: data.is_free_shipping || false,

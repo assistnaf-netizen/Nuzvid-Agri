@@ -245,8 +245,9 @@ const Checkout = () => {
         product_id: item.id,
         quantity: item.quantity,
         price_at_time: item.price,
-        product_title: item.title,
-        product_image: item.image
+        product_title: item.title + (item.weight ? ` - ${item.weight}` : ''),
+        product_image: item.image,
+        weight: item.weight
       }));
 
       const saveRes = await fetch('/api/create-order', {

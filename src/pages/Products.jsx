@@ -13,6 +13,7 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState('');
   const [sortOrder, setSortOrder] = useState('featured');
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,8 +44,14 @@ const Products = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const q = new URLSearchParams(location.search).get('search');
+    if (q) {
+      setSearchKeyword(q);
+    } else {
+      setSearchKeyword('');
+    }
     window.scrollTo(0, 0);
-  }, [location]);
+  }, [location.search]);
 
   // Derive categories and counts
   const categories = useMemo(() => {
@@ -58,15 +65,14 @@ const Products = () => {
   const filteredProducts = useMemo(() => {
     let result = [...products];
     
-    const searchParams = new URLSearchParams(location.search);
-    const searchQuery = searchParams.get('search')?.toLowerCase();
+    const query = searchKeyword.toLowerCase();
 
     // Search term filtering
-    if (searchQuery) {
+    if (query) {
       result = result.filter(p => 
-        p.title.toLowerCase().includes(searchQuery) || 
-        (p.description && p.description.toLowerCase().includes(searchQuery)) ||
-        p.category.toLowerCase().includes(searchQuery)
+        p.title.toLowerCase().includes(query) || 
+        (p.description && p.description.toLowerCase().includes(query)) ||
+        p.category.toLowerCase().includes(query)
       );
     }
 
@@ -103,7 +109,7 @@ const Products = () => {
     }
 
     return result;
-  }, [products, category, minPrice, maxPrice, sortOrder, inStockOnly, location.search]);
+  }, [products, category, minPrice, maxPrice, sortOrder, inStockOnly, searchKeyword]);
 
   const searchParams = new URLSearchParams(location.search);
   const activeSearchQuery = searchParams.get('search');
@@ -136,6 +142,20 @@ const Products = () => {
           </button>
 
           <div className={`sidebar-content ${isMobileFilterOpen ? 'open' : ''}`}>
+            {/* Search */}
+            <div className="sidebar-widget">
+              <div className="sidebar-widget-header">
+                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Search</span>
+              </div>
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                style={{ width: '100%', padding: '10px 15px', borderRadius: '8px', border: '1px solid #e5e7eb', outline: 'none', fontSize: '14px', marginTop: '10px' }}
+              />
+            </div>
+
             {/* Categories */}
             <div className="sidebar-widget">
             <div className="sidebar-widget-header">

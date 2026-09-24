@@ -37,13 +37,41 @@ export default async function handler(req, res) {
       }
 
       const realOrderId = orderData[0].id;
-      const itemsToInsert = itemsPayload.map(item => ({ ...item, order_id: realOrderId }));
+      const itemsToInsert = itemsPayload.map(item => {
+        const { weight, ...rest } = item;
+        return { ...rest, order_id: realOrderId };
+      });
 
       const { error: itemsError } = await supabaseAdmin.from('order_items').insert(itemsToInsert);
       if (itemsError) {
         console.error('Items insert error:', itemsError);
         return res.status(500).json({ error: itemsError.message });
       }
+
+      // --- INVENTORY DEDUCTION LOGIC ---
+      try {
+        for (const item of itemsPayload) {
+          const { data: prodData } = await supabaseAdmin.from('products').select('stock_quantity, variants').eq('id', item.product_id).single();
+          if (prodData) {
+            if (item.weight && prodData.variants && prodData.variants.length > 0) {
+              const updatedVariants = prodData.variants.map(v => {
+                if (v.weight === item.weight) {
+                  return { ...v, stock_quantity: Math.max(0, (v.stock_quantity || 0) - item.quantity) };
+                }
+                return v;
+              });
+              await supabaseAdmin.from('products').update({ variants: updatedVariants }).eq('id', item.product_id);
+            } else {
+              const newStock = Math.max(0, (prodData.stock_quantity || 0) - item.quantity);
+              await supabaseAdmin.from('products').update({ stock_quantity: newStock }).eq('id', item.product_id);
+            }
+          }
+        }
+        console.log('Inventory deducted successfully.');
+      } catch (invErr) {
+        console.error('Failed to deduct inventory:', invErr);
+      }
+      // ---------------------------------
 
       // --- NEW NOTIFICATION LOGIC ---
       try {
