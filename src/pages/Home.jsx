@@ -240,7 +240,7 @@ const Home = () => {
               </div>
 
               <div className="promo-banner-small hover-zoom">
-                <Link to="/our-intro" className="promo-img-link">
+                <Link to="/about-us" className="promo-img-link">
                   <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Our_Intro_1200x.jpg?v=1759857682" alt="Our Intro" className="promo-bg-img" />
                   <div className="banner-overlay"></div>
                   <div className="banner-arrow-btn">
