@@ -64,7 +64,15 @@ const ProductDetail = () => {
           mrp: data.original_price,
           category: data.category,
           image: data.image_url || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image',
-          images: (data.images && data.images.length > 0) ? data.images : (data.image_url ? [data.image_url] : ['https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image']),
+          images: (() => {
+            let imgs = [];
+            if (Array.isArray(data.images)) imgs = data.images;
+            else if (typeof data.images === 'string') {
+              try { imgs = JSON.parse(data.images); } catch(e) { imgs = [data.images]; }
+            }
+            if (!Array.isArray(imgs)) imgs = [];
+            return imgs.length > 0 ? imgs : (data.image_url ? [data.image_url] : ['https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image']);
+          })(),
           description: data.description,
           sku: data.sku,
           weight: data.weight,
@@ -216,7 +224,7 @@ const ProductDetail = () => {
                 >
                   <Heart size={20} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
                 </button>
-                <img src={product.images[currentImageIndex] || product.image} alt={product.title} className="detail-main-img" style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain', display: 'block' }} />
+                <img src={product.images[currentImageIndex] || product.image} alt={product.title} fetchpriority="high" className="detail-main-img" style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain', display: 'block' }} />
               </div>
               
               <div className="detail-thumbnails" style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }}>
@@ -230,7 +238,7 @@ const ProductDetail = () => {
                       borderRadius: '8px', overflow: 'hidden', cursor: 'pointer', flexShrink: 0
                     }}
                   >
-                    <img src={img} alt={`${product.title} ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={img} alt={`${product.title} ${idx + 1}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 ))}
               </div>
@@ -346,21 +354,7 @@ const ProductDetail = () => {
                 </div>
               )}
 
-              {/* Guarantees */}
-              <div className="detail-guarantees" style={{ marginTop: '30px' }}>
-                <div className="guarantee-item">
-                  <img src="https://cdn-icons-png.flaticon.com/512/2956/2956820.png" alt="Pure" width="30"/>
-                  <span>100% Pure</span>
-                </div>
-                <div className="guarantee-item">
-                  <img src="https://cdn-icons-png.flaticon.com/512/814/814513.png" alt="Shipping" width="30"/>
-                  <span>Fast Delivery</span>
-                </div>
-                <div className="guarantee-item">
-                  <img src="https://cdn-icons-png.flaticon.com/512/272/272290.png" alt="Secure" width="30"/>
-                  <span>Secure Pay</span>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>

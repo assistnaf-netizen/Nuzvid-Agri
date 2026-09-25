@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { FaArrowRight, FaArrowLeft, FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
-import { Leaf, Truck, ShieldCheck, Award } from 'lucide-react';
+import { Leaf, Truck, ShieldCheck, Award, Handshake, HeartHandshake } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
@@ -10,7 +10,7 @@ import './Home.css';
 import './Home-premium.css';
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState('wood-pressed-oils');
+  const [activeTab, setActiveTab] = useState('all');
   const [heroBanners, setHeroBanners] = useState([{
     desktop: 'https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977',
     mobile: 'https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977'
@@ -21,21 +21,31 @@ const Home = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data, error } = await supabase.from('products').select('*');
+      const { data, error } = await supabase.from('products').select('id, name, price, original_price, category, image_url, images, is_featured, is_free_shipping, description');
       if (data) {
-        setProducts(data.map(p => ({
-          id: p.id,
-          title: p.name,
-          price: p.price,
-          mrp: p.original_price,
-          category: p.category,
-          image: p.image_url,
-          hoverImage: p.image_url,
-          description: p.description,
-          isNew: p.is_featured,
-          sale: p.is_featured,
-          isFreeShipping: p.is_free_shipping || false
-        })));
+        setProducts(data.map(p => {
+          let imgs = [];
+          if (Array.isArray(p.images)) imgs = p.images;
+          else if (typeof p.images === 'string') {
+            try { imgs = JSON.parse(p.images); } catch(e) { imgs = [p.images]; }
+          }
+          if (!Array.isArray(imgs)) imgs = [];
+          
+          return {
+            id: p.id,
+            title: p.name,
+            price: p.price,
+            mrp: p.original_price,
+            category: p.category,
+            image: imgs.length > 0 ? imgs[0] : p.image_url,
+            hoverImage: imgs.length > 1 ? imgs[1] : (imgs.length > 0 ? imgs[0] : p.image_url),
+            images: imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []),
+            description: p.description,
+            isNew: p.is_featured,
+            sale: p.is_featured,
+            isFreeShipping: p.is_free_shipping || false
+          };
+        }));
       }
       setLoadingProducts(false);
     };
@@ -78,53 +88,63 @@ const Home = () => {
   const blogs = [
     {
       id: 'brown-sugar',
+      title: 'Brown Sugar by Nuzvid Agri Farms',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/Organic_Brown_sugar_370x.png?v=1759230994",
-      link: "/blogs/brown-sugar"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/brown-sugar-by-nuzvid-agri-farms-pure-wholesome-sweetness-rooted-in-tradition"
     },
     {
       id: 'buffalo-ghee',
+      title: 'Buffalo Ghee by Nuzvid Agri Farms',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL1-BufaloGhee_370x.jpg?v=1759150769",
-      link: "/blogs/buffalo-ghee"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/buffalo-ghee-by-nuzvid-agri-farms-the-golden-elixir-of-purity-and-tradition"
     },
     {
       id: 'mineral-salt',
+      title: 'Himalayan Pink Salt',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-MineralSalt_370x.jpg?v=1759150645",
-      link: "/blogs/mineral-salt"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/himalayan-pink-salt-by-nuzvid-agri-farms-nature-s-purest-gift-crystal-by-crystal"
     },
     {
       id: 'real-food',
+      title: 'A Return to Real Food',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/Flier_370x.jpg?v=1759298285",
-      link: "/blogs/real-food"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/nuzvid-agri-farms-a-return-to-real-food"
     },
     {
       id: 'red-chilli',
+      title: 'Red Chilli Powder',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-RedChilliPowder_370x.jpg?v=1759150731",
-      link: "/blogs/red-chilli"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/red-chilli-powder-by-nuzvid-agri-farms-bold-flavor-rooted-in-nature-and-tradition"
     },
     {
       id: 'turmeric',
+      title: 'Turmeric Powder',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Turmeric_370x.jpg?v=1759150715",
-      link: "/blogs/turmeric"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/turmeric-powder-by-nuzvid-agri-farms-nature-s-golden-gift-for-everyday-wellness"
     },
     {
       id: 'jaggery',
+      title: 'Organic Jaggery',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Jaggery_370x.jpg?v=1759150700",
-      link: "/blogs/jaggery"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/organic-jaggery-by-nuzvid-agri-farms-sweetness-rooted-in-tradition-and-wellness"
     },
     {
       id: 'coldpressed-oils',
+      title: 'Wood Cold Pressed Oils',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Oils_370x.jpg?v=1759150787",
-      link: "/blogs/coldpressed-oils"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/wood-coldpressed-oils-by-nuzvid-agri-farms-nourishment-crafted-with-care"
     },
     {
       id: 'a2-ghee',
+      title: 'A2 Ghee',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL1-A2GHEE_370x.jpg?v=1759150680",
-      link: "/blogs/a2-ghee"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/a2-ghee-by-nuzvid-agri-farms-tradition-nutrition-and-a-touch-of-home"
     },
     {
       id: 'forest-honey',
+      title: 'Raw Forest Honey',
       image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Honey_fde9b232-10fa-4e95-8e25-5d109399ddf9_370x.jpg?v=1759150454",
-      link: "/blogs/forest-honey"
+      link: "https://www.nuzvidagrifarms.com/blogs/news/raw-forest-honey-by-nuzvid-agri-farms-nature-s-sweetest-gift-bottled-with-care"
     }
   ];
 
@@ -178,7 +198,7 @@ const Home = () => {
       {/* Product Ticker Section */}
       <div className="product-ticker-container">
         <div className="product-ticker-track">
-          {[...products, ...products].map((product, index) => (
+          {[...products.slice(0, 5), ...products.slice(0, 5), ...products.slice(0, 5), ...products.slice(0, 5)].map((product, index) => (
             <span key={index} className="ticker-item">
               <span className="ticker-bullet">✦</span> {product.title}
             </span>
@@ -260,6 +280,12 @@ const Home = () => {
           <h2 className="section-title text-center">The Goodness We Share</h2>
           <div className="tabs">
             <button
+              className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveTab('all')}
+            >
+              ALL
+            </button>
+            <button
               className={`tab-btn ${activeTab === 'wood-pressed-oils' ? 'active' : ''}`}
               onClick={() => setActiveTab('wood-pressed-oils')}
             >
@@ -282,12 +308,6 @@ const Home = () => {
               onClick={() => setActiveTab('countryside-grocery')}
             >
               COUNTRYSIDE GROCERY
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'market-products' ? 'active' : ''}`}
-              onClick={() => setActiveTab('market-products')}
-            >
-              MARKET PRODUCTS
             </button>
           </div>
 
@@ -349,35 +369,53 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
+      {/* Value Propositions Section (From Screenshot) */}
       <motion.section 
-        className="features-section py-4"
+        className="py-5"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="container">
-          <div className="features-grid">
-            <div className="feature-item hover-lift">
-              <Leaf className="feature-icon" size={32} />
-              <h4>100% Organic</h4>
-              <p>Pure & natural products from our own farms.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px' }}>
+            
+            {/* Block 1 */}
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+              <Award size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
+              <div>
+                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Quality Products</h4>
+                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>Every product is carefully selected to ensure safety, authenticity, and the highest quality.</p>
+              </div>
             </div>
-            <div className="feature-item hover-lift">
-              <Truck className="feature-icon" size={32} />
-              <h4>Fast Delivery</h4>
-              <p>Quick & safe delivery to your doorstep.</p>
+
+            {/* Block 2 */}
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+              <Handshake size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
+              <div>
+                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Trust</h4>
+                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>We stand by every product, ensuring confidence in every purchase.</p>
+              </div>
             </div>
-            <div className="feature-item hover-lift">
-              <ShieldCheck className="feature-icon" size={32} />
-              <h4>Quality Guaranteed</h4>
-              <p>Strict quality checks for your health.</p>
+
+            {/* Block 3 */}
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+              <HeartHandshake size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
+              <div>
+                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Health</h4>
+                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>Carefully chosen to promote true wellness and well-being.</p>
+              </div>
             </div>
-            <div className="feature-item hover-lift">
-              <Award className="feature-icon" size={32} />
-              <h4>Premium Quality</h4>
-              <p>Best in class natural food products.</p>
+
+            {/* Block 4 */}
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
+              <Truck size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
+              <div>
+                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Free home delivery</h4>
+                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>Free delivery for all orders over ₹1999/-.</p>
+              </div>
             </div>
+
           </div>
         </div>
       </motion.section>
@@ -397,14 +435,14 @@ const Home = () => {
             <div className="blog-grid-scroll" ref={blogScrollRef}>
               {blogs.map(blog => (
                 <div className="blog-card" key={blog.id}>
-                  <Link to={blog.link} className="blog-img-wrapper">
+                  <a href={blog.link} target="_blank" rel="noopener noreferrer" className="blog-img-wrapper">
                     <img src={blog.image} alt={blog.id} />
-                  </Link>
+                  </a>
                   <div className="blog-content">
                     <h3 className="blog-title">
-                      <Link to={blog.link}>{blog.title}</Link>
+                      <a href={blog.link} target="_blank" rel="noopener noreferrer">{blog.title}</a>
                     </h3>
-                    <Link to={blog.link} className="read-more-link">Read More</Link>
+                    <a href={blog.link} target="_blank" rel="noopener noreferrer" className="read-more-link">Read More</a>
                   </div>
                 </div>
               ))}
@@ -524,17 +562,7 @@ const Home = () => {
         );
       })()}
 
-      {/* Newsletter Section */}
-      <section className="newsletter-section">
-        <div className="container text-center">
-          <h2>Join Our Farm Family</h2>
-          <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
-          <form className="newsletter-form" onSubmit={(e) => { e.preventDefault(); alert('Subscribed!'); }}>
-            <input type="email" placeholder="Enter your email address" required />
-            <button type="submit" className="btn-primary">Subscribe</button>
-          </form>
-        </div>
-      </section>
+
     </div>
   );
 };

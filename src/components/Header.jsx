@@ -74,9 +74,9 @@ const Header = () => {
             <span>Nuzvid, Eluru District, AP</span>
           </div>
           <div className="top-bar-right">
-            <a href="#"><FaFacebook size={14} /></a>
-            <a href="#"><FaInstagram size={14} /></a>
-            <a href="#"><FaYoutube size={14} /></a>
+            <a href="https://www.facebook.com/profile.php?id=61579403908868" target="_blank" rel="noopener noreferrer"><FaFacebook size={14} /></a>
+            <a href="https://www.instagram.com/nuzvidagrifarms/" target="_blank" rel="noopener noreferrer"><FaInstagram size={14} /></a>
+            <a href="https://www.youtube.com/@NuzvidAgriFarms" target="_blank" rel="noopener noreferrer"><FaYoutube size={14} /></a>
           </div>
         </div>
       </div>

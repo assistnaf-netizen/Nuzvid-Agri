@@ -7,27 +7,6 @@ import './Footer.css';
 const Footer = () => {
   return (
     <footer className="footer">
-      {/* Value Proposition Grid */}
-      <div className="value-prop-section">
-        <div className="container value-prop-grid">
-          <div className="value-item">
-            <h4>Quality Products</h4>
-            <p>100% natural and pure</p>
-          </div>
-          <div className="value-item">
-            <h4>Trust</h4>
-            <p>Directly from farmers</p>
-          </div>
-          <div className="value-item">
-            <h4>Health</h4>
-            <p>No added chemicals</p>
-          </div>
-          <div className="value-item">
-            <h4>Free Home Delivery</h4>
-            <p>On orders over ₹1,999/-</p>
-          </div>
-        </div>
-      </div>
 
       {/* Main Sitemap Footer */}
       <div className="main-footer">

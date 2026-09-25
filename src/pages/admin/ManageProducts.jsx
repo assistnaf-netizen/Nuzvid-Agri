@@ -43,7 +43,15 @@ const ManageProducts = () => {
         mrp: p.original_price,
         category: p.category,
         image: p.image_url,
-        images: p.images || (p.image_url ? [p.image_url] : []),
+        images: (() => {
+          let imgs = [];
+          if (Array.isArray(p.images)) imgs = p.images;
+          else if (typeof p.images === 'string') {
+            try { imgs = JSON.parse(p.images); } catch(e) { imgs = [p.images]; }
+          }
+          if (!Array.isArray(imgs)) imgs = [];
+          return imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []);
+        })(),
         sku: p.sku || '',
         weight: p.weight || '',
         stock_quantity: p.stock_quantity !== null ? p.stock_quantity : 10,

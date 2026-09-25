@@ -23,20 +23,6 @@
 .commitment-image-side {
   width: 45%;
   position: relative;
-  padding-left: 30px;
-}
-
-.commitment-image-side::before {
-  content: '';
-  position: absolute;
-  top: 10%;
-  bottom: 10%;
-  left: 0;
-  width: 100px;
-  background-color: var(--color-accent);
-  z-index: 0;
-  border-radius: var(--radius-sm);
-  opacity: 0.85;
 }
 
 .commitment-img-wrapper {
