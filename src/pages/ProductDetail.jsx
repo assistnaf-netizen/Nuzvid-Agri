@@ -363,7 +363,7 @@ const ProductDetail = () => {
         <div className="detail-tabs-section mt-5">
           <div className="detail-tabs-nav">
             <button className={activeTab === 'description' ? 'active' : ''} onClick={() => setActiveTab('description')}>Description</button>
-            <button className={activeTab === 'shipping' ? 'active' : ''} onClick={() => setActiveTab('shipping')}>Shipping & Returns</button>
+
             <button className={activeTab === 'reviews' ? 'active' : ''} onClick={() => setActiveTab('reviews')}>Reviews ({product.reviews})</button>
           </div>
           
@@ -372,20 +372,6 @@ const ProductDetail = () => {
               <div className="tab-pane active fade-in">
                 <p>{product.description}</p>
                 <p>Our commitment to purity and traditional practices ensures that every product reaching your kitchen is packed with natural nutrition and authentic flavor. All our ingredients are hand-picked, organically processed, and rigorously tested to meet our premium quality standards.</p>
-              </div>
-            )}
-            
-            {activeTab === 'shipping' && (
-              <div className="tab-pane active fade-in">
-                <h4>Shipping Information</h4>
-                <p>We process all orders within 24 hours. Standard shipping takes 3-5 business days depending on your location.</p>
-                <ul>
-                  <li>Free shipping on orders over ₹{freeShippingThreshold}.</li>
-                  <li>Tracking number provided for all orders.</li>
-                  <li>Secure and eco-friendly packaging.</li>
-                </ul>
-                <h4 className="mt-4">Returns Policy</h4>
-                <p>If you are not 100% satisfied with your purchase, you can return the product and get a full refund or exchange the product for another one. You can return a product for up to 7 days from the date you purchased it.</p>
               </div>
             )}
 
