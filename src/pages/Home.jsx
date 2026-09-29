@@ -12,8 +12,8 @@ import './Home-premium.css';
 const Home = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [heroBanners, setHeroBanners] = useState([{
-    desktop: 'https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977',
-    mobile: 'https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977'
+    desktop: '/hero-banner.png',
+    mobile: '/hero-banner.png'
   }]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [products, setProducts] = useState([]);
@@ -240,7 +240,7 @@ const Home = () => {
               </div>
 
               <div className="promo-banner-small hover-zoom">
-                <Link to="/about-us" className="promo-img-link">
+                <Link to="/our-intro" className="promo-img-link">
                   <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Our_Intro_1200x.jpg?v=1759857682" alt="Our Intro" className="promo-bg-img" />
                   <div className="banner-overlay"></div>
                   <div className="banner-arrow-btn">

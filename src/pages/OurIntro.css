@@ -1,0 +1,163 @@
+/* ============================================
+   OUR INTRO PAGE
+   ============================================ */
+
+.intro-page-wrapper {
+  background-color: var(--color-bg-light, #ffffff);
+  color: var(--color-text, #333);
+  font-family: var(--font-body, 'Inter', sans-serif);
+}
+
+/* Hero Banner */
+.intro-hero {
+  width: 100%;
+  height: 350px;
+  background-color: #555;
+  /* Use a placeholder image until the real one is placed in public folder */
+  background-image: url('/our-intro-banner.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.intro-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
+}
+
+.intro-hero-text {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  font-family: var(--font-heading, sans-serif);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.intro-hero-text a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-right: 5px;
+  transition: color 0.3s ease;
+}
+
+.intro-hero-text a:hover {
+  color: var(--color-accent, #e67e22);
+}
+
+.intro-hero-text span {
+  color: var(--color-accent, #e67e22); /* Orange tone from screenshot */
+  margin-left: 5px;
+}
+
+/* Container */
+.intro-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+/* Top Grid */
+.intro-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+  align-items: flex-start;
+}
+
+.intro-text-side h2 {
+  font-size: 28px;
+  color: #1a2b4c; /* Deep blue/black color from screenshot */
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-family: var(--font-heading, sans-serif);
+  font-weight: 700;
+}
+
+.intro-text-side p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 25px;
+}
+
+/* Image side */
+.intro-image-side {
+  width: 100%;
+}
+
+.intro-main-img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: block;
+}
+
+/* Bottom Content (List) */
+.intro-bottom-content {
+  margin-top: 40px;
+}
+
+.intro-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 30px;
+}
+
+.intro-list li {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.intro-list li strong {
+  color: #1a2b4c; /* Match heading color */
+  font-weight: 600;
+}
+
+.intro-conclusion {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #444;
+  margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .intro-top-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .intro-image-side {
+    order: -1; /* Move image above text on mobile if desired, or leave as is */
+    margin-bottom: 20px;
+  }
+
+  .intro-text-side h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .intro-hero {
+    height: 200px;
+    padding-right: 5%;
+  }
+
+  .intro-container {
+    padding: 40px 15px;
+  }
+}

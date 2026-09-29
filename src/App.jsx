@@ -20,6 +20,7 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import Faqs from './pages/Faqs';
 import Blogs from './pages/Blogs';
 import Commitment from './pages/Commitment';
+import OurIntro from './pages/OurIntro';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
 import Cart from './pages/Cart';
@@ -74,6 +75,8 @@ function App() {
             <Route path="/faqs" element={<Faqs />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/our-commitment" element={<Commitment />} />
+            <Route path="/our-intro" element={<OurIntro />} />
+            <Route path="/pages/our-intro" element={<OurIntro />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
