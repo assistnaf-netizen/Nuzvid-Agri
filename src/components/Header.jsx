@@ -65,21 +65,7 @@ const Header = () => {
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-      {/* Top Bar */}
-      <div className="top-bar">
-        <div className="container top-bar-inner">
-          <div className="top-bar-left">
-            <span>assist.naf@gmail.com</span>
-            <span className="separator">|</span>
-            <span>Nuzvid, Eluru District, AP</span>
-          </div>
-          <div className="top-bar-right">
-            <a href="https://www.facebook.com/profile.php?id=61579403908868" target="_blank" rel="noopener noreferrer"><FaFacebook size={14} /></a>
-            <a href="https://www.instagram.com/nuzvidagrifarms/" target="_blank" rel="noopener noreferrer"><FaInstagram size={14} /></a>
-            <a href="https://www.youtube.com/@NuzvidAgriFarms" target="_blank" rel="noopener noreferrer"><FaYoutube size={14} /></a>
-          </div>
-        </div>
-      </div>
+
 
       {/* Main Navbar */}
       <div className="main-nav-wrapper">
