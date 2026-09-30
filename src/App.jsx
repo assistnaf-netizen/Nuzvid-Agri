@@ -19,6 +19,7 @@ import CancellationPolicy from './pages/CancellationPolicy';
 import ShippingPolicy from './pages/ShippingPolicy';
 import Faqs from './pages/Faqs';
 import Blogs from './pages/Blogs';
+import BlogDetail from './pages/BlogDetail';
 import Commitment from './pages/Commitment';
 import OurIntro from './pages/OurIntro';
 import Contact from './pages/Contact';
@@ -74,6 +75,7 @@ function App() {
             <Route path="/shipping-policy" element={<ShippingPolicy />} />
             <Route path="/faqs" element={<Faqs />} />
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blogs/:slug" element={<BlogDetail />} />
             <Route path="/our-commitment" element={<Commitment />} />
             <Route path="/our-intro" element={<OurIntro />} />
             <Route path="/pages/our-intro" element={<OurIntro />} />

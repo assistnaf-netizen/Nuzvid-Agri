@@ -6,6 +6,7 @@ import { Leaf, Truck, ShieldCheck, Award, Handshake, HeartHandshake } from 'luci
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
+import { blogsContent } from '../utils/blogData';
 import './Home.css';
 import './Home-premium.css';
 
@@ -85,68 +86,7 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [heroBanners]);
 
-  const blogs = [
-    {
-      id: 'brown-sugar',
-      title: 'Brown Sugar by Nuzvid Agri Farms',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/Organic_Brown_sugar_370x.png?v=1759230994",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/brown-sugar-by-nuzvid-agri-farms-pure-wholesome-sweetness-rooted-in-tradition"
-    },
-    {
-      id: 'buffalo-ghee',
-      title: 'Buffalo Ghee by Nuzvid Agri Farms',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL1-BufaloGhee_370x.jpg?v=1759150769",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/buffalo-ghee-by-nuzvid-agri-farms-the-golden-elixir-of-purity-and-tradition"
-    },
-    {
-      id: 'mineral-salt',
-      title: 'Himalayan Pink Salt',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-MineralSalt_370x.jpg?v=1759150645",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/himalayan-pink-salt-by-nuzvid-agri-farms-nature-s-purest-gift-crystal-by-crystal"
-    },
-    {
-      id: 'real-food',
-      title: 'A Return to Real Food',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/Flier_370x.jpg?v=1759298285",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/nuzvid-agri-farms-a-return-to-real-food"
-    },
-    {
-      id: 'red-chilli',
-      title: 'Red Chilli Powder',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-RedChilliPowder_370x.jpg?v=1759150731",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/red-chilli-powder-by-nuzvid-agri-farms-bold-flavor-rooted-in-nature-and-tradition"
-    },
-    {
-      id: 'turmeric',
-      title: 'Turmeric Powder',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Turmeric_370x.jpg?v=1759150715",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/turmeric-powder-by-nuzvid-agri-farms-nature-s-golden-gift-for-everyday-wellness"
-    },
-    {
-      id: 'jaggery',
-      title: 'Organic Jaggery',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Jaggery_370x.jpg?v=1759150700",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/organic-jaggery-by-nuzvid-agri-farms-sweetness-rooted-in-tradition-and-wellness"
-    },
-    {
-      id: 'coldpressed-oils',
-      title: 'Wood Cold Pressed Oils',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Oils_370x.jpg?v=1759150787",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/wood-coldpressed-oils-by-nuzvid-agri-farms-nourishment-crafted-with-care"
-    },
-    {
-      id: 'a2-ghee',
-      title: 'A2 Ghee',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL1-A2GHEE_370x.jpg?v=1759150680",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/a2-ghee-by-nuzvid-agri-farms-tradition-nutrition-and-a-touch-of-home"
-    },
-    {
-      id: 'forest-honey',
-      title: 'Raw Forest Honey',
-      image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Honey_fde9b232-10fa-4e95-8e25-5d109399ddf9_370x.jpg?v=1759150454",
-      link: "https://www.nuzvidagrifarms.com/blogs/news/raw-forest-honey-by-nuzvid-agri-farms-nature-s-sweetest-gift-bottled-with-care"
-    }
-  ];
+  const blogs = blogsContent;
 
   const blogScrollRef = useRef(null);
 
