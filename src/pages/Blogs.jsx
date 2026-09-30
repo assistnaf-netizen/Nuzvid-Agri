@@ -23,9 +23,17 @@ const Blogs = () => {
       <div className="blogs-grid">
         {blogsContent.map((blog, index) => (
           <div key={index} className="blog-card">
-            <div className="blog-image-placeholder">
-              <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7 11h10v2H7zm0-4h10v2H7zm0 8h7v2H7z"></path></svg>
-            </div>
+            <Link to={`/blogs/${blog.slug}`} className="blog-image-link">
+              <div className="blog-image-wrapper">
+                {blog.image ? (
+                  <img src={blog.image} alt={blog.title} className="blog-card-image" />
+                ) : (
+                  <div className="blog-image-placeholder">
+                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7 11h10v2H7zm0-4h10v2H7zm0 8h7v2H7z"></path></svg>
+                  </div>
+                )}
+              </div>
+            </Link>
             <div className="blog-card-content">
               <div className="blog-date">{blog.date}</div>
               <h2 className="blog-title">{blog.title}</h2>
