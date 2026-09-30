@@ -7,7 +7,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
-import { getDisplayName } from '../utils/productUtils';
+import { getDisplayName, getProductImages } from '../utils/productUtils';
 import './ProductDetail.css';
 
 const jaggeryBlockShortDesc = "Enjoy organic jaggery made the way it should be, slow-cooked to preserve its natural richness. Packed with essential minerals, it energizes your body and strengthens immunity. Sweeten every meal the healthy, wholesome way and bring care and tradition to your family's table. At Nuzvid Agri Farms, our organic jaggery is...";
@@ -590,7 +590,7 @@ const ProductDetail = () => {
           mrp: data.original_price,
           category: data.category,
           image: data.image_url || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image',
-          images: (() => {
+          images: getProductImages(data.name, (() => {
             let imgs = [];
             if (Array.isArray(data.images)) imgs = data.images;
             else if (typeof data.images === 'string') {
@@ -598,7 +598,7 @@ const ProductDetail = () => {
             }
             if (!Array.isArray(imgs)) imgs = [];
             return imgs.length > 0 ? imgs : (data.image_url ? [data.image_url] : ['https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image']);
-          })(),
+          })()),
           description: data.description,
           sku: data.sku,
           weight: data.weight,
@@ -740,7 +740,7 @@ const ProductDetail = () => {
           {/* Left Column: Image Gallery */}
           <div className="col-lg-6 col-md-12">
             <div className="detail-gallery">
-              <div className="detail-main-img-wrapper" style={{ position: 'relative', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', overflow: 'hidden', background: 'white', marginBottom: '15px' }}>
+              <div className="detail-main-img-wrapper" style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', marginBottom: '15px' }}>
                 {product.sale && <span className="detail-badge sale">Sale</span>}
                 {product.isNew && <span className="detail-badge new">New</span>}
                 <button 

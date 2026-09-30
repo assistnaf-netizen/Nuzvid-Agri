@@ -1,7 +1,7 @@
 export const getDisplayName = (originalName) => {
   if (!originalName) return "";
   const title = originalName.trim();
-  
+
   const map = {
     "Bilona A2 Ghee (Cow Ghee) - 500ml": "A2 Cow Ghee 500 ml",
     "Bilona A2 Ghee (Cow Ghee)": "A2 Cow Ghee 1 Liter",
@@ -30,7 +30,7 @@ export const getDisplayName = (originalName) => {
 
   // Fallback: Check if it contains the keys and replace (for sizes that might not be exactly mapped)
   const sortedKeys = Object.keys(map).sort((a, b) => b.length - a.length);
-  
+
   let newTitle = title;
   for (const key of sortedKeys) {
     if (newTitle.includes(key)) {

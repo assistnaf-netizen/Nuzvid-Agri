@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
-import { getDisplayName } from '../utils/productUtils';
+import { getDisplayName, getProductImages } from '../utils/productUtils';
 import './Products.css';
 
 const Products = () => {
@@ -31,15 +31,17 @@ const Products = () => {
           }
           if (!Array.isArray(imgs)) imgs = [];
           
+          const mappedImages = getProductImages(p.name, imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []));
+          
           return {
             id: p.id,
             title: getDisplayName(p.name),
             price: p.price,
             mrp: p.original_price,
             category: p.category,
-            image: imgs.length > 0 ? imgs[0] : p.image_url,
-            hoverImage: imgs.length > 1 ? imgs[1] : (imgs.length > 0 ? imgs[0] : p.image_url),
-            images: imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []),
+            image: mappedImages.length > 0 ? mappedImages[0] : p.image_url,
+            hoverImage: mappedImages.length > 1 ? mappedImages[1] : (mappedImages.length > 0 ? mappedImages[0] : p.image_url),
+            images: mappedImages,
             description: p.description,
             isNew: p.is_featured,
             sale: p.is_featured,
