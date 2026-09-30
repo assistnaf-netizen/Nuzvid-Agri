@@ -118,7 +118,7 @@ const BlogDetail = () => {
             </div>
             
             {/* Prev / Next Navigation */}
-            <div className="blog-navigation">
+            <div className="blog-navigation mb-5 pb-4">
               {prevBlog ? (
                 <div className="nav-prev">
                   <span className="nav-label">Prev Post</span>
