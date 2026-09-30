@@ -750,7 +750,7 @@ const ProductDetail = () => {
                 >
                   <Heart size={20} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
                 </button>
-                <img src={product.images[currentImageIndex] || product.image} alt={product.title} fetchPriority="high" className="detail-main-img" style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain', display: 'block' }} />
+                <img src={product.images[currentImageIndex] || product.image} alt={product.title} fetchPriority="high" className="detail-main-img" />
               </div>
 
               <div className="detail-thumbnails" style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }}>
