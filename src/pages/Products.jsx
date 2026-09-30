@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
-import { getDisplayName, getProductImages } from '../utils/productUtils';
+import { getDisplayName } from '../utils/productUtils';
 import './Products.css';
 
 const Products = () => {
@@ -27,21 +27,19 @@ const Products = () => {
           let imgs = [];
           if (Array.isArray(p.images)) imgs = p.images;
           else if (typeof p.images === 'string') {
-            try { imgs = JSON.parse(p.images); } catch(e) { imgs = [p.images]; }
+            try { imgs = JSON.parse(p.images); } catch (e) { imgs = [p.images]; }
           }
           if (!Array.isArray(imgs)) imgs = [];
-          
-          const mappedImages = getProductImages(p.name, imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []));
-          
+
           return {
             id: p.id,
             title: getDisplayName(p.name),
             price: p.price,
             mrp: p.original_price,
             category: p.category,
-            image: mappedImages.length > 0 ? mappedImages[0] : p.image_url,
-            hoverImage: mappedImages.length > 1 ? mappedImages[1] : (mappedImages.length > 0 ? mappedImages[0] : p.image_url),
-            images: mappedImages,
+            image: imgs.length > 0 ? imgs[0] : p.image_url,
+            hoverImage: imgs.length > 1 ? imgs[1] : (imgs.length > 0 ? imgs[0] : p.image_url),
+            images: imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []),
             description: p.description,
             isNew: p.is_featured,
             sale: p.is_featured,
@@ -77,13 +75,13 @@ const Products = () => {
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
-    
+
     const query = searchKeyword.toLowerCase();
 
     // Search term filtering
     if (query) {
-      result = result.filter(p => 
-        p.title.toLowerCase().includes(query) || 
+      result = result.filter(p =>
+        p.title.toLowerCase().includes(query) ||
         (p.description && p.description.toLowerCase().includes(query)) ||
         p.category.toLowerCase().includes(query)
       );
@@ -147,7 +145,7 @@ const Products = () => {
       <div className="products-body">
 
         <aside className="products-sidebar">
-          <button 
+          <button
             className="mobile-filter-toggle"
             onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
           >
@@ -160,9 +158,9 @@ const Products = () => {
               <div className="sidebar-widget-header">
                 <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Search</span>
               </div>
-              <input 
-                type="text" 
-                placeholder="Search products..." 
+              <input
+                type="text"
+                placeholder="Search products..."
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
                 style={{ width: '100%', padding: '10px 15px', borderRadius: '8px', border: '1px solid #e5e7eb', outline: 'none', fontSize: '14px', marginTop: '10px' }}
@@ -171,57 +169,57 @@ const Products = () => {
 
             {/* Categories */}
             <div className="sidebar-widget">
-            <div className="sidebar-widget-header">
-              <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Categories</span>
+              <div className="sidebar-widget-header">
+                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Categories</span>
+              </div>
+              <ul className="widget-list">
+                {Object.entries(categories).map(([catName, count]) => (
+                  <li key={catName}>
+                    <button
+                      onClick={() => setCategory(catName)}
+                      className={`category-btn ${category === catName ? 'active' : ''}`}
+                    >
+                      <span className="category-name">{catName}</span>
+                      <span className="category-count">({count})</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="widget-list">
-              {Object.entries(categories).map(([catName, count]) => (
-                <li key={catName}>
-                  <button 
-                    onClick={() => setCategory(catName)}
-                    className={`category-btn ${category === catName ? 'active' : ''}`}
-                  >
-                    <span className="category-name">{catName}</span>
-                    <span className="category-count">({count})</span>
-                  </button>
+
+            {/* Availability */}
+            <div className="sidebar-widget">
+              <div className="sidebar-widget-header">
+                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Availability</span>
+              </div>
+              <ul className="widget-list">
+                <li>
+                  <label className="checkbox-label">
+                    <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
+                    <span>In Stock</span>
+                  </label>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Availability */}
-          <div className="sidebar-widget">
-            <div className="sidebar-widget-header">
-              <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Availability</span>
+              </ul>
             </div>
-            <ul className="widget-list">
-              <li>
-                <label className="checkbox-label">
-                  <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
-                  <span>In Stock</span>
-                </label>
-              </li>
-            </ul>
-          </div>
 
-          {/* Price */}
-          <div className="sidebar-widget">
-            <div className="sidebar-widget-header">
-              <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Price</span>
-            </div>
-            <div className="price-range-box">
-              <div className="price-row">
-                <div className="price-col">
-                  <label className="price-label">From ₹</label>
-                  <input type="number" placeholder="0" className="price-input-box" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
-                </div>
-                <div className="price-col">
-                  <label className="price-label">To ₹</label>
-                  <input type="number" placeholder="5000" className="price-input-box" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+            {/* Price */}
+            <div className="sidebar-widget">
+              <div className="sidebar-widget-header">
+                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Price</span>
+              </div>
+              <div className="price-range-box">
+                <div className="price-row">
+                  <div className="price-col">
+                    <label className="price-label">From ₹</label>
+                    <input type="number" placeholder="0" className="price-input-box" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
+                  </div>
+                  <div className="price-col">
+                    <label className="price-label">To ₹</label>
+                    <input type="number" placeholder="5000" className="price-input-box" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
 
         </aside>

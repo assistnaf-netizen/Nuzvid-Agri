@@ -6,7 +6,6 @@ import { Leaf, Truck, ShieldCheck, Award, Handshake, HeartHandshake } from 'luci
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
-import { getDisplayName, getProductImages } from '../utils/productUtils';
 import './Home.css';
 import './Home-premium.css';
 
@@ -28,21 +27,19 @@ const Home = () => {
           let imgs = [];
           if (Array.isArray(p.images)) imgs = p.images;
           else if (typeof p.images === 'string') {
-            try { imgs = JSON.parse(p.images); } catch(e) { imgs = [p.images]; }
+            try { imgs = JSON.parse(p.images); } catch (e) { imgs = [p.images]; }
           }
           if (!Array.isArray(imgs)) imgs = [];
-          
-          const mappedImages = getProductImages(p.name, imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []));
-          
+
           return {
             id: p.id,
-            title: getDisplayName(p.name),
+            title: p.name,
             price: p.price,
             mrp: p.original_price,
             category: p.category,
-            image: mappedImages.length > 0 ? mappedImages[0] : p.image_url,
-            hoverImage: mappedImages.length > 1 ? mappedImages[1] : (mappedImages.length > 0 ? mappedImages[0] : p.image_url),
-            images: mappedImages,
+            image: imgs.length > 0 ? imgs[0] : p.image_url,
+            hoverImage: imgs.length > 1 ? imgs[1] : (imgs.length > 0 ? imgs[0] : p.image_url),
+            images: imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []),
             description: p.description,
             isNew: p.is_featured,
             sale: p.is_featured,
@@ -210,7 +207,7 @@ const Home = () => {
       </div>
 
       {/* Promotional Banners Section (3 Cards) */}
-      <motion.section 
+      <motion.section
         className="promo-banners-section py-4"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -257,22 +254,22 @@ const Home = () => {
       </motion.section>
 
       {/* Mid Banner Section */}
-      <motion.section 
+      <motion.section
         className="mid-banner-section"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <img 
-          src="/home-mid-banner.jpeg" 
-          alt="Nuzvid Agri Farms Highlights" 
-          style={{ width: '100%', height: 'auto', display: 'block' }} 
+        <img
+          src="/home-mid-banner.jpeg"
+          alt="Nuzvid Agri Farms Highlights"
+          style={{ width: '100%', height: 'auto', display: 'block' }}
         />
       </motion.section>
 
       {/* The Goodness We Share */}
-      <motion.section 
+      <motion.section
         className="goodness-section py-4"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -316,9 +313,9 @@ const Home = () => {
 
           <div className="product-grid">
             {loadingProducts ? (
-               <div style={{ padding: '40px', textAlign: 'center', gridColumn: '1 / -1' }}>
-                 <p>Loading products...</p>
-               </div>
+              <div style={{ padding: '40px', textAlign: 'center', gridColumn: '1 / -1' }}>
+                <p>Loading products...</p>
+              </div>
             ) : filteredProducts.length > 0 ? (
               filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
@@ -373,7 +370,7 @@ const Home = () => {
 
       {/* Features Section */}
       {/* Value Propositions Section (From Screenshot) */}
-      <motion.section 
+      <motion.section
         className="py-5"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -382,7 +379,7 @@ const Home = () => {
       >
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px' }}>
-            
+
             {/* Block 1 */}
             <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
               <Award size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
@@ -424,7 +421,7 @@ const Home = () => {
       </motion.section>
 
       {/* Blog & Insights */}
-      <motion.section 
+      <motion.section
         className="blog-insights py-4"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -544,7 +541,7 @@ const Home = () => {
       {(() => {
         const viewedIds = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
         if (viewedIds.length === 0) return null;
-        
+
         const viewedProducts = viewedIds
           .map(id => products.find(p => p.id === id))
           .filter(Boolean)
