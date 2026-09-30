@@ -374,15 +374,15 @@ const Home = () => {
 
             <div className="blog-grid-scroll" ref={blogScrollRef}>
               {blogs.map(blog => (
-                <div className="blog-card" key={blog.id}>
-                  <a href={blog.link} target="_blank" rel="noopener noreferrer" className="blog-img-wrapper">
-                    <img src={blog.image} alt={blog.id} />
-                  </a>
+                <div className="blog-card" key={blog.slug}>
+                  <Link to={`/blogs/${blog.slug}`} className="blog-img-wrapper">
+                    <img src={blog.image} alt={blog.title} />
+                  </Link>
                   <div className="blog-content">
                     <h3 className="blog-title">
-                      <a href={blog.link} target="_blank" rel="noopener noreferrer">{blog.title}</a>
+                      <Link to={`/blogs/${blog.slug}`}>{blog.title}</Link>
                     </h3>
-                    <a href={blog.link} target="_blank" rel="noopener noreferrer" className="read-more-link">Read More</a>
+                    <Link to={`/blogs/${blog.slug}`} className="read-more-link">Read More</Link>
                   </div>
                 </div>
               ))}
