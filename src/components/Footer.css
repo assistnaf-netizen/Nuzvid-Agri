@@ -55,9 +55,9 @@
 .footer-col h3 {
   color: var(--color-secondary);
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   text-transform: uppercase;
   letter-spacing: 2px;
   position: relative;
@@ -97,8 +97,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
-  margin-bottom: 12px;
+  font-size: 15px;
+  margin-bottom: 14px;
   color: #bbb;
 }
 
@@ -121,7 +121,7 @@
 .footer-col ul a {
   position: relative;
   display: inline-block;
-  font-size: 13px;
+  font-size: 15px;
   color: #999;
   text-decoration: none;
   font-weight: 500;
@@ -166,7 +166,7 @@
 }
 
 .copy-text {
-  font-size: 12px;
+  font-size: 14px;
   color: #777;
   margin: 0;
 }
