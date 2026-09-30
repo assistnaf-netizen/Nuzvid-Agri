@@ -4,13 +4,15 @@
 
 .footer {
   position: relative;
-  background-color: #111;
-  /* Unique CSS geometric background */
-  background-image: 
-    radial-gradient(circle at 100% 150%, var(--color-primary) 24%, transparent 25%),
-    radial-gradient(circle at 0% -50%, var(--color-primary) 24%, transparent 25%);
-  background-size: 400px 400px;
-  background-position: center;
+  background-color: var(--color-bg-dark);
+  /* Different subtle detailing: Diagonal pinstripes */
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 15px
+  );
   color: #ddd;
   overflow: hidden;
 }
@@ -19,7 +21,7 @@
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(17, 17, 17, 0.94); /* Dimming the pattern */
+  background: radial-gradient(circle at center top, rgba(0,0,0,0) 0%, var(--color-bg-dark) 90%);
   z-index: 1;
 }
 
