@@ -7,7 +7,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
-import { getDisplayName, getProductImages } from '../utils/productUtils';
+import { getDisplayName } from '../utils/productUtils';
 import './ProductDetail.css';
 
 const jaggeryBlockShortDesc = "Enjoy organic jaggery made the way it should be, slow-cooked to preserve its natural richness. Packed with essential minerals, it energizes your body and strengthens immunity. Sweeten every meal the healthy, wholesome way and bring care and tradition to your family's table. At Nuzvid Agri Farms, our organic jaggery is...";
@@ -15,15 +15,15 @@ const jaggeryBlockShortDesc = "Enjoy organic jaggery made the way it should be, 
 const jaggeryBlockLongDesc = (
   <div className="jaggery-long-desc">
     <p>Enjoy organic jaggery made the way it should be, slow-cooked to preserve its natural richness. Packed with essential minerals, it energizes your body and strengthens immunity. Sweeten every meal the healthy, wholesome way and bring care and tradition to your family's table.</p>
-    
+
     <p>At Nuzvid Agri Farms, our organic jaggery is made the way it should be made, slowly and with care. Fresh organic sugarcane juice is boiled in traditional food-grade steel vessels over a wood-fired stove, without any chemicals, whiteners, or refining that takes away its natural richness.</p>
-    
+
     <p>Naturally rich in iron, magnesium, potassium, and essential minerals, this jaggery supports digestion, purifies the blood, boosts energy, and strengthens immunity. A wholesome alternative to refined sugar, it delivers natural sweetness with all its nutrients intact.</p>
-    
+
     <p>Every piece of this jaggery holds the warmth of our roots, a taste that reminds us of our childhood, our elders, and a time when food was made with love, not shortcuts.</p>
-    
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Sweet Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Sweet Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Naturally rich in calcium, iron, and essential minerals</li>
       <li>Provides slow-releasing energy that fuels the body all day</li>
       <li>Supports digestion and helps cleanse the system</li>
@@ -33,8 +33,8 @@ const jaggeryBlockLongDesc = (
       <li>100% pure, chemical-free, and traditionally crafted</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Sugarcane</strong> – Cultivated without pesticides, fertilizers, or harmful chemicals</li>
       <li><strong>Freshly Crushed Juice</strong> – Extracted from matured cane for maximum sweetness</li>
       <li><strong>Slow-Cooked in Steel Vessels</strong> – Preserves natural minerals and authentic taste</li>
@@ -49,15 +49,15 @@ const jaggeryPowderShortDesc = "Enjoy organic jaggery made the way it should be,
 const jaggeryPowderLongDesc = (
   <div className="jaggery-powder-long-desc">
     <p>Enjoy organic jaggery made the way it should be, slow-cooked to preserve its natural richness. Packed with essential minerals, it energizes your body and strengthens immunity. Sweeten every meal the healthy, wholesome way and bring care and tradition to your family's table.</p>
-    
+
     <p>At Nuzvid Agri Farms, our organic jaggery is made the way it should be made, slowly and with care. Fresh organic sugarcane juice is boiled in traditional food-grade steel vessels over a wood-fired stove, without any chemicals, whiteners, or refining that takes away its natural richness.</p>
-    
+
     <p>Naturally rich in iron, magnesium, potassium, and essential minerals, this jaggery supports digestion, purifies the blood, boosts energy, and strengthens immunity. A wholesome alternative to refined sugar, it delivers natural sweetness with all its nutrients intact.</p>
-    
+
     <p>Every piece of this jaggery holds the warmth of our roots, a taste that reminds us of our childhood, our elders, and a time when food was made with love, not shortcuts.</p>
-    
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Sweet Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Sweet Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Naturally rich in calcium, iron, and essential minerals</li>
       <li>Provides slow-releasing energy that fuels the body all day</li>
       <li>Supports digestion and helps cleanse the system</li>
@@ -67,8 +67,8 @@ const jaggeryPowderLongDesc = (
       <li>100% pure, chemical-free, and traditionally crafted</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Sugarcane</strong> – Cultivated without pesticides, fertilizers, or harmful chemicals</li>
       <li><strong>Freshly Crushed Juice</strong> – Extracted from matured cane for maximum sweetness</li>
       <li><strong>Slow-Cooked in Steel Vessels</strong> – Preserves natural minerals and authentic taste</li>
@@ -83,15 +83,15 @@ const naturalSugarShortDesc = "Welcome home the rich, wholesome sweetness of pur
 const naturalSugarLongDesc = (
   <div className="sugar-long-desc">
     <p>Welcome home the rich, wholesome sweetness of pure natural sugar, unrefined, unprocessed, and untouched by chemicals. It's not just sugar; it's a return to tradition, a taste that nourishes both the body and the soul.</p>
-    
+
     <p>At Nuzvid Agri Farms, we believe that the sweetest things in life should be real. Our natural sugar is crafted with love and patience, made from freshly squeezed sugarcane juice and slowly evaporated to preserve its natural goodness. There are no chemicals, no artificial refining, and no shortcuts. What you get is sugar in its most authentic form, infused with natural molasses that bring a deep, rich caramel flavour, as close to nature as it gets.</p>
-    
+
     <p>Unlike refined sugars, our natural sugar holds on to nature's essentials, such as trace minerals like iron, calcium, and potassium, making it a much better choice for your health. It's not just a sweetener; it's a nutrient-rich ingredient that adds layers of flavour while supporting your well-being. Whether it's your morning cup of tea, a homemade dessert, or a traditional dish, our brown sugar elevates your recipes with natural sweetness and wholesome benefits.</p>
-    
+
     <p>Every grain of our natural sugar is a testament to our dedication to sustainable farming and the hardworking hands that make it possible. We partner with local farmers, ensuring fair trade practices and supporting the agricultural community because we believe in giving back to the land that gives us so much. At your table, there's no room for compromise. We believe in honesty, purity, and respect for tradition. Every granule of our brown sugar reflects that commitment, delivering a sweetness that's true to its roots. When you choose Nuzvid Agri Farms, you're choosing more than just sugar; you're choosing the best for you, your family, and the planet.</p>
-    
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Sweet Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Sweet Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Naturally rich in minerals like calcium, iron, and magnesium</li>
       <li>Provides steady, clean energy compared to refined sugar</li>
       <li>Supports digestion with trace molasses content</li>
@@ -101,8 +101,8 @@ const naturalSugarLongDesc = (
       <li>100% pure, chemical-free, and made the natural way</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Sugarcane</strong> – Cultivated without pesticides, chemicals, or synthetic fertilizers</li>
       <li><strong>Carefully Harvested & Crushed</strong> – Juice extracted from fresh, matured cane</li>
       <li><strong>Slow-Cooked to Retain Minerals</strong> – Traditional method preserves natural nutrients and molasses</li>
@@ -117,17 +117,17 @@ const gheeShortDesc = "Experience the richness of A2 Ghee made from fresh milk u
 const gheeLongDesc = (
   <div className="ghee-long-desc">
     <p>Experience the richness of A2 Ghee made from fresh milk using the Bilona method, crafted with care just like in our grandparents’ kitchens. This nutritious superfood, packed with Omega-3, 6, 9, CLA, and essential vitamins, nurtures heart, brain, and immunity. Bring home the taste of tradition and give your family wholesome nourishment in every meal.</p>
-    
+
     <p>There is something special about the aroma of pure desi ghee warming on the stove. It brings back memories of childhood, care, and food made with love.</p>
-    
+
     <p>At Nuzvid Agri Farms, we make our A2 Ghee just as it was prepared in our grandparents’ homes. We begin with fresh, non-frozen milk from native cows. The milk is set into curd and gently churned to extract butter, which is carefully fermented and washed with purified water. This butter is then slowly cooked in a Kanchu patra, a traditional bronze vessel, over a low flame on a wood-fired stove, preserving its authentic flavor and nutrients.</p>
-    
+
     <p>This golden ghee is rich in Omega-3, Omega-6, and Omega-9 fatty acids, supporting heart health and brain function. It is naturally packed with Vitamins A, D, E, K, and K12, which promote immunity, bone strength, and hormonal balance. It also contains Butyric Acid, which supports gut health and reduces inflammation, and CLA, which helps maintain healthy metabolism and enhances immunity.</p>
-    
+
     <p>More than an ingredient, our A2 Ghee brings nourishment, balance, and strength to every meal. This is not just ghee; it is tradition, healing, and wholesome goodness brought back to your plate.</p>
-    
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Builds strong immunity with vitamins A, D, E & K</li>
       <li>Omega 3, 6 & 9 support heart and brain health</li>
       <li>CLA enhances fat metabolism, focus, and memory</li>
@@ -137,8 +137,8 @@ const gheeLongDesc = (
       <li>Nourishes skin, hair, and balances overall wellness naturally</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Native Cow Milk</strong> – Fresh, non-frozen milk sourced from indigenous cows</li>
       <li><strong>Traditional Bilona Method</strong> – Milk set into curd, hand-churned to extract butter</li>
       <li><strong>Slow-Cooked in Bronze Vessels</strong> – Butter simmered gently over wood fire, with no shortcuts</li>
@@ -159,8 +159,8 @@ const buffaloGheeLongDesc = (
 
     <p>This golden ghee is rich in vitamins A, D, E, and K, essential for immunity, bone strength, and overall wellness. It contains healthy fats that provide sustained energy throughout the day and support digestion by enhancing nutrient absorption. Known for its natural antioxidants, buffalo ghee helps boost immunity and supports joint flexibility. More than just an ingredient, our Buffalo Ghee brings strength, balance, and nourishment to every meal.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Goodness of Buffalo Ghee:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Goodness of Buffalo Ghee:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Rich in vitamins A, D, E & K for overall wellness</li>
       <li>High in healthy fats that provide sustained energy</li>
       <li>Supports bone strength and joint flexibility</li>
@@ -170,8 +170,8 @@ const buffaloGheeLongDesc = (
       <li>100% pure, chemical-free, and carefully crafted</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Farm-Fresh Buffalo Milk</strong> – Collected from healthy, grass-fed buffaloes without hormones or chemicals</li>
       <li><strong>Slow Simmering of Cream</strong> – Fresh cream gently simmered to release natural ghee</li>
       <li><strong>Careful Clarification</strong> – Milk solids separated to retain purity and rich golden texture</li>
@@ -195,10 +195,10 @@ const sesameOilLongDesc = (
 
     <p>When you choose Nuzvid Agri Farms, you are choosing more than just oil. You are bringing home a legacy that honours health, nature, and the farmers who make it possible.</p>
 
-    <p style={{fontStyle: 'italic', color: '#6b7280', fontSize: '14px'}}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
+    <p style={{ fontStyle: 'italic', color: '#6b7280', fontSize: '14px' }}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Retains natural antioxidants and vitamin E for strong immunity</li>
       <li>Cold-pressed method preserves essential fatty acids and nutrients</li>
       <li>Supports heart health with balanced Omega 3 and 6</li>
@@ -208,8 +208,8 @@ const sesameOilLongDesc = (
       <li>100% natural, unrefined, and free from preservatives</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Seeds and Nuts</strong> – Sourced from trusted farms, free from chemicals and pesticides</li>
       <li><strong>Wooden Cold-Pressed Extraction</strong> – Seeds pressed slowly at low temperature, no heat or chemicals</li>
       <li><strong>Nutrient-Rich Pure Oil</strong> – Retains natural aroma, flavour, antioxidants, and nutrients</li>
@@ -233,10 +233,10 @@ const coconutOilLongDesc = (
 
     <p>For generations, coconut oil has been trusted in kitchens and homes as a source of cooking, care, and wellness. With every bottle of Nuzvid Agri Farms extra virgin coconut oil, you choose purity, tradition, and a promise of care that honours both health and heritage.</p>
 
-    <p style={{fontStyle: 'italic', color: '#6b7280', fontSize: '14px'}}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
+    <p style={{ fontStyle: 'italic', color: '#6b7280', fontSize: '14px' }}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Retains natural antioxidants and vitamin E for strong immunity</li>
       <li>Cold-pressed method preserves essential fatty acids and nutrients</li>
       <li>Supports heart health with balanced Omega 3 and 6</li>
@@ -246,8 +246,8 @@ const coconutOilLongDesc = (
       <li>100% natural, unrefined, and free from preservatives</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Seeds and Nuts</strong> – Sourced from trusted farms, free from chemicals and pesticides</li>
       <li><strong>Wooden Cold-Pressed Extraction</strong> – Seeds pressed slowly at low temperature, no heat or chemicals</li>
       <li><strong>Nutrient-Rich Pure Oil</strong> – Retains natural aroma, flavour, antioxidants, and nutrients</li>
@@ -269,10 +269,10 @@ const mustardOilLongDesc = (
 
     <p>A thoughtful choice for your family, our mustard oil brings nutrition, flavour, and care to your kitchen. Every drop reflects tradition and love, making each meal wholesome and memorable.</p>
 
-    <p style={{fontStyle: 'italic', color: '#6b7280', fontSize: '14px'}}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
+    <p style={{ fontStyle: 'italic', color: '#6b7280', fontSize: '14px' }}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Retains natural antioxidants and vitamin E for strong immunity</li>
       <li>Cold-pressed method preserves essential fatty acids and nutrients</li>
       <li>Supports heart health with balanced Omega 3 and 6</li>
@@ -282,8 +282,8 @@ const mustardOilLongDesc = (
       <li>100% natural, unrefined, and free from preservatives</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Seeds and Nuts</strong> – Sourced from trusted farms, free from chemicals and pesticides</li>
       <li><strong>Wooden Cold-Pressed Extraction</strong> – Seeds pressed slowly at low temperature, no heat or chemicals</li>
       <li><strong>Nutrient-Rich Pure Oil</strong> – Retains natural aroma, flavour, antioxidants, and nutrients</li>
@@ -305,10 +305,10 @@ const groundnutOilLongDesc = (
 
     <p>We take pride in preserving traditional cold-press methods to extract oil, keeping all its natural goodness intact gently. With Nuzvid Agri Farms' groundnut oil, you're choosing health, tradition, and a promise that the farmer's hard work reaches your kitchen directly.</p>
 
-    <p style={{fontStyle: 'italic', color: '#6b7280', fontSize: '14px'}}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
+    <p style={{ fontStyle: 'italic', color: '#6b7280', fontSize: '14px' }}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Retains natural antioxidants and vitamin E for strong immunity</li>
       <li>Cold-pressed method preserves essential fatty acids and nutrients</li>
       <li>Supports heart health with balanced Omega 3 and 6</li>
@@ -318,8 +318,8 @@ const groundnutOilLongDesc = (
       <li>100% natural, unrefined, and free from preservatives</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Seeds and Nuts</strong> – Sourced from trusted farms, free from chemicals and pesticides</li>
       <li><strong>Wooden Cold-Pressed Extraction</strong> – Seeds pressed slowly at low temperature, no heat or chemicals</li>
       <li><strong>Nutrient-Rich Pure Oil</strong> – Retains natural aroma, flavour, antioxidants, and nutrients</li>
@@ -343,10 +343,10 @@ const safflowerOilLongDesc = (
 
     <p>By choosing Nuzvid Agri Farms safflower oil, you are bringing home more than just a cooking ingredient. You are supporting mindful farming, traditional methods, and a way of health that stays true to the soil it comes from.</p>
 
-    <p style={{fontStyle: 'italic', color: '#6b7280', fontSize: '14px'}}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
+    <p style={{ fontStyle: 'italic', color: '#6b7280', fontSize: '14px' }}>Note: Every product is packed in carefully chosen food-grade materials to ensure complete safety for your family. Our containers are fully recyclable and reusable, reflecting our effort to reduce environmental impact while delivering the highest quality to your home.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Retains natural antioxidants and vitamin E for strong immunity</li>
       <li>Cold-pressed method preserves essential fatty acids and nutrients</li>
       <li>Supports heart health with balanced Omega 3 and 6</li>
@@ -356,8 +356,8 @@ const safflowerOilLongDesc = (
       <li>100% natural, unrefined, and free from preservatives</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Grown Seeds and Nuts</strong> – Sourced from trusted farms, free from chemicals and pesticides</li>
       <li><strong>Wooden Cold-Pressed Extraction</strong> – Seeds pressed slowly at low temperature, no heat or chemicals</li>
       <li><strong>Nutrient-Rich Pure Oil</strong> – Retains natural aroma, flavour, antioxidants, and nutrients</li>
@@ -379,8 +379,8 @@ const curryChilliPowderLongDesc = (
 
     <p>This Masala Chilly Powder brings the bold, pure taste of tradition to your kitchen. Every spoonful carries freshness, flavour, and health, making your meals vibrant and full of life. Bring home the spice that awakens the senses and nourishes the body.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Fiery Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Fiery Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Capsaicin-rich spice that boosts metabolism and supports weight management</li>
       <li>Natural antioxidants strengthen immunity and fight oxidative stress</li>
       <li>Promotes healthy blood circulation and heart wellness</li>
@@ -390,8 +390,8 @@ const curryChilliPowderLongDesc = (
       <li>100% pure, chemical-free, and bursting with authentic Guntur heat</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Cultivated in Guntur Farms</strong> – Grown in the fertile soils of Andhra, free from chemicals and pesticides</li>
       <li><strong>Handpicked with Care</strong> – Harvested at peak ripeness for maximum flavour and colour</li>
       <li><strong>Sun-Dried Naturally</strong> – Preserves fiery heat, vibrant red colour, and nutrient value</li>
@@ -413,8 +413,8 @@ const redChilliPowderLongDesc = (
 
     <p>This Red Chilly Powder brings the bold, pure taste of tradition to your kitchen. Every spoonful carries freshness, flavor, and health, making your meals vibrant and full of life. Bring home the spice that awakens the senses and nourishes the body.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Fiery Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Fiery Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Capsaicin-rich spice that boosts metabolism and supports weight management</li>
       <li>Natural antioxidants strengthen immunity and fight oxidative stress</li>
       <li>Promotes healthy blood circulation and heart wellness</li>
@@ -424,8 +424,8 @@ const redChilliPowderLongDesc = (
       <li>100% pure, chemical-free, and bursting with authentic Guntur heat</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Organically Cultivated in Guntur Farms</strong> – Grown in the fertile soils of Andhra, free from chemicals and pesticides</li>
       <li><strong>Handpicked with Care</strong> – Harvested at peak ripeness for maximum flavor and color</li>
       <li><strong>Sun-Dried Naturally</strong> – Preserves fiery heat, vibrant red color, and nutrient value</li>
@@ -447,8 +447,8 @@ const turmericPowderLongDesc = (
 
     <p>This is more than a spice; it is tradition, health, and purity brought to your kitchen with care. With every use, you bring home the goodness of Ayurveda and the strength of a superfood that your family deserves.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Curcumin-rich spice supports strong natural immunity</li>
       <li>Potent antioxidants help combat daily oxidative stress</li>
       <li>Natural anti-inflammatory properties ease joint and muscle health</li>
@@ -458,8 +458,8 @@ const turmericPowderLongDesc = (
       <li>100% pure, chemical-free, and packed with nature's golden goodness</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Naturally Cultivated in Organic Farms</strong> – Grown without pesticides, fertilizers, or chemicals</li>
       <li><strong>Carefully Harvested Rhizomes</strong> – Picked at the right maturity to preserve potency</li>
       <li><strong>Gentle Cleaning & Sun Drying</strong> – Retains essential curcumin and natural aroma</li>
@@ -481,8 +481,8 @@ const rawHoneyLongDesc = (
 
     <p>This isn't just honey. It's nature's gift, brought to your home with care, for those who believe in honest, wholesome living.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Golden Wellness Wonders:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Golden Wellness Wonders:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Raw honey rich in live enzymes that build natural immunity</li>
       <li>Antioxidants in every drop help fight oxidative stress</li>
       <li>Naturally antibacterial, soothing sore throats and supporting lungs</li>
@@ -492,8 +492,8 @@ const rawHoneyLongDesc = (
       <li>100% pure, unheated, and unprocessed to keep nature's full goodness intact</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Naturally Sourced from Forests</strong> – Collected from wild, pesticide-free floral regions</li>
       <li><strong>Hand-Harvested with Care</strong> – Gathered by experienced beekeepers, respecting nature's rhythm</li>
       <li><strong>Raw & Untouched Purity</strong> – No heating, no filtering, no additives, honey as it is</li>
@@ -517,16 +517,16 @@ const mineralSaltLongDesc = (
 
     <p>Every grain we offer reflects our commitment to authenticity, health, and responsible sourcing. We work closely with ethical suppliers and local communities to ensure that what reaches your table is not only of the highest quality but also rooted in care and respect for the earth. When you choose Nuzvid Agri Farms, you choose wellness, integrity, and the simple luxury of nature at its best.</p>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Himalayan Mineral Salt – Nature's Pure Essence:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Himalayan Mineral Salt – Nature's Pure Essence:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li>Harvested from ancient Himalayan salt mines, rich in 80+ trace minerals</li>
       <li>Naturally mineral-rich crystals that support electrolyte balance & hydration</li>
       <li>Mined gently, free from chemicals, additives, or refining</li>
       <li>Preserves natural flavor & purity in every grain</li>
     </ul>
 
-    <h4 style={{marginTop: '20px', fontWeight: 'bold'}}>Traditional Purity Process:</h4>
-    <ul style={{listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8'}}>
+    <h4 style={{ marginTop: '20px', fontWeight: 'bold' }}>Traditional Purity Process:</h4>
+    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.8' }}>
       <li><strong>Hand-mined</strong> from salt beds formed millions of years ago</li>
       <li><strong>Unrefined & raw</strong>, never bleached or chemically processed</li>
       <li><strong>Retains natural color</strong>, balanced flavor & elemental purity</li>
@@ -540,7 +540,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  
+
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -590,15 +590,15 @@ const ProductDetail = () => {
           mrp: data.original_price,
           category: data.category,
           image: data.image_url || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image',
-          images: getProductImages(data.name, (() => {
+          images: (() => {
             let imgs = [];
             if (Array.isArray(data.images)) imgs = data.images;
             else if (typeof data.images === 'string') {
-              try { imgs = JSON.parse(data.images); } catch(e) { imgs = [data.images]; }
+              try { imgs = JSON.parse(data.images); } catch (e) { imgs = [data.images]; }
             }
             if (!Array.isArray(imgs)) imgs = [];
             return imgs.length > 0 ? imgs : (data.image_url ? [data.image_url] : ['https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image']);
-          })()),
+          })(),
           description: data.description,
           sku: data.sku,
           weight: data.weight,
@@ -627,19 +627,19 @@ const ProductDetail = () => {
         const { data: relatedData } = await supabase.from('products').select('*').eq('category', data.category).neq('id', data.id).limit(4);
         if (relatedData) {
           setRelatedProducts(relatedData.map(rp => ({
-             id: rp.id,
-             title: getDisplayName(rp.name),
-             price: rp.price,
-             mrp: rp.original_price,
-             category: rp.category,
-             image: rp.image_url,
-             hoverImage: rp.image_url,
-             description: rp.description,
-             isNew: rp.is_featured,
-             sale: rp.is_featured,
-             isFreeShipping: rp.is_free_shipping || false,
-             rating: 5.0,
-             reviews: 12
+            id: rp.id,
+            title: getDisplayName(rp.name),
+            price: rp.price,
+            mrp: rp.original_price,
+            category: rp.category,
+            image: rp.image_url,
+            hoverImage: rp.image_url,
+            description: rp.description,
+            isNew: rp.is_featured,
+            sale: rp.is_featured,
+            isFreeShipping: rp.is_free_shipping || false,
+            rating: 5.0,
+            reviews: 12
           })));
         }
       }
@@ -687,7 +687,7 @@ const ProductDetail = () => {
       sku: selectedVariant ? selectedVariant.sku : product.sku,
       isFreeShipping: product.isFreeShipping
     }, quantity);
-    
+
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 3000);
   };
@@ -700,7 +700,7 @@ const ProductDetail = () => {
   return (
     <div className="product-detail-page">
       {product && (
-        <SEO 
+        <SEO
           title={product.title}
           description={product.description}
           image={product.image}
@@ -728,38 +728,38 @@ const ProductDetail = () => {
           <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', color: '#4b5563', fontWeight: 600, marginRight: '16px' }}>
             <ArrowLeft size={16} /> Back
           </button>
-          <Link to="/">Home</Link> <ChevronRight size={14} /> 
-          <Link to="/collections/all">Products</Link> <ChevronRight size={14} /> 
+          <Link to="/">Home</Link> <ChevronRight size={14} />
+          <Link to="/collections/all">Products</Link> <ChevronRight size={14} />
           <span className="current">{product.title}</span>
         </div>
       </div>
 
       <div className="container pb-5">
         <div className="row detail-main-row">
-          
+
           {/* Left Column: Image Gallery */}
           <div className="col-lg-6 col-md-12">
             <div className="detail-gallery">
-              <div className="detail-main-img-wrapper" style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', marginBottom: '15px' }}>
+              <div className="detail-main-img-wrapper" style={{ position: 'relative', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', overflow: 'hidden', background: 'white', marginBottom: '15px' }}>
                 {product.sale && <span className="detail-badge sale">Sale</span>}
                 {product.isNew && <span className="detail-badge new">New</span>}
-                <button 
+                <button
                   className={`detail-wishlist-btn ${isWishlisted ? 'active' : ''}`}
                   onClick={() => toggleWishlist(product)}
                   style={{ position: 'absolute', right: '15px', top: '15px', zIndex: 10, background: 'rgba(255,255,255,0.8)', borderRadius: '50%', padding: '8px', border: 'none', display: 'flex' }}
                 >
                   <Heart size={20} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
                 </button>
-                <img src={product.images[currentImageIndex] || product.image} alt={product.title} fetchpriority="high" className="detail-main-img" style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain', display: 'block' }} />
+                <img src={product.images[currentImageIndex] || product.image} alt={product.title} fetchPriority="high" className="detail-main-img" style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain', display: 'block' }} />
               </div>
-              
+
               <div className="detail-thumbnails" style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }}>
                 {product.images.map((img, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`thumbnail ${currentImageIndex === idx ? 'active' : ''}`} 
+                  <div
+                    key={idx}
+                    className={`thumbnail ${currentImageIndex === idx ? 'active' : ''}`}
                     onClick={() => setCurrentImageIndex(idx)}
-                    style={{ 
+                    style={{
                       width: '80px', height: '80px', border: currentImageIndex === idx ? '2px solid var(--color-primary)' : '1px solid #e5e7eb',
                       borderRadius: '8px', overflow: 'hidden', cursor: 'pointer', flexShrink: 0
                     }}
@@ -775,7 +775,7 @@ const ProductDetail = () => {
           <div className="col-lg-6 col-md-12">
             <div className="detail-info">
               <h1 className="detail-title">{product.title}</h1>
-              
+
               <div className="detail-rating-wrapper">
                 <div className="detail-stars">
                   {[...Array(5)].map((_, i) => (
@@ -808,16 +808,16 @@ const ProductDetail = () => {
                   <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px', color: '#4b5563' }}>Select Size / Weight</h4>
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     {product.variants.map((v, idx) => (
-                      <button 
+                      <button
                         key={idx}
                         onClick={() => { setSelectedVariant(v); setQuantity(1); }}
-                        style={{ 
-                          padding: '8px 16px', 
-                          border: selectedVariant?.weight === v.weight ? '2px solid var(--color-primary)' : '1px solid #d1d5db', 
+                        style={{
+                          padding: '8px 16px',
+                          border: selectedVariant?.weight === v.weight ? '2px solid var(--color-primary)' : '1px solid #d1d5db',
                           background: selectedVariant?.weight === v.weight ? '#fef3c7' : 'white',
                           color: selectedVariant?.weight === v.weight ? '#92400e' : '#4b5563',
-                          borderRadius: '8px', 
-                          fontWeight: 600, 
+                          borderRadius: '8px',
+                          fontWeight: 600,
                           cursor: 'pointer',
                           transition: 'all 0.2s'
                         }}
@@ -860,8 +860,8 @@ const ProductDetail = () => {
                           ? mineralSaltShortDesc
                           : product.title?.toLowerCase().includes('powder') && product.title?.toLowerCase().includes('jaggery')
                             ? jaggeryPowderShortDesc
-                            : product.title?.toLowerCase().includes('jaggery') 
-                              ? jaggeryBlockShortDesc 
+                            : product.title?.toLowerCase().includes('jaggery')
+                              ? jaggeryBlockShortDesc
                               : product.title?.toLowerCase().includes('sugar')
                                 ? naturalSugarShortDesc
                                 : product.title?.toLowerCase().includes('ghee')
@@ -897,12 +897,12 @@ const ProductDetail = () => {
                     <input type="text" value={quantity} readOnly />
                     <button onClick={() => handleQuantityChange('increment')}>+</button>
                   </div>
-                  <button 
-                    className="btn-primary detail-add-btn" 
+                  <button
+                    className="btn-primary detail-add-btn"
                     onClick={handleAddToCart}
                     style={{ backgroundColor: addedToCart ? '#2e7d32' : '' }}
                   >
-                    <ShoppingBag size={20} /> 
+                    <ShoppingBag size={20} />
                     {addedToCart ? 'Added to Cart!' : 'Add to Cart'}
                   </button>
                 </div>
@@ -918,30 +918,30 @@ const ProductDetail = () => {
           <div className="detail-tabs-nav">
             <button className={activeTab === 'description' ? 'active' : ''} onClick={() => setActiveTab('description')}>Description</button>
           </div>
-          
+
           <div className="detail-tab-content">
             {activeTab === 'description' && (
               <div className="tab-pane active fade-in">
                 {product.title?.toLowerCase().includes('curry') && product.title?.toLowerCase().includes('chilli') ? curryChilliPowderLongDesc :
-                 product.title?.toLowerCase().includes('red') && product.title?.toLowerCase().includes('chilli') ? redChilliPowderLongDesc :
-                 product.title?.toLowerCase().includes('turmeric') ? turmericPowderLongDesc :
-                 product.title?.toLowerCase().includes('honey') ? rawHoneyLongDesc :
-                 product.title?.toLowerCase().includes('salt') ? mineralSaltLongDesc :
-                 product.title?.toLowerCase().includes('powder') && product.title?.toLowerCase().includes('jaggery') ? jaggeryPowderLongDesc :
-                 product.title?.toLowerCase().includes('jaggery') ? jaggeryBlockLongDesc : 
-                 product.title?.toLowerCase().includes('sugar') ? naturalSugarLongDesc : 
-                 product.title?.toLowerCase().includes('buffalo') && product.title?.toLowerCase().includes('ghee') ? buffaloGheeLongDesc : 
-                 product.title?.toLowerCase().includes('ghee') ? gheeLongDesc : 
-                 product.title?.toLowerCase().includes('sesame oil') ? sesameOilLongDesc : 
-                 product.title?.toLowerCase().includes('coconut') && product.title?.toLowerCase().includes('oil') ? coconutOilLongDesc : 
-                 product.title?.toLowerCase().includes('mustard') && product.title?.toLowerCase().includes('oil') ? mustardOilLongDesc : 
-                 product.title?.toLowerCase().includes('groundnut') && product.title?.toLowerCase().includes('oil') ? groundnutOilLongDesc : 
-                 product.title?.toLowerCase().includes('safflower') && product.title?.toLowerCase().includes('oil') ? safflowerOilLongDesc : (
-                  <>
-                    <p>{product.description}</p>
-                    <p>Our commitment to purity and traditional practices ensures that every product reaching your kitchen is packed with natural nutrition and authentic flavor. All our ingredients are hand-picked, organically processed, and rigorously tested to meet our premium quality standards.</p>
-                  </>
-                )}
+                  product.title?.toLowerCase().includes('red') && product.title?.toLowerCase().includes('chilli') ? redChilliPowderLongDesc :
+                    product.title?.toLowerCase().includes('turmeric') ? turmericPowderLongDesc :
+                      product.title?.toLowerCase().includes('honey') ? rawHoneyLongDesc :
+                        product.title?.toLowerCase().includes('salt') ? mineralSaltLongDesc :
+                          product.title?.toLowerCase().includes('powder') && product.title?.toLowerCase().includes('jaggery') ? jaggeryPowderLongDesc :
+                            product.title?.toLowerCase().includes('jaggery') ? jaggeryBlockLongDesc :
+                              product.title?.toLowerCase().includes('sugar') ? naturalSugarLongDesc :
+                                product.title?.toLowerCase().includes('buffalo') && product.title?.toLowerCase().includes('ghee') ? buffaloGheeLongDesc :
+                                  product.title?.toLowerCase().includes('ghee') ? gheeLongDesc :
+                                    product.title?.toLowerCase().includes('sesame oil') ? sesameOilLongDesc :
+                                      product.title?.toLowerCase().includes('coconut') && product.title?.toLowerCase().includes('oil') ? coconutOilLongDesc :
+                                        product.title?.toLowerCase().includes('mustard') && product.title?.toLowerCase().includes('oil') ? mustardOilLongDesc :
+                                          product.title?.toLowerCase().includes('groundnut') && product.title?.toLowerCase().includes('oil') ? groundnutOilLongDesc :
+                                            product.title?.toLowerCase().includes('safflower') && product.title?.toLowerCase().includes('oil') ? safflowerOilLongDesc : (
+                                              <>
+                                                <p>{product.description}</p>
+                                                <p>Our commitment to purity and traditional practices ensures that every product reaching your kitchen is packed with natural nutrition and authentic flavor. All our ingredients are hand-picked, organically processed, and rigorously tested to meet our premium quality standards.</p>
+                                              </>
+                                            )}
               </div>
             )}
 
