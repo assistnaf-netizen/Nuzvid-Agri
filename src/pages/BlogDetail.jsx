@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { Search, Calendar, User, MessageCircle, Facebook, Instagram, Youtube, Twitter, Pinterest, LayoutGrid, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Search, Calendar, User, MessageCircle, LayoutGrid, ChevronRight, ArrowLeft } from 'lucide-react';
+import { FaFacebook, FaInstagram, FaYoutube, FaTwitter, FaPinterest } from 'react-icons/fa';
 import './Blogs.css';
 import './BlogDetail.css';
 import { blogsContent } from '../utils/blogData';
@@ -71,9 +72,9 @@ const BlogDetail = () => {
             <div className="sidebar-widget">
               <h4 className="widget-title"><span></span> Never Miss News</h4>
               <div className="social-icons-widget">
-                <a href="#" className="social-icon"><Facebook size={16} /></a>
-                <a href="#" className="social-icon"><Instagram size={16} /></a>
-                <a href="#" className="social-icon"><Youtube size={16} /></a>
+                <a href="#" className="social-icon"><FaFacebook size={16} /></a>
+                <a href="#" className="social-icon"><FaInstagram size={16} /></a>
+                <a href="#" className="social-icon"><FaYoutube size={16} /></a>
               </div>
             </div>
             
@@ -110,9 +111,9 @@ const BlogDetail = () => {
               </div>
               <div className="blog-share">
                 <strong>Share This Post</strong>
-                <a href="#"><Facebook size={14} /></a>
-                <a href="#"><Twitter size={14} /></a>
-                <a href="#"><Pinterest size={14} /></a>
+                <a href="#"><FaFacebook size={14} /></a>
+                <a href="#"><FaTwitter size={14} /></a>
+                <a href="#"><FaPinterest size={14} /></a>
               </div>
             </div>
             
