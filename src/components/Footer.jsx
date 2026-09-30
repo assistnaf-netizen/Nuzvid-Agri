@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa';
+import FallingCrystals from './FallingCrystals';
 import './Footer.css';
 
 const Footer = () => {
   return (
     <footer className="footer">
+      <FallingCrystals />
       <div className="footer-glow"></div>
       {/* Main Sitemap Footer */}
       <div className="main-footer">
