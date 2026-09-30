@@ -1,14 +1,8 @@
-import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import SEO from '../components/SEO';
-import { ChevronRight, Calendar, ArrowLeft } from 'lucide-react';
-import './Blogs.css';
-import { blogsContent } from '../utils/blogData';
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { Search, Calendar, User, MessageCircle, Facebook, Instagram, Youtube, Twitter, Pinterest, LayoutGrid } from 'lucide-react';
+import { Search, Calendar, User, MessageCircle, Facebook, Instagram, Youtube, Twitter, Pinterest, LayoutGrid, ChevronRight, ArrowLeft } from 'lucide-react';
+import './Blogs.css';
 import './BlogDetail.css';
 import { blogsContent } from '../utils/blogData';
 
