@@ -36,7 +36,7 @@ const BlogDetail = () => {
       <SEO title={blog.title} description={blog.description} />
       
       <div className="container">
-        <div className="row">
+        <div className="row d-flex flex-nowrap">
           
           {/* Sidebar */}
           <div className="col-4 col-lg-3 sidebar-column">
