@@ -81,9 +81,9 @@ const Products = () => {
     // Search term filtering
     if (query) {
       result = result.filter(p =>
-        p.title.toLowerCase().includes(query) ||
+        (p.title && p.title.toLowerCase().includes(query)) ||
         (p.description && p.description.toLowerCase().includes(query)) ||
-        p.category.toLowerCase().includes(query)
+        (p.category && p.category.toLowerCase().includes(query))
       );
     }
 
