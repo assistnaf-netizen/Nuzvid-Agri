@@ -73,32 +73,9 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
-.blog-image-link {
-  display: block;
-  overflow: hidden;
-}
-
-.blog-image-wrapper {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  position: relative;
-}
-
-.blog-card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.blog-card:hover .blog-card-image {
-  transform: scale(1.05);
-}
-
 .blog-image-placeholder {
   width: 100%;
-  height: 100%;
+  height: 200px;
   background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
   display: flex;
   align-items: center;
@@ -167,11 +144,11 @@
   .blogs-hero {
     padding: 60px 20px 80px;
   }
-  
+
   .blogs-hero h1 {
     font-size: 32px;
   }
-  
+
   .blogs-grid {
     grid-template-columns: 1fr;
     margin-top: -40px;
