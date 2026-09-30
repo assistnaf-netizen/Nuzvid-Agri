@@ -149,11 +149,13 @@
 
 .blog-featured-image {
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .blog-featured-image img {
-  width: 100%;
-  height: auto;
+  max-height: 550px;
+  width: auto;
+  max-width: 100%;
 }
 
 .blog-main-title {
