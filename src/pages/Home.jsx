@@ -104,7 +104,44 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      <SEO title="Home" description="Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table." />
+      <SEO 
+        title="Home" 
+        description="Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table." 
+        productSchema={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://www.nuzvidagrifarms.com/#organization",
+              "name": "Nuzvid Agri Farms",
+              "url": "https://www.nuzvidagrifarms.com/",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png"
+              },
+              "sameAs": [
+                "https://www.facebook.com/profile.php?id=61579403908868",
+                "https://www.instagram.com/nuzvidagrifarms/",
+                "https://www.youtube.com/@NuzvidAgriFarms"
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.nuzvidagrifarms.com/#website",
+              "url": "https://www.nuzvidagrifarms.com/",
+              "name": "Nuzvid Agri Farms",
+              "publisher": {
+                "@id": "https://www.nuzvidagrifarms.com/#organization"
+              },
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.nuzvidagrifarms.com/products?search={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            }
+          ]
+        }}
+      />
       {/* Hero Section */}
       <section className="hero-section">
         <AnimatePresence mode="wait">

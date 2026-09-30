@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Core Pages -->
   <url>
     <loc>https://www.nuzvidagrifarms.com/</loc>
     <changefreq>daily</changefreq>
@@ -26,15 +25,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
-  <!-- Product Categories / Collections -->
   <url>
-    <loc>https://www.nuzvidagrifarms.com/collections/all</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://www.nuzvidagrifarms.com/blogs</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Blogs -->
   <url>
     <loc>https://www.nuzvidagrifarms.com/blogs/brown-sugar</loc>
     <changefreq>monthly</changefreq>
@@ -84,5 +79,90 @@
     <loc>https://www.nuzvidagrifarms.com/blogs/forest-honey</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/99a5cb66-1a06-49a4-97a8-0ba39e7971ee</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/9f1facc8-443a-49e2-8541-8f22f204f0ee</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/a449f4a8-b397-4dd8-a8a0-1f2346974c59</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/45f67472-5cd7-46c0-92e8-0562100904d7</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/59aa6ce6-a954-49c3-9878-1584a15f809e</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/238be601-c5f4-41d2-a44b-7a2c840d4ced</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/a5f61a17-dd47-4faa-90ce-d21556bebbc8</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/df24ad65-fcbc-4e21-90ef-38b1ddd7493c</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/35677c18-1c7b-4a83-9091-4c565f30c2a4</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/2099b696-14f6-4f9f-92a1-c526258cce1b</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/dbba4fad-e8e9-4ae0-bf85-037f44e92c77</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/6a946601-3d97-4e22-8556-06c00255b060</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/b8544e20-1aea-4352-a5c0-c5ded25abab9</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/c8c68de2-75bf-4f1f-b704-7fd2c9ba91d2</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/7f565e86-ebac-4670-83d1-17bfc364fc8b</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/a89423dc-3227-43da-af14-f3a56b93ff26</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.nuzvidagrifarms.com/products/c77c4001-96bb-4d21-a4d0-cad88bab2f4e</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

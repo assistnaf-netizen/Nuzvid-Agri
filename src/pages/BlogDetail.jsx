@@ -33,7 +33,27 @@ const BlogDetail = () => {
 
   return (
     <div className="blog-detail-page py-5">
-      <SEO title={blog.title} description={blog.description} />
+      <SEO 
+        title={blog.title} 
+        description={blog.description} 
+        image={blog.image}
+        type="article"
+        productSchema={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": blog.title,
+          "image": [
+            blog.image
+           ],
+          "datePublished": "2024-01-01T08:00:00+08:00",
+          "dateModified": "2024-01-01T08:00:00+08:00",
+          "author": [{
+              "@type": "Organization",
+              "name": "Nuzvid Agri Farms",
+              "url": "https://www.nuzvidagrifarms.com"
+            }]
+        }}
+      />
       
       <div className="container">
         <div className="row d-flex flex-nowrap">
