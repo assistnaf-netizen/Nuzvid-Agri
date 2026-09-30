@@ -58,6 +58,9 @@ const Products = () => {
     const q = new URLSearchParams(location.search).get('search');
     if (q) {
       setSearchKeyword(q);
+      setCategory('All');
+      setMinPrice('');
+      setMaxPrice('');
     } else {
       setSearchKeyword('');
     }
@@ -137,7 +140,7 @@ const Products = () => {
           className="banner-img"
         />
         <div className="banner-breadcrumb-text">
-          Home &nbsp;|&nbsp; <span className="active-crumb">{activeSearchQuery ? `Search Results for "${activeSearchQuery}"` : 'Products'}</span>
+          Home &nbsp;|&nbsp; <span className="active-crumb">{searchKeyword ? `Search Results for "${searchKeyword}"` : 'Products'}</span>
         </div>
       </div>
 
