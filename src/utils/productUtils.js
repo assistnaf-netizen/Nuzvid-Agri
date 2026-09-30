@@ -41,3 +41,21 @@ export const getDisplayName = (originalName) => {
 
   return newTitle;
 };
+
+export const getProductImages = (originalName, defaultImages) => {
+  if (!originalName) return defaultImages;
+  const title = originalName.trim();
+  
+  if (title.includes("Bilona A2 Ghee (Cow Ghee)")) {
+    return [
+      "/products/a2-ghee-1.png",
+      "/products/a2-ghee-2.png",
+      "/products/a2-ghee-3.png",
+      "/products/a2-ghee-4.png",
+      "/products/a2-ghee-5.png"
+    ];
+  }
+  
+  return defaultImages;
+};
+
