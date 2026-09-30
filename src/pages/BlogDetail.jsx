@@ -39,7 +39,7 @@ const BlogDetail = () => {
         <div className="row">
           
           {/* Sidebar */}
-          <div className="col-md-4 col-lg-3 sidebar-column">
+          <div className="col-4 col-lg-3 sidebar-column">
             
             {/* Search Widget */}
             <div className="sidebar-widget">
@@ -81,7 +81,7 @@ const BlogDetail = () => {
           </div>
 
           {/* Main Content */}
-          <div className="col-md-8 col-lg-9 main-content-column">
+          <div className="col-8 col-lg-9 main-content-column">
             
             {/* Featured Image */}
             <div className="blog-featured-image">
