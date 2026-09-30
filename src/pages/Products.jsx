@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
+import { getDisplayName } from '../utils/productUtils';
 import './Products.css';
 
 const Products = () => {
@@ -32,7 +33,7 @@ const Products = () => {
           
           return {
             id: p.id,
-            title: p.name,
+            title: getDisplayName(p.name),
             price: p.price,
             mrp: p.original_price,
             category: p.category,

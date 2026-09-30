@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { Trash2, ShoppingBag, ArrowRight, ShieldCheck, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
+import { getDisplayName } from '../utils/productUtils';
 import './Cart.css';
 
 const Cart = () => {
@@ -87,10 +88,10 @@ const Cart = () => {
                   const itemId = item.cartItemId || item.id;
                   return (
                   <motion.div key={itemId} className="cart-item-card" variants={itemVariants} exit="exit">
-                    <img src={item.image} alt={item.title} className="cart-item-image" />
+                    <img src={item.image} alt={getDisplayName(item.title)} className="cart-item-image" />
                     
                     <div className="cart-item-details">
-                      <h3>{item.title}</h3>
+                      <h3>{getDisplayName(item.title)}</h3>
                       {item.weight && <span style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }}>Size/Weight: {item.weight}</span>}
                       <p className="cart-item-price">₹{item.price}</p>
                     </div>

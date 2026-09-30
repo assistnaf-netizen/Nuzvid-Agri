@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { Heart, ShoppingCart, Trash2, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
+import { getDisplayName } from '../utils/productUtils';
 import './Wishlist.css';
 
 const Wishlist = () => {
@@ -63,7 +64,7 @@ const Wishlist = () => {
                 >
                   <div className="wishlist-card-img">
                     <Link to={`/products/${item.id}`}>
-                      <img src={item.image} alt={item.title} />
+                      <img src={item.image} alt={getDisplayName(item.title)} />
                     </Link>
                     <button 
                       className="btn-remove-wishlist"
@@ -75,7 +76,7 @@ const Wishlist = () => {
                   </div>
                   <div className="wishlist-card-content">
                     <Link to={`/products/${item.id}`} className="wishlist-card-title">
-                      {item.title}
+                      {getDisplayName(item.title)}
                     </Link>
                     <div className="wishlist-card-price">
                       <span className="current-price">₹{item.price.toLocaleString()}</span>
