@@ -22,17 +22,41 @@ const Footer = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
+  const [subscribeMsg, setSubscribeMsg] = useState('');
+  const [subscribeError, setSubscribeError] = useState('');
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) return;
-    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      setSubscribeError('Please enter a valid email address.');
+      return;
+    }
+
     setSubscribing(true);
-    setTimeout(() => {
+    setSubscribeError('');
+    setSubscribeMsg('');
+
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setIsSubscribed(true);
+        setSubscribeMsg(data.message || 'Subscribed successfully!');
+        setEmail('');
+      } else {
+        setSubscribeError(data.error || 'Could not subscribe. Please try again.');
+      }
+    } catch (err) {
+      setSubscribeError('Network error. Please check your connection.');
+    } finally {
       setSubscribing(false);
-      setIsSubscribed(true);
-      setEmail('');
-    }, 600);
+    }
   };
 
   const scrollToTop = () => {
@@ -71,29 +95,33 @@ const Footer = () => {
               {isSubscribed ? (
                 <div className="newsletter-success">
                   <CheckCircle2 size={22} className="success-icon" />
-                  <span>Thank you! Welcome to the Nuzvid Agri Farms family.</span>
+                  <span>{subscribeMsg || 'Thank you! Welcome to the Nuzvid Agri Farms family 🌿'}</span>
                 </div>
               ) : (
-                <form onSubmit={handleSubscribe} className="newsletter-unified-form">
-                  <Mail size={18} className="unified-mail-icon" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address..."
-                    required
-                    aria-label="Email Address for newsletter"
-                    className="unified-newsletter-input"
-                  />
-                  <button 
-                    type="submit" 
-                    className="unified-newsletter-btn" 
-                    disabled={subscribing}
-                  >
-                    <span>{subscribing ? 'Joining...' : 'Subscribe'}</span>
-                    <Send size={14} className="btn-send-icon" />
-                  </button>
-                </form>
+                <>
+                  <form onSubmit={handleSubscribe} className="newsletter-unified-form">
+                    <Mail size={18} className="unified-mail-icon" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setSubscribeError(''); }}
+                      placeholder="Enter your email address..."
+                      aria-label="Email Address for newsletter"
+                      className={`unified-newsletter-input${subscribeError ? ' input-error' : ''}`}
+                    />
+                    <button 
+                      type="submit" 
+                      className="unified-newsletter-btn" 
+                      disabled={subscribing}
+                    >
+                      <span>{subscribing ? 'Joining...' : 'Subscribe'}</span>
+                      <Send size={14} className="btn-send-icon" />
+                    </button>
+                  </form>
+                  {subscribeError && (
+                    <p className="newsletter-error">{subscribeError}</p>
+                  )}
+                </>
               )}
             </div>
           </div>
