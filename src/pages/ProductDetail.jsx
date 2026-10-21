@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, ShoppingBag, Heart, Check, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { supabase } from '../lib/supabase';
 import { useWishlist } from '../context/WishlistContext';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
@@ -554,13 +553,6 @@ const ProductDetail = () => {
 
   const isWishlisted = product ? isInWishlist(product.id) : false;
 
-  useEffect(() => {
-    const fetchShipping = async () => {
-      const { data } = await supabase.from('store_settings').select('free_shipping_threshold').eq('id', 1).single();
-      if (data) setFreeShippingThreshold(data.free_shipping_threshold);
-    };
-    fetchShipping();
-  }, []);
 
 
 

@@ -33,24 +33,34 @@ const Home = () => {
 
   useEffect(() => {
     const fetchBanners = async () => {
-      try {
-        const { data } = await supabase.from('site_settings').select('value').eq('key', 'hero_banners').single();
-        if (data?.value) {
-          const parsed = JSON.parse(data.value);
-          setHeroBanners(parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b));
-        } else {
-          const localBanners = localStorage.getItem('hero_banners');
-          if (localBanners) {
-            const parsed = JSON.parse(localBanners);
-            setHeroBanners(parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b));
-          }
-        }
-      } catch (error) {
-        const localBanners = localStorage.getItem('hero_banners');
-        if (localBanners) {
+      // Use localStorage first (instant)
+      const localBanners = localStorage.getItem('hero_banners');
+      if (localBanners) {
+        try {
           const parsed = JSON.parse(localBanners);
           setHeroBanners(parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b));
+        } catch {}
+      }
+
+      // Then try Supabase with a strict 2s timeout (won't block UI)
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 2000);
+        const { data } = await supabase
+          .from('site_settings')
+          .select('value')
+          .eq('key', 'hero_banners')
+          .single()
+          .abortSignal(controller.signal);
+        clearTimeout(timeout);
+        if (data?.value) {
+          const parsed = JSON.parse(data.value);
+          const banners = parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b);
+          setHeroBanners(banners);
+          localStorage.setItem('hero_banners', JSON.stringify(parsed));
         }
+      } catch {
+        // DB paused or timeout — already showing fallback/local banner, nothing to do
       }
     };
     fetchBanners();
