@@ -1,68 +1,66 @@
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://fknkpjxamdwaytzayiwn.supabase.co';
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SMTP_USER = process.env.SMTP_USER || 'assist.naf@gmail.com';
+const SMTP_PASS = process.env.SMTP_PASS;
+const ADMIN_EMAIL = 'assist.naf@gmail.com';
 
-// Use service role client — bypasses RLS, can do anything
-const getAdminClient = () =>
-  createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+// Email transporter (fallback when Supabase fails)
+const createTransporter = () =>
+  nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+  });
+
+// Try to save email to Supabase
+async function saveToSupabase(email) {
+  if (!SERVICE_ROLE_KEY) return { success: false, error: 'No service key' };
+
+  const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-// Create the table via Supabase's SQL over HTTP (service role required)
-async function createTableViaSql() {
-  const sql = `
-    CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
-      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-      email text NOT NULL,
-      subscribed_at timestamptz DEFAULT now(),
-      source text DEFAULT 'footer',
-      CONSTRAINT newsletter_subscribers_email_key UNIQUE (email)
-    );
-    ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
-    DO $$ BEGIN
-      IF NOT EXISTS (
-        SELECT 1 FROM pg_policies WHERE tablename='newsletter_subscribers' AND policyname='Allow public inserts'
-      ) THEN
-        EXECUTE 'CREATE POLICY "Allow public inserts" ON public.newsletter_subscribers FOR INSERT WITH CHECK (true)';
-      END IF;
-    END $$;
-  `;
-
-  // Supabase exposes SQL execution via the pg-meta REST API on Vercel
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SERVICE_ROLE_KEY,
-      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-    },
-    body: JSON.stringify({ sql }),
-  });
-
-  if (!response.ok) {
-    // Fallback: use the pg meta API (available on Supabase projects)
-    const pgRes = await fetch(`${SUPABASE_URL}/pg/query`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SERVICE_ROLE_KEY,
-        'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-      },
-      body: JSON.stringify({ query: sql }),
-    });
-    return pgRes.ok;
-  }
-  return true;
-}
-
-// Try to insert a subscriber
-async function insertEmail(email) {
-  const supabase = getAdminClient();
-  return await supabase
+  const { data, error } = await supabase
     .from('newsletter_subscribers')
     .insert([{ email: email.toLowerCase().trim(), source: 'footer' }])
     .select('id');
+
+  return { success: !error, error: error?.message, code: error?.code };
+}
+
+// Fallback: notify admin via email that someone subscribed
+async function notifyAdminByEmail(email) {
+  if (!SMTP_PASS) return false;
+  try {
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: `"Nuzvid Agri Farms" <${SMTP_USER}>`,
+      to: ADMIN_EMAIL,
+      subject: '🌿 New Newsletter Subscriber',
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; background: #fdf8f3; border-radius: 12px; border: 1px solid #e8d5b7;">
+          <h2 style="color: #7b4f2e; margin-top: 0;">New Newsletter Subscriber</h2>
+          <p style="font-size: 16px; color: #3d2b1f;">
+            <strong>Email:</strong> <a href="mailto:${email}" style="color: #D68D3C;">${email}</a>
+          </p>
+          <p style="font-size: 13px; color: #888; margin-top: 16px;">
+            Subscribed at: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST<br/>
+            Source: Website Footer Newsletter
+          </p>
+          <hr style="border: none; border-top: 1px solid #e8d5b7; margin: 20px 0;"/>
+          <p style="font-size: 11px; color: #aaa; text-align: center;">
+            Nuzvid Agri Farms — Auto notification
+          </p>
+        </div>
+      `,
+    });
+    return true;
+  } catch (err) {
+    console.error('Email notify error:', err.message);
+    return false;
+  }
 }
 
 export default async function handler(req, res) {
@@ -73,56 +71,62 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Validate
   const { email } = req.body || {};
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email.trim())) {
     return res.status(400).json({ error: 'Please enter a valid email address.' });
   }
 
-  if (!SERVICE_ROLE_KEY) {
-    console.error('SUPABASE_SERVICE_ROLE_KEY not set');
-    return res.status(500).json({ error: 'Server configuration error.' });
-  }
+  const cleanEmail = email.trim().toLowerCase();
 
   try {
-    // First attempt
-    let { data, error } = await insertEmail(email);
+    // Attempt 1: Save to Supabase DB
+    const supaResult = await saveToSupabase(cleanEmail);
 
-    if (error) {
-      // Table doesn't exist — auto-create and retry
-      if (error.code === '42P01' || (error.message && error.message.includes('does not exist'))) {
-        console.log('Table not found. Auto-creating newsletter_subscribers...');
-        await createTableViaSql();
-        // Wait briefly for table creation to propagate
-        await new Promise(r => setTimeout(r, 500));
-        const retry = await insertEmail(email);
-        data = retry.data;
-        error = retry.error;
-      }
-
-      if (error) {
-        // Already subscribed
-        if (error.code === '23505') {
-          return res.status(200).json({
-            success: true,
-            already: true,
-            message: "You're already subscribed! 🎉",
-          });
-        }
-        console.error('Subscribe insert error:', error);
-        return res.status(500).json({ error: 'Could not subscribe. Please try again.' });
-      }
+    if (supaResult.success) {
+      // Saved to DB — also send confirmation email to admin (non-blocking)
+      notifyAdminByEmail(cleanEmail).catch(() => {});
+      return res.status(200).json({
+        success: true,
+        message: 'Subscribed successfully! Welcome to the Nuzvid Agri Farms family 🌿',
+      });
     }
 
-    console.log(`✅ New subscriber: ${email}`);
-    return res.status(200).json({
-      success: true,
-      message: 'Subscribed successfully! Welcome to the Nuzvid Agri Farms family 🌿',
-    });
+    // Duplicate email in DB
+    if (supaResult.code === '23505') {
+      return res.status(200).json({
+        success: true,
+        already: true,
+        message: "You're already subscribed! 🎉",
+      });
+    }
+
+    // Supabase failed (table missing, network, etc.) — fallback to email notification
+    console.log('Supabase failed:', supaResult.error, '— using email fallback');
+    const emailSent = await notifyAdminByEmail(cleanEmail);
+
+    if (emailSent) {
+      return res.status(200).json({
+        success: true,
+        message: 'Subscribed successfully! Welcome to the Nuzvid Agri Farms family 🌿',
+      });
+    }
+
+    // Both failed
+    return res.status(500).json({ error: 'Could not subscribe. Please try again later.' });
 
   } catch (err) {
-    console.error('Subscribe handler exception:', err);
+    console.error('Subscribe exception:', err);
+
+    // Last resort — try email fallback
+    const emailSent = await notifyAdminByEmail(cleanEmail).catch(() => false);
+    if (emailSent) {
+      return res.status(200).json({
+        success: true,
+        message: 'Subscribed successfully! Welcome to the Nuzvid Agri Farms family 🌿',
+      });
+    }
+
     return res.status(500).json({ error: 'Server error. Please try again.' });
   }
 }
