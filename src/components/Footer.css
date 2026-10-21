@@ -771,12 +771,8 @@
     font-size: 12.5px;
   }
 
-  /* --- Show nav cols as 2-col grid on mobile --- */
-  .footer-grid .footer-col:not(.brand-col) {
-    /* keep normal */
-  }
-
   /* Show all non-brand cols in a 2-col sub-grid */
+
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
