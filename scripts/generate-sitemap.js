@@ -40,14 +40,24 @@ const blogSlugs = [
 
 async function generateSitemap() {
   try {
-    console.log("Fetching products from Supabase...");
-    const { data: products, error } = await supabase
-      .from('products')
-      .select('id');
-
-    if (error) {
-      throw error;
+    let productList = [];
+    try {
+      const { data, error } = await Promise.race([
+        supabase.from('products').select('id'),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
+      ]);
+      if (data && data.length > 0) {
+        productList = data;
+      }
+    } catch (e) {
+      console.log("Supabase fetch failed/timed out, using local products fallback...");
     }
+
+    if (productList.length === 0) {
+      const { products: localProds } = await import('../src/data/products.js');
+      productList = localProds.map(p => ({ id: p.id }));
+    }
+    const products = productList;
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;

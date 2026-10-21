@@ -46,13 +46,13 @@ export const getProductImages = (originalName, defaultImages) => {
   if (!originalName) return defaultImages;
   const title = originalName.trim();
   
-  if (title.includes("Bilona A2 Ghee (Cow Ghee)")) {
+  if (title.includes("Bilona A2 Ghee (Cow Ghee)") || title.includes("A2 Cow Ghee")) {
     return [
-      "/products/a2-ghee-1.png",
-      "/products/a2-ghee-2.png",
-      "/products/a2-ghee-3.png",
-      "/products/a2-ghee-4.png",
-      "/products/a2-ghee-5.png"
+      "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-1.webp",
+      "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-2.webp",
+      "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-3.webp",
+      "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-4.webp",
+      "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-5.webp"
     ];
   }
   

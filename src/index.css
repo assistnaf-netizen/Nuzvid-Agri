@@ -50,12 +50,17 @@ html, body {
   background-color: var(--color-bg-light);
   line-height: 1.6;
   width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Premium text selection */

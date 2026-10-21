@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { FaArrowRight, FaArrowLeft, FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
 import { Leaf, Truck, ShieldCheck, Award, Handshake, HeartHandshake } from 'lucide-react';
+import { getProducts, getFallbackProducts } from '../services/productService';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
@@ -13,44 +14,21 @@ import './Home-premium.css';
 const Home = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [heroBanners, setHeroBanners] = useState([{
-    desktop: '/hero-banner.png',
-    mobile: '/hero-banner.png'
+    desktop: '/hero-banner.webp',
+    mobile: '/hero-banner.webp'
   }]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [products, setProducts] = useState([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [products, setProducts] = useState(() => getFallbackProducts());
+  const [loadingProducts, setLoadingProducts] = useState(false);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const { data, error } = await supabase.from('products').select('id, name, price, original_price, category, image_url, images, is_featured, is_free_shipping, description');
-      if (data) {
-        setProducts(data.map(p => {
-          let imgs = [];
-          if (Array.isArray(p.images)) imgs = p.images;
-          else if (typeof p.images === 'string') {
-            try { imgs = JSON.parse(p.images); } catch (e) { imgs = [p.images]; }
-          }
-          if (!Array.isArray(imgs)) imgs = [];
-
-          return {
-            id: p.id,
-            title: p.name,
-            price: p.price,
-            mrp: p.original_price,
-            category: p.category,
-            image: imgs.length > 0 ? imgs[0] : p.image_url,
-            hoverImage: imgs.length > 1 ? imgs[1] : (imgs.length > 0 ? imgs[0] : p.image_url),
-            images: imgs.length > 0 ? imgs : (p.image_url ? [p.image_url] : []),
-            description: p.description,
-            isNew: p.is_featured,
-            sale: p.is_featured,
-            isFreeShipping: p.is_free_shipping || false
-          };
-        }));
+    let isMounted = true;
+    getProducts().then(data => {
+      if (isMounted && data && data.length > 0) {
+        setProducts(data);
       }
-      setLoadingProducts(false);
-    };
-    fetchProducts();
+    });
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {

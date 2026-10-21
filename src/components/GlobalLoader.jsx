@@ -86,7 +86,7 @@ const GlobalLoader = ({ onLoaded }) => {
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
                   <img 
-                    src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
+                    src="/Nuzvid Agri Farms Logo.png" 
                     alt="Nuzvid Agri Farms Logo" 
                     className="loader-actual-logo"
                   />

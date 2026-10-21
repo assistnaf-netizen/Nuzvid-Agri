@@ -71,7 +71,7 @@ const Header = () => {
       <div className="main-nav-wrapper">
         <div className="container main-nav">
           <Link to="/" className="logo">
-            <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" alt="Nuzvid Agri Farms" className="logo-img" />
+            <img src="/Nuzvid Agri Farms Logo.png" alt="Nuzvid Agri Farms" className="logo-img" />
           </Link>
 
           {/* Desktop Nav */}

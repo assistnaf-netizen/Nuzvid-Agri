@@ -11,6 +11,7 @@ const ProductCard = ({ product }) => {
   
   const isWishlisted = isInWishlist(product.id);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [isCardHovered, setIsCardHovered] = useState(false);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -33,10 +34,30 @@ const ProductCard = ({ product }) => {
           <Heart size={18} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
         </button>
 
-        <Link to={`/product/${product.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
-          <img src={product.image || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image'} alt={product.title} className="primary-img" loading="lazy" />
-          {product.hoverImage ? (
-            <img src={product.hoverImage || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image'} alt={product.title} className="hover-img" loading="lazy" />
+        <Link 
+          to={`/product/${product.id}`} 
+          style={{ display: 'block', width: '100%', height: '100%' }}
+          onMouseEnter={() => setIsCardHovered(true)}
+        >
+          <img 
+            src={product.image || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image'} 
+            alt={product.title} 
+            className="primary-img" 
+            loading="lazy" 
+            decoding="async"
+            width="400"
+            height="400"
+          />
+          {product.hoverImage && product.hoverImage !== product.image && isCardHovered ? (
+            <img 
+              src={product.hoverImage} 
+              alt={product.title} 
+              className="hover-img" 
+              loading="lazy" 
+              decoding="async"
+              width="400"
+              height="400"
+            />
           ) : null}
         </Link>
         

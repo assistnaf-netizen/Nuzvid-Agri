@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
 import { getDisplayName } from '../utils/productUtils';
+import { getProductById, getFallbackProducts } from '../services/productService';
 import './ProductDetail.css';
 
 const jaggeryBlockShortDesc = "Enjoy organic jaggery made the way it should be, slow-cooked to preserve its natural richness. Packed with essential minerals, it energizes your body and strengthens immunity. Sweeten every meal the healthy, wholesome way and bring care and tradition to your family's table. At Nuzvid Agri Farms, our organic jaggery is...";
@@ -565,87 +566,43 @@ const ProductDetail = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchProduct = async () => {
-      setLoading(true);
-      const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
-      if (data) {
-        const getWeightValue = (weightStr) => {
-          if (!weightStr) return Number.MAX_SAFE_INTEGER;
-          const w = weightStr.toLowerCase();
-          const match = w.match(/([\d.]+)/);
-          if (!match) return Number.MAX_SAFE_INTEGER;
-          let val = parseFloat(match[1]);
-          if (w.includes('kg') || w.includes('liter') || w.includes('litre')) {
-            val *= 1000;
-          }
-          return val;
-        };
+    let isMounted = true;
 
-        const sortedVariants = (data.variants || []).sort((a, b) => getWeightValue(a.weight) - getWeightValue(b.weight));
+    const loadProductData = async () => {
+      // 1. Instant check from local/cache
+      const foundProduct = await getProductById(id);
 
-        const foundProduct = {
-          id: data.id,
-          title: getDisplayName(data.name),
-          price: data.price,
-          mrp: data.original_price,
-          category: data.category,
-          image: data.image_url || 'https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image',
-          images: (() => {
-            let imgs = [];
-            if (Array.isArray(data.images)) imgs = data.images;
-            else if (typeof data.images === 'string') {
-              try { imgs = JSON.parse(data.images); } catch (e) { imgs = [data.images]; }
-            }
-            if (!Array.isArray(imgs)) imgs = [];
-            return imgs.length > 0 ? imgs : (data.image_url ? [data.image_url] : ['https://placehold.co/600x600/f9fafb/9ca3af?text=No+Image']);
-          })(),
-          description: data.description,
-          sku: data.sku,
-          weight: data.weight,
-          stock_quantity: data.stock_quantity !== null ? data.stock_quantity : 10,
-          highlights: data.highlights || [],
-          variants: sortedVariants,
-          isNew: data.is_featured,
-          sale: data.is_featured,
-          isFreeShipping: data.is_free_shipping || false,
-          rating: 5.0,
-          reviews: 12
-        };
+      if (foundProduct && isMounted) {
         setProduct(foundProduct);
         if (foundProduct.variants && foundProduct.variants.length > 0) {
           setSelectedVariant(foundProduct.variants[0]);
         }
         setCurrentImageIndex(0);
 
-        let recentlyViewed = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
-        recentlyViewed = recentlyViewed.filter(pId => pId !== foundProduct.id);
-        recentlyViewed.unshift(foundProduct.id);
-        if (recentlyViewed.length > 4) recentlyViewed.pop();
-        localStorage.setItem('recently_viewed', JSON.stringify(recentlyViewed));
+        // Update recently viewed
+        try {
+          let recentlyViewed = JSON.parse(localStorage.getItem('recently_viewed') || '[]');
+          recentlyViewed = recentlyViewed.filter(pId => pId !== foundProduct.id);
+          recentlyViewed.unshift(foundProduct.id);
+          if (recentlyViewed.length > 4) recentlyViewed.pop();
+          localStorage.setItem('recently_viewed', JSON.stringify(recentlyViewed));
+        } catch (e) {}
 
-        // Fetch related products
-        const { data: relatedData } = await supabase.from('products').select('*').eq('category', data.category).neq('id', data.id).limit(4);
-        if (relatedData) {
-          setRelatedProducts(relatedData.map(rp => ({
-            id: rp.id,
-            title: getDisplayName(rp.name),
-            price: rp.price,
-            mrp: rp.original_price,
-            category: rp.category,
-            image: rp.image_url,
-            hoverImage: rp.image_url,
-            description: rp.description,
-            isNew: rp.is_featured,
-            sale: rp.is_featured,
-            isFreeShipping: rp.is_free_shipping || false,
-            rating: 5.0,
-            reviews: 12
-          })));
-        }
+        // Related products
+        const allFallback = getFallbackProducts();
+        const related = allFallback
+          .filter(p => p.category === foundProduct.category && String(p.id) !== String(foundProduct.id))
+          .slice(0, 4);
+        setRelatedProducts(related.length > 0 ? related : allFallback.slice(0, 4));
+
+        setLoading(false);
+      } else if (isMounted) {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    fetchProduct();
+
+    loadProductData();
+    return () => { isMounted = false; };
   }, [id]);
 
   if (loading) {

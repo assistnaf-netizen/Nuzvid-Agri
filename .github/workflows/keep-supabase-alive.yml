@@ -1,0 +1,28 @@
+name: Keep Supabase Database Active
+
+on:
+  schedule:
+    # Runs at 00:00 and 12:00 UTC every day (every 12 hours)
+    - cron: '0 */12 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Ping Supabase Database
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://fknkpjxamdwaytzayiwn.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'sb_publishable_ho81zX0vU5KRCOYquGWtFg_ey1-0rXl' }}
+        run: node scripts/keep-supabase-alive.js
