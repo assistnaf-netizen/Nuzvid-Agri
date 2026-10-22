@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { FaEye, FaShoppingCart, FaHeart } from 'react-icons/fa';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Search, LayoutGrid, CheckCircle2, IndianRupee } from 'lucide-react';
 import { getProducts, getFallbackProducts } from '../services/productService';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
@@ -147,7 +146,9 @@ const Products = () => {
             {/* Search */}
             <div className="sidebar-widget">
               <div className="sidebar-widget-header">
-                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Search</span>
+                <span className="widget-title">
+                  <Search size={16} className="widget-icon" /> Search
+                </span>
               </div>
               <input
                 type="text"
@@ -161,7 +162,9 @@ const Products = () => {
             {/* Categories */}
             <div className="sidebar-widget">
               <div className="sidebar-widget-header">
-                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Categories</span>
+                <span className="widget-title">
+                  <LayoutGrid size={16} className="widget-icon" /> Categories
+                </span>
               </div>
               <ul className="widget-list">
                 {Object.entries(categories).map(([catName, count]) => (
@@ -181,7 +184,9 @@ const Products = () => {
             {/* Availability */}
             <div className="sidebar-widget">
               <div className="sidebar-widget-header">
-                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Availability</span>
+                <span className="widget-title">
+                  <CheckCircle2 size={16} className="widget-icon" /> Availability
+                </span>
               </div>
               <ul className="widget-list">
                 <li>
@@ -196,7 +201,9 @@ const Products = () => {
             {/* Price */}
             <div className="sidebar-widget">
               <div className="sidebar-widget-header">
-                <span className="widget-title"><span className="dash-mark">--</span><span className="dot-mark">·</span> Price</span>
+                <span className="widget-title">
+                  <IndianRupee size={15} className="widget-icon" /> Price
+                </span>
               </div>
               <div className="price-range-box">
                 <div className="price-row">

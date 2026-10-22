@@ -91,23 +91,19 @@
 }
 
 .widget-title {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 700;
   color: var(--color-primary);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
 }
 
-.dash-mark {
-  color: var(--color-secondary);
-  font-weight: 400;
-  font-size: 13px;
-}
-
-.dot-mark {
-  color: var(--color-accent);
-  font-size: 16px;
+.widget-icon {
+  color: var(--color-secondary, #D68D3C);
+  flex-shrink: 0;
 }
 
 .widget-list {

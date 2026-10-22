@@ -336,6 +336,16 @@ const Footer = () => {
         <div className="container copyright-inner">
           <p className="copy-text">
             &copy; {new Date().getFullYear()} <strong>Nuzvid Agri Farms</strong>. Pure Wood Pressed &amp; Vedic Living. All Rights Reserved.
+            <span className="copy-sep">•</span>
+            <span className="dev-credit">
+              Developed by{' '}
+              <a href="tel:9030545655" className="dev-link" aria-label="Contact Balaji Projects: 9030545655">
+                <span className="dev-name">Balaji Projects</span>
+                <span className="dev-tooltip">
+                  📞 9030545655
+                </span>
+              </a>
+            </span>
           </p>
 
           <div className="footer-social-wrapper">
