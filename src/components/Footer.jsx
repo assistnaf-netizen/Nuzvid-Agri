@@ -13,7 +13,10 @@ import {
   HeartHandshake, 
   Leaf, 
   Award,
-  ChevronRight
+  ChevronRight,
+  Sprout,
+  FileCheck2,
+  PackageCheck
 } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaYoutube, FaWhatsapp } from 'react-icons/fa';
 import './Footer.css';
@@ -135,20 +138,20 @@ const Footer = () => {
         <div className="container">
           <div className="highlights-grid">
             <div className="highlight-pill">
+              <Sprout className="pill-icon" size={17} />
+              <span><strong>Native seed selection</strong></span>
+            </div>
+            <div className="highlight-pill">
               <Award className="pill-icon" size={17} />
-              <span><strong>100% Vedic Heritage</strong> — Ancient Bilona Method</span>
+              <span><strong>Traditional process</strong></span>
             </div>
             <div className="highlight-pill">
-              <Leaf className="pill-icon" size={17} />
-              <span><strong>Wood-Pressed Oils</strong> — Cold-Pressed Under 40°C</span>
+              <FileCheck2 className="pill-icon" size={17} />
+              <span><strong>Lab Certified reports</strong></span>
             </div>
             <div className="highlight-pill">
-              <ShieldCheck className="pill-icon" size={17} />
-              <span><strong>Lab Certified</strong> — Zero Chemical Residues</span>
-            </div>
-            <div className="highlight-pill">
-              <HeartHandshake className="pill-icon" size={17} />
-              <span><strong>Direct Farm Sourcing</strong> — Andhra Pradesh</span>
+              <PackageCheck className="pill-icon" size={17} />
+              <span><strong>Food grade packing</strong></span>
             </div>
           </div>
         </div>
