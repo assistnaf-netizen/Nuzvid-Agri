@@ -45,13 +45,12 @@ export const products = [
     "mrp": 1900,
     "rating": 4.8,
     "reviews": 12,
-    "image": "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-3.webp",
+    "image": "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-3.webp",
     "hoverImage": "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-1.webp",
     "images": [
-      "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-3.webp",
+      "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-3.webp",
       "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-1.webp",
       "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-2.webp",
-      "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-3.webp",
       "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-4.webp",
       "/products/a2-cow-ghee-500-ml/a2-cow-ghee-500-ml-5.webp"
     ],
