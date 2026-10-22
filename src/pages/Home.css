@@ -51,13 +51,16 @@
 
 @media (max-width: 768px) {
   .hero-section {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 9;
+    min-height: 220px;
+    max-height: 280px;
   }
   .desktop-bg {
-    display: none;
+    display: block;
+    background-position: center center;
   }
   .mobile-bg {
-    display: block;
+    display: none;
   }
 }
 
@@ -1003,17 +1006,17 @@
     flex-direction: column;
   }
 
-  /* Make Hero Image full visible on mobile (aspect ratio 16:9 approx) */
+  /* Make Hero Image full visible on mobile */
   .hero-section {
     height: 56vw;
-    /* 16:9 aspect ratio */
     min-height: 200px;
+    max-height: 280px;
   }
 
   .hero-background {
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
-    background-position: center top;
+    background-position: center center;
   }
 
   .hero-dots {
