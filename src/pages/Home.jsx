@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { FaArrowRight, FaArrowLeft, FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
-import { Leaf, Truck, ShieldCheck, Award, Handshake, HeartHandshake } from 'lucide-react';
+import { Award, Handshake, HeartHandshake, Truck } from 'lucide-react';
 import { getProducts, getFallbackProducts } from '../services/productService';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -391,57 +391,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      {/* Value Propositions Section (From Screenshot) */}
-      <motion.section
-        className="py-5"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px' }}>
 
-            {/* Block 1 */}
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
-              <Award size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
-              <div>
-                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Quality Products</h4>
-                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>Every product is carefully selected to ensure safety, authenticity, and the highest quality.</p>
-              </div>
-            </div>
-
-            {/* Block 2 */}
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
-              <Handshake size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
-              <div>
-                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Trust</h4>
-                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>We stand by every product, ensuring confidence in every purchase.</p>
-              </div>
-            </div>
-
-            {/* Block 3 */}
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
-              <HeartHandshake size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
-              <div>
-                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Health</h4>
-                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>Carefully chosen to promote true wellness and well-being.</p>
-              </div>
-            </div>
-
-            {/* Block 4 */}
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
-              <Truck size={42} color="#64748b" style={{ flexShrink: 0, marginTop: '5px' }} />
-              <div>
-                <h4 style={{ fontSize: '22px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Free home delivery</h4>
-                <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', margin: 0 }}>Free delivery for all orders over ₹1999/-.</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </motion.section>
 
       {/* Blog & Insights */}
       <motion.section
@@ -481,24 +431,24 @@ const Home = () => {
           <h2 className="section-title text-center text-uppercase fw-bold" style={{ letterSpacing: '2px', color: '#333' }}>Why Choose Us<span style={{ color: '#8B4513' }}>.</span></h2>
           <div className="features-grid mt-4">
             <div className="feature-card">
-              <div className="feature-icon"><Leaf size={40} /></div>
-              <h3>100% Organic</h3>
-              <p>Grown without synthetic pesticides or harmful fertilizers.</p>
-            </div>
-            <div className="feature-card">
               <div className="feature-icon"><Award size={40} /></div>
-              <h3>Premium Quality</h3>
-              <p>Carefully handpicked and processed to retain maximum nutrition.</p>
+              <h3>Quality Products</h3>
+              <p>Every product is carefully selected to ensure safety, authenticity, and the highest quality.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon"><ShieldCheck size={40} /></div>
-              <h3>Lab Tested</h3>
-              <p>Every batch is rigorously tested to ensure purity and safety.</p>
+              <div className="feature-icon"><Handshake size={40} /></div>
+              <h3>Trust</h3>
+              <p>We stand by every product, ensuring confidence in every purchase.</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon"><HeartHandshake size={40} /></div>
+              <h3>Health</h3>
+              <p>Carefully chosen to promote true wellness and well-being.</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon"><Truck size={40} /></div>
-              <h3>Fast Delivery</h3>
-              <p>Direct from our farm to your doorstep in pristine condition.</p>
+              <h3>Free home delivery</h3>
+              <p>Free delivery for all orders over ₹1999/-.</p>
             </div>
           </div>
         </div>
