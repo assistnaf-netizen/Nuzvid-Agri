@@ -142,11 +142,11 @@ const Footer = () => {
               <span><strong>Native seed selection</strong></span>
             </div>
             <div className="highlight-pill">
-              <Award className="pill-icon" size={17} />
+              <FileCheck2 className="pill-icon" size={17} />
               <span><strong>Traditional process</strong></span>
             </div>
             <div className="highlight-pill">
-              <FileCheck2 className="pill-icon" size={17} />
+              <Award className="pill-icon" size={17} />
               <span><strong>Lab Certified reports</strong></span>
             </div>
             <div className="highlight-pill">
