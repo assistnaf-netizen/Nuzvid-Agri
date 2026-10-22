@@ -176,8 +176,7 @@ const Footer = () => {
             </Link>
             
             <p className="brand-mission-text">
-              Reviving Vedic food wisdom from the fertile soil of Nuzvid. Pure wood-pressed oils, 
-              authentic A2 Bilona cow ghee, wild honey, and natural farm groceries.
+             Our mission at Nuzvid Agri Farms is to bring back what was good and pass it on to the next generation, not as a trend but as a way of life. We are committed to preserving these traditional methods for a healthier future.
             </p>
 
             <div className="compact-contact-block">

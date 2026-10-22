@@ -697,30 +697,43 @@
     margin-top: 6px;
   }
 
-  /* --- Highlights: horizontal scroll on mobile --- */
+  /* --- Highlights: clean 2x2 responsive grid on mobile --- */
   .footer-highlights-bar {
-    padding: 10px 0 8px;
+    padding: 12px 0 10px;
   }
   .highlights-grid {
-    grid-template-columns: none;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    gap: 8px 10px;
+    overflow-x: visible;
   }
-  .highlights-grid::-webkit-scrollbar { display: none; }
   .highlight-pill {
-    flex-shrink: 0;
-    white-space: nowrap;
-    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
     font-size: 11.5px;
+    line-height: 1.3;
+    white-space: normal;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .highlight-pill span {
+    display: block;
+    word-break: normal;
+  }
+  .highlight-pill strong {
+    font-size: 11.5px;
+    font-weight: 600;
   }
   .pill-icon {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    color: #D68D3C;
   }
 
   /* --- Main footer grid: single column, tighter --- */
@@ -735,14 +748,24 @@
     grid-column: auto;
   }
 
-  /* --- Brand column --- */
+  /* --- Brand column: clean proportional logo on mobile --- */
   .footer-logo-box {
-    width: 90px;
-    height: 70px;
+    width: auto;
+    height: auto;
+    padding: 7px 15px;
+    border-radius: 8px;
     margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
   }
   .footer-logo-img {
-    max-height: 58px;
+    width: 125px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
   .brand-mission-text {
     font-size: 12.5px;
@@ -822,5 +845,26 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .highlights-grid {
+    gap: 6px 8px;
+  }
+  .highlight-pill {
+    padding: 6px 8px;
+    font-size: 11px;
+    gap: 6px;
+  }
+  .highlight-pill strong {
+    font-size: 11px;
+  }
+  .highlight-pill .pill-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .footer-logo-img {
+    width: 110px;
   }
 }

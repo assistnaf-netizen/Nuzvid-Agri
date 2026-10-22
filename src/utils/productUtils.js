@@ -5,6 +5,8 @@ export const getDisplayName = (originalName) => {
   const map = {
     "Bilona A2 Ghee (Cow Ghee) - 500ml": "A2 Cow Ghee 500 ml",
     "Bilona A2 Ghee (Cow Ghee)": "A2 Cow Ghee 1 Liter",
+    "Bilona A2 Ghee - 500ml": "A2 Cow Ghee 500 ml",
+    "Bilona A2 Ghee": "A2 Cow Ghee",
     "Buffalo Ghee": "Buffalo Ghee",
     "Raw Honey -1 KG": "Forest Honey 1 KG",
     "Raw Honey": "Forest Honey",
@@ -46,7 +48,7 @@ export const getProductImages = (originalName, defaultImages) => {
   if (!originalName) return defaultImages;
   const title = originalName.trim();
   
-  if (title.includes("Bilona A2 Ghee (Cow Ghee)") || title.includes("A2 Cow Ghee")) {
+  if (title.includes("Bilona A2 Ghee") || title.includes("A2 Cow Ghee") || title.includes("A2 Ghee")) {
     return [
       "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-3.webp",
       "/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-1.webp",

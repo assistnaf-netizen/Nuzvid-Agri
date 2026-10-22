@@ -27,33 +27,47 @@ const Home = () => {
 
     const cleanTitle = (title) => {
       if (!title) return '';
-      return title
+      let t = title
         .replace(/[-–—]?\s*\d+(\.\d+)?\s*(liters?|litres?|ltr|l|ml|kgs?|gm?|grams?)\b/gi, '')
         .replace(/\s+/g, ' ')
         .trim();
+      const lower = t.toLowerCase();
+      if ((lower.includes('a2') && lower.includes('ghee')) || lower.includes('bilona a2')) {
+        return 'A2 Cow Ghee';
+      }
+      if (lower.includes('jaggery') && lower.includes('powder')) {
+        return 'Organic Jaggery Powder';
+      }
+      if (lower.includes('red chilli')) {
+        return 'Red Chilli Powder';
+      }
+      return t;
     };
 
-    const priorityKeywords = [
-      'safflower',
-      'a2 cow ghee',
-      'groundnut',
-      'coconut',
-      'sesame',
-      'mustard',
-      'buffalo',
-      'honey',
-      'turmeric',
-      'jaggery'
+    // Priority products to display — specifically includes Red Chilli Powder, A2 Cow Ghee, and Organic Jaggery Powder
+    const priorityChecks = [
+      { label: 'Red Chilli Powder', match: p => p.title?.toLowerCase().includes('red chilli') },
+      { label: 'A2 Cow Ghee', match: p => (p.title?.toLowerCase().includes('a2') && p.title?.toLowerCase().includes('ghee')) || (p.title?.toLowerCase().includes('bilona') && p.title?.toLowerCase().includes('ghee')) },
+      { label: 'Organic Jaggery Powder', match: p => p.title?.toLowerCase().includes('jaggery') && p.title?.toLowerCase().includes('powder') },
+      { label: 'Safflower Oil', match: p => p.title?.toLowerCase().includes('safflower') },
+      { label: 'Groundnut Oil', match: p => p.title?.toLowerCase().includes('groundnut') },
+      { label: 'Coconut Oil', match: p => p.title?.toLowerCase().includes('coconut') },
+      { label: 'Sesame Oil', match: p => p.title?.toLowerCase().includes('sesame') },
+      { label: 'Mustard Oil', match: p => p.title?.toLowerCase().includes('mustard') },
+      { label: 'Buffalo Ghee', match: p => p.title?.toLowerCase().includes('buffalo') },
+      { label: 'Forest Honey', match: p => p.title?.toLowerCase().includes('honey') },
+      { label: 'Organic Turmeric Powder', match: p => p.title?.toLowerCase().includes('turmeric') },
+      { label: 'Organic Jaggery', match: p => p.title?.toLowerCase().includes('jaggery') && !p.title?.toLowerCase().includes('powder') }
     ];
 
     const selected = [];
     const addedNames = new Set();
 
-    // 1. Add priority products (guarantees key wood-pressed staples appear, unique names)
-    for (const kw of priorityKeywords) {
+    // 1. Add priority products (guarantees key staples appear with clean unique names)
+    for (const item of priorityChecks) {
       const match = products.find(p => {
         const cleaned = cleanTitle(p.title);
-        return p.title?.toLowerCase().includes(kw) && !addedNames.has(cleaned.toLowerCase());
+        return item.match(p) && !addedNames.has(cleaned.toLowerCase());
       });
       if (match) {
         const cleaned = cleanTitle(match.title);
@@ -62,14 +76,13 @@ const Home = () => {
       }
     }
 
-    // 2. Fill remaining slots up to 10 products
+    // 2. Fill remaining slots if any other products exist
     for (const p of products) {
       const cleaned = cleanTitle(p.title);
       if (!addedNames.has(cleaned.toLowerCase())) {
         selected.push({ ...p, tickerTitle: cleaned });
         addedNames.add(cleaned.toLowerCase());
       }
-      if (selected.length >= 10) break;
     }
 
     return selected.length > 0 ? selected : products.map(p => ({ ...p, tickerTitle: cleanTitle(p.title) }));
@@ -459,7 +472,7 @@ const Home = () => {
             <div className="feature-card">
               <div className="feature-icon"><Truck size={40} /></div>
               <h3>Free home delivery</h3>
-              <p>Free delivery for all orders over ₹1999/-.</p>
+              <p>Free delivery for all orders over ₹2999/-.</p>
             </div>
           </div>
         </div>
