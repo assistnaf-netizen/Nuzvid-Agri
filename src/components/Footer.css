@@ -780,23 +780,30 @@
     grid-column: 1 / -1;
   }
 
-  /* --- Social section --- */
+  /* --- Social section in one single line on mobile --- */
   .footer-social-wrapper {
-    flex-direction: column;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     gap: 10px;
-    padding: 12px 0 8px;
+    padding: 6px 0 2px;
+    flex-wrap: nowrap;
   }
   .social-label {
     font-size: 12px;
+    white-space: nowrap;
+    color: #9c8a7e;
   }
-  .social-bubbles {
+  .social-links-unique {
+    display: flex;
+    align-items: center;
     gap: 8px;
   }
   .social-bubble {
-    width: 34px;
-    height: 34px;
-    font-size: 15px;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
   }
 
   /* --- Copyright bar on mobile --- */
@@ -815,16 +822,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
-  }
-  .footer-social-wrapper {
-    gap: 6px;
-  }
-  .social-label {
-    font-size: 11px;
-  }
-  .social-bubble {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
   }
 }
