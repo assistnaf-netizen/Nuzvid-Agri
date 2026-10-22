@@ -159,7 +159,7 @@ const Products = () => {
                       onClick={() => setCategory(catName)}
                       className={`category-btn ${category === catName ? 'active' : ''}`}
                     >
-                      <span className="category-name">{catName}</span>
+                      <span className="category-name">{catName.toLowerCase() === 'a2-ghee' ? 'Ghee' : catName}</span>
                       <span className="category-count">({count})</span>
                     </button>
                   </li>
