@@ -318,7 +318,7 @@ const Home = () => {
               className={`tab-btn ${activeTab === 'a2-ghee' ? 'active' : ''}`}
               onClick={() => setActiveTab('a2-ghee')}
             >
-              A2 GHEE
+              GHEE
             </button>
             <button
               className={`tab-btn ${activeTab === 'natural-sweeteners' ? 'active' : ''}`}
