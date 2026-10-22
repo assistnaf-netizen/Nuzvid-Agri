@@ -165,6 +165,15 @@
   padding: 0 30px;
   display: flex;
   align-items: center;
+  color: var(--color-white);
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.ticker-item:hover {
+  opacity: 0.88;
+  color: var(--color-white);
 }
 
 .ticker-bullet {

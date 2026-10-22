@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { FaArrowRight, FaArrowLeft, FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
@@ -20,6 +20,45 @@ const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [products, setProducts] = useState(() => getFallbackProducts());
   const [loadingProducts, setLoadingProducts] = useState(false);
+
+  // Curated products for ticker — prominently features Safflower Oil and pure wood-pressed essentials
+  const tickerProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+
+    const priorityKeywords = [
+      'safflower',
+      'a2 cow ghee',
+      'groundnut',
+      'coconut',
+      'sesame',
+      'mustard',
+      'buffalo',
+      'honey'
+    ];
+
+    const selected = [];
+    const addedIds = new Set();
+
+    // 1. Add priority products (guarantees Safflower Oil and key staples appear)
+    for (const kw of priorityKeywords) {
+      const match = products.find(p => p.title?.toLowerCase().includes(kw) && !addedIds.has(p.id));
+      if (match) {
+        selected.push(match);
+        addedIds.add(match.id);
+      }
+    }
+
+    // 2. Fill remaining slots up to 10 products
+    for (const p of products) {
+      if (!addedIds.has(p.id)) {
+        selected.push(p);
+        addedIds.add(p.id);
+      }
+      if (selected.length >= 10) break;
+    }
+
+    return selected.length > 0 ? selected : products;
+  }, [products]);
 
   useEffect(() => {
     let isMounted = true;
@@ -163,10 +202,14 @@ const Home = () => {
       {/* Product Ticker Section */}
       <div className="product-ticker-container">
         <div className="product-ticker-track">
-          {[...products.slice(0, 5), ...products.slice(0, 5), ...products.slice(0, 5), ...products.slice(0, 5)].map((product, index) => (
-            <span key={index} className="ticker-item">
+          {[...tickerProducts, ...tickerProducts].map((product, index) => (
+            <Link
+              key={`${product.id || index}-${index}`}
+              to={product.id ? `/product/${product.id}` : '#'}
+              className="ticker-item"
+            >
               <span className="ticker-bullet">✦</span> {product.title}
-            </span>
+            </Link>
           ))}
         </div>
       </div>
