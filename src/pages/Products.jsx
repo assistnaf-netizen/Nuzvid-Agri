@@ -26,7 +26,18 @@ const Products = () => {
         setProducts(data);
       }
     });
-    return () => { isMounted = false; };
+
+    const handleUpdate = (e) => {
+      if (isMounted && e.detail && e.detail.length > 0) {
+        setProducts(e.detail);
+      }
+    };
+    window.addEventListener('naf_products_updated', handleUpdate);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('naf_products_updated', handleUpdate);
+    };
   }, []);
 
   const location = useLocation();

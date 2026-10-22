@@ -5,6 +5,13 @@ import { getDisplayName } from '../utils/productUtils';
 let memoryCache = null;
 const CACHE_KEY = 'naf_products_cache_v3';
 
+// Automatically clean legacy caches from user browsers
+if (typeof window !== 'undefined') {
+  try {
+    ['naf_products_cache', 'naf_products_cache_v1', 'naf_products_cache_v2'].forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
+}
+
 export const getFallbackProducts = () => {
   return localProducts.map(p => ({
     ...p,
@@ -116,6 +123,10 @@ export const refreshProductsFromSupabase = async () => {
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify(normalized));
     } catch (e) {}
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('naf_products_updated', { detail: normalized }));
+    }
 
     return normalized;
   } catch (err) {
