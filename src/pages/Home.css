@@ -377,25 +377,83 @@
 }
 
 .product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 10px 0 20px 0;
+  width: 100%;
+}
+
+.product-grid > * {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* View More Button for Goodness Section */
+.view-more-container {
   display: flex;
-  overflow-x: auto;
-  gap: 30px;
-  padding: 10px 5px 30px 5px;
-  /* Add padding to prevent box-shadow clipping */
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  /* Firefox */
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
-.product-grid::-webkit-scrollbar {
-  display: none;
-  /* Chrome/Safari */
+.view-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 34px;
+  background: linear-gradient(135deg, var(--color-primary, #3C1C14) 0%, #5a2a1a 100%);
+  color: #ffffff;
+  border: 1px solid rgba(214, 141, 60, 0.45);
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(60, 28, 20, 0.25);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.product-grid>* {
-  flex: 0 0 calc(25% - 22.5px);
-  /* 4 cards visible: (100% - 3*30px gap)/4 */
-  scroll-snap-align: start;
+.view-more-btn:hover {
+  background: linear-gradient(135deg, #4f251a 0%, #703421 100%);
+  border-color: #D68D3C;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(60, 28, 20, 0.35), 0 0 15px rgba(214, 141, 60, 0.25);
+}
+
+.view-more-arrow {
+  color: #D68D3C;
+  transition: transform 0.3s ease;
+}
+
+.view-more-arrow.rotated {
+  transform: rotate(180deg);
 }
 
 /* ============================================
@@ -717,10 +775,6 @@
 }
 
 @media (max-width: 992px) {
-  .product-grid>* {
-    flex: 0 0 calc(50% - 15px);
-  }
-
   .promo-banners-grid {
     grid-template-columns: 1fr;
   }
@@ -733,10 +787,6 @@
 @media (max-width: 768px) {
   .hero-content h1 {
     font-size: 2.5rem;
-  }
-
-  .product-grid>* {
-    flex: 0 0 100%;
   }
 
   .blog-card {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Heart, ShoppingBag, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -13,10 +13,46 @@ const ProductCard = ({ product }) => {
   const [addedToCart, setAddedToCart] = useState(false);
   const [isCardHovered, setIsCardHovered] = useState(false);
 
-  const handleAddToCart = () => {
-    addToCart(product);
+  // Initialize selected variant to the first variant if available
+  const [selectedVariant, setSelectedVariant] = useState(
+    product.variants && product.variants.length > 0 ? product.variants[0] : null
+  );
+
+  // Reset or update selected variant when product changes
+  useEffect(() => {
+    if (product.variants && product.variants.length > 0) {
+      setSelectedVariant(product.variants[0]);
+    } else {
+      setSelectedVariant(null);
+    }
+  }, [product.id, product.variants]);
+
+  // Dynamic pricing based on active weight variant
+  const currentPrice = selectedVariant?.price !== undefined
+    ? Number(selectedVariant.price)
+    : Number(product.price);
+
+  const currentMrp = (selectedVariant?.mrp || selectedVariant?.original_price) !== undefined
+    ? Number(selectedVariant.mrp || selectedVariant.original_price)
+    : (product.mrp ? Number(product.mrp) : (product.original_price ? Number(product.original_price) : currentPrice));
+
+  const currentWeight = selectedVariant?.weight || product.weight;
+  const discountPercent = currentMrp > currentPrice ? Math.round(((currentMrp - currentPrice) / currentMrp) * 100) : 0;
+
+  const handleAddToCart = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    addToCart({
+      ...product,
+      price: currentPrice,
+      mrp: currentMrp,
+      weight: currentWeight,
+      cartItemId: `${product.id}-${currentWeight}`
+    });
     setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 3000);
+    setTimeout(() => setAddedToCart(false), 2500);
   };
   
   return (
@@ -24,11 +60,15 @@ const ProductCard = ({ product }) => {
       <div className="product-image-wrapper">
         <div className="product-badges">
           {product.isNew && <span className="badge new">New</span>}
-          {product.sale && <span className="badge sale">Sale</span>}
+          {discountPercent > 0 && <span className="badge sale">{discountPercent}% OFF</span>}
         </div>
         <button 
           className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
-          onClick={() => toggleWishlist(product)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWishlist(product);
+          }}
           aria-label="Add to wishlist"
         >
           <Heart size={18} fill={isWishlisted ? "var(--color-primary)" : "none"} color={isWishlisted ? "var(--color-primary)" : "#333"} />
@@ -63,6 +103,7 @@ const ProductCard = ({ product }) => {
         
         <div className="product-actions">
           <button 
+            type="button"
             className="action-btn cart-btn" 
             onClick={handleAddToCart} 
             title="Add to Cart"
@@ -77,7 +118,10 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
       <div className="product-info">
-        <h3 className="product-title">{product.title}</h3>
+        <h3 className="product-title">
+          <Link to={`/product/${product.id}`}>{product.title}</Link>
+        </h3>
+        
         <div className="product-rating">
           {[...Array(5)].map((_, i) => {
             const ratingValue = product.rating ?? 5;
@@ -90,13 +134,39 @@ const ProductCard = ({ product }) => {
               />
             );
           })}
-          <span className="review-count">({product.reviews ?? 0})</span>
+          <span className="review-count">({product.reviews ?? 15})</span>
         </div>
+
+        {/* Interactive Weight Variants Selection */}
+        {product.variants && product.variants.length > 0 && (
+          <div className="product-variant-selector" onClick={(e) => e.stopPropagation()}>
+            {product.variants.map((v, idx) => {
+              const isSelected = selectedVariant ? selectedVariant.weight === v.weight : idx === 0;
+              return (
+                <button
+                  key={v.weight || idx}
+                  type="button"
+                  className={`variant-btn ${isSelected ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedVariant(v);
+                  }}
+                  title={`${v.weight} — ₹${v.price}`}
+                >
+                  {v.weight}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Dynamic Price Display */}
         <div className="product-price-wrapper">
-          {product.mrp && product.mrp > product.price && (
-            <span className="product-mrp">₹{product.mrp.toFixed(2)}</span>
+          {currentMrp > currentPrice && (
+            <span className="product-mrp">₹{currentMrp.toFixed(2)}</span>
           )}
-          <span className="product-price">₹{product.price.toFixed(2)}</span>
+          <span className="product-price">₹{currentPrice.toFixed(2)}</span>
         </div>
       </div>
     </div>

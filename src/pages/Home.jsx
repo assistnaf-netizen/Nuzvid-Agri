@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { FaArrowRight, FaArrowLeft, FaChevronLeft, FaChevronRight, FaStar } from 'react-icons/fa';
-import { Award, Handshake, HeartHandshake, Truck } from 'lucide-react';
+import { Award, Handshake, HeartHandshake, Truck, ChevronDown } from 'lucide-react';
 import { getProducts, getFallbackProducts } from '../services/productService';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -117,7 +117,7 @@ const Home = () => {
         try {
           const parsed = JSON.parse(localBanners);
           setHeroBanners(parsed.map(b => typeof b === 'string' ? { desktop: b, mobile: b } : b));
-        } catch {}
+        } catch { }
       }
 
       // Then try Supabase with a strict 2s timeout (won't block UI)
@@ -168,11 +168,23 @@ const Home = () => {
 
   const filteredProducts = products.filter(p => p.category === activeTab || activeTab === 'all');
 
+  const [showAllProducts, setShowAllProducts] = useState(false);
+
+  // Reset to initial collapsed view when category tab changes
+  useEffect(() => {
+    setShowAllProducts(false);
+  }, [activeTab]);
+
+  const INITIAL_PRODUCT_COUNT = 4;
+  const displayedProducts = showAllProducts
+    ? filteredProducts
+    : filteredProducts.slice(0, INITIAL_PRODUCT_COUNT);
+
   return (
     <div className="home-page">
-      <SEO 
-        title="Home" 
-        description="Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table." 
+      <SEO
+        title="Home"
+        description="Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table."
         productSchema={{
           "@context": "https://schema.org",
           "@graph": [
@@ -330,31 +342,31 @@ const Home = () => {
               className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
             >
-              ALL
+              All Products
             </button>
             <button
               className={`tab-btn ${activeTab === 'wood-pressed-oils' ? 'active' : ''}`}
               onClick={() => setActiveTab('wood-pressed-oils')}
             >
-              WOOD PRESSED OILS
+              Wood Pressed Oils
             </button>
             <button
               className={`tab-btn ${activeTab === 'a2-ghee' ? 'active' : ''}`}
               onClick={() => setActiveTab('a2-ghee')}
             >
-              GHEE
+              Pure Desi Ghee
             </button>
             <button
               className={`tab-btn ${activeTab === 'natural-sweeteners' ? 'active' : ''}`}
               onClick={() => setActiveTab('natural-sweeteners')}
             >
-              NATURAL SWEETNERS
+              Honey & Jaggery
             </button>
             <button
               className={`tab-btn ${activeTab === 'countryside-grocery' ? 'active' : ''}`}
               onClick={() => setActiveTab('countryside-grocery')}
             >
-              COUNTRYSIDE GROCERY
+              Spices & Powders
             </button>
           </div>
 
@@ -363,14 +375,33 @@ const Home = () => {
               <div style={{ padding: '40px', textAlign: 'center', gridColumn: '1 / -1' }}>
                 <p>Loading products...</p>
               </div>
-            ) : filteredProducts.length > 0 ? (
-              filteredProducts.map(product => (
+            ) : displayedProducts.length > 0 ? (
+              displayedProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))
             ) : (
               <p className="no-products">No products found in this category.</p>
             )}
           </div>
+
+          {filteredProducts.length > INITIAL_PRODUCT_COUNT && (
+            <div className="view-more-container">
+              <button
+                type="button"
+                className="view-more-btn"
+                onClick={() => setShowAllProducts(prev => !prev)}
+                aria-expanded={showAllProducts}
+              >
+                <span>
+                  {showAllProducts ? 'View Less' : `View More Products (${filteredProducts.length - INITIAL_PRODUCT_COUNT} More)`}
+                </span>
+                <ChevronDown
+                  size={18}
+                  className={`view-more-arrow ${showAllProducts ? 'rotated' : ''}`}
+                />
+              </button>
+            </div>
+          )}
         </div>
       </motion.section>
 

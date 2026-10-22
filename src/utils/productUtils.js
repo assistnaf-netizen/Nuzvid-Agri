@@ -68,8 +68,8 @@ export const getCategoryDisplayName = (category) => {
     'all': 'All Products',
     'wood-pressed-oils': 'Wood Pressed Oils',
     'a2-ghee': 'Pure Desi Ghee',
-    'natural-sweeteners': 'Honey & Natural Sweeteners',
-    'countryside-grocery': 'Spices & Farm Groceries',
+    'natural-sweeteners': 'Honey & Jaggery',
+    'countryside-grocery': 'Spices & Powders',
   };
   return map[key] || category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 };
