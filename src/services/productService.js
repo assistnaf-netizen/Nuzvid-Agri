@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { getDisplayName } from '../utils/productUtils';
 
 let memoryCache = null;
-const CACHE_KEY = 'naf_products_cache';
+const CACHE_KEY = 'naf_products_cache_v3';
 
 export const getFallbackProducts = () => {
   return localProducts.map(p => ({
@@ -85,7 +85,7 @@ export const refreshProductsFromSupabase = async () => {
 
       // Check if fallback has better local WebP images
       const fallbackMatch = localProducts.find(lp => lp.id === p.id || lp.title.toLowerCase() === (p.name || '').toLowerCase());
-      const primaryImg = (imgs.length > 0 ? imgs[0] : p.image_url) || (fallbackMatch ? fallbackMatch.image : '/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-1.webp');
+      const primaryImg = (imgs.length > 0 ? imgs[0] : p.image_url) || (fallbackMatch ? fallbackMatch.image : '/products/a2-cow-ghee-1-liter/a2-cow-ghee-1-liter-3.webp');
       const hoverImg = (imgs.length > 1 ? imgs[1] : primaryImg) || (fallbackMatch ? fallbackMatch.hoverImage : primaryImg);
       const allImgs = imgs.length > 0 ? imgs : (fallbackMatch ? fallbackMatch.images : [primaryImg]);
 
