@@ -799,26 +799,32 @@
     font-size: 15px;
   }
 
-  /* --- Copyright --- */
-  .footer-copyright {
+  /* --- Copyright bar on mobile --- */
+  .copyright-bar {
     padding: 10px 0;
   }
   .copyright-inner {
     flex-direction: column;
+    align-items: center;
     text-align: center;
-    gap: 10px;
-  }
-  .copyright-text {
-    font-size: 11.5px;
-  }
-  .footer-legal-links {
-    font-size: 11.5px;
     gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
   }
-  .back-to-top-btn {
-    font-size: 11.5px;
-    padding: 4px 10px;
+  .copy-text {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .footer-social-wrapper {
+    gap: 6px;
+  }
+  .social-label {
+    font-size: 11px;
+  }
+  .social-bubble {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
   }
 }

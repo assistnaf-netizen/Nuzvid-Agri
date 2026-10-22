@@ -2,15 +2,56 @@
   min-height: calc(100vh - 400px);
 }
 
-/* WhatsApp wrapper positions the whole widget */
-.whatsapp-float-wrapper {
+/* ============================================
+   FLOATING WIDGET COLUMN (Top btn + WhatsApp)
+   ============================================ */
+
+/* Outer column — fixed position, stacks items vertically */
+.floating-widget-col {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 28px;
+  right: 28px;
   z-index: 1000;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* Scroll-to-Top floating button */
+.floating-top-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #D68D3C, #b37430);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(214, 141, 60, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: fadeInUp 0.3s ease;
+}
+
+.floating-top-btn:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 6px 20px rgba(214, 141, 60, 0.6);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* WhatsApp wrapper — no longer needs fixed positioning (handled by col) */
+.whatsapp-float-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .whatsapp-float {
@@ -21,8 +62,8 @@
 }
 
 .whatsapp-float img {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
   transition: transform 0.3s ease;
 }
@@ -85,13 +126,24 @@
 
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
-  .whatsapp-float-wrapper {
-    bottom: 20px;
-    right: 20px;
+  .floating-widget-col {
+    bottom: 18px;
+    right: 16px;
+    gap: 8px;
+  }
+  .floating-top-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  .whatsapp-float img {
+    width: 48px;
+    height: 48px;
   }
   .wa-bubble {
     display: none;

@@ -333,7 +333,7 @@ const Footer = () => {
       <div className="copyright-bar">
         <div className="container copyright-inner">
           <p className="copy-text">
-            &copy; {new Date().getFullYear()} <strong>Nuzvid Agri Farms</strong>. Pure Wood Pressed & Vedic Living. All Rights Reserved.
+            &copy; {new Date().getFullYear()} <strong>Nuzvid Agri Farms</strong>. Pure Wood Pressed &amp; Vedic Living. All Rights Reserved.
           </p>
 
           <div className="footer-social-wrapper">
@@ -381,16 +381,6 @@ const Footer = () => {
               </a>
             </div>
           </div>
-
-          <button 
-            onClick={scrollToTop} 
-            className="back-to-top-btn"
-            title="Scroll to top of page"
-            aria-label="Back to top"
-          >
-            <span>Top</span>
-            <ArrowUp size={14} className="top-arrow-icon" />
-          </button>
         </div>
       </div>
     </footer>
