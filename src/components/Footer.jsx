@@ -76,7 +76,7 @@ const Footer = () => {
             <div className="newsletter-content">
               <div className="newsletter-badge">
                 <Sparkles size={13} className="badge-icon" />
-                <span>Farm-To-Table Newsletter</span>
+                <span>Pure & Delight Newsletter</span>
               </div>
               <h3 className="newsletter-title">
                 Experience Pure Tradition In Every Drop

@@ -31,10 +31,6 @@ const About = () => {
               alt="Farming Family" 
               className="main-story-img" 
             />
-            <div className="experience-badge">
-              <h3>10+</h3>
-              <p>Years Experience</p>
-            </div>
           </div>
           
           {/* Right: Text content */}
