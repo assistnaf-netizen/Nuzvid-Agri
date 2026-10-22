@@ -21,9 +21,17 @@ const Home = () => {
   const [products, setProducts] = useState(() => getFallbackProducts());
   const [loadingProducts, setLoadingProducts] = useState(false);
 
-  // Curated products for ticker — prominently features Safflower Oil and pure wood-pressed essentials
+  // Curated products for ticker — clean product names without quantities (e.g. 1 Liter, 500 ml)
   const tickerProducts = useMemo(() => {
     if (!products || products.length === 0) return [];
+
+    const cleanTitle = (title) => {
+      if (!title) return '';
+      return title
+        .replace(/[-–—]?\s*\d+(\.\d+)?\s*(liters?|litres?|ltr|l|ml|kgs?|gm?|grams?)\b/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
 
     const priorityKeywords = [
       'safflower',
@@ -33,31 +41,38 @@ const Home = () => {
       'sesame',
       'mustard',
       'buffalo',
-      'honey'
+      'honey',
+      'turmeric',
+      'jaggery'
     ];
 
     const selected = [];
-    const addedIds = new Set();
+    const addedNames = new Set();
 
-    // 1. Add priority products (guarantees Safflower Oil and key staples appear)
+    // 1. Add priority products (guarantees key wood-pressed staples appear, unique names)
     for (const kw of priorityKeywords) {
-      const match = products.find(p => p.title?.toLowerCase().includes(kw) && !addedIds.has(p.id));
+      const match = products.find(p => {
+        const cleaned = cleanTitle(p.title);
+        return p.title?.toLowerCase().includes(kw) && !addedNames.has(cleaned.toLowerCase());
+      });
       if (match) {
-        selected.push(match);
-        addedIds.add(match.id);
+        const cleaned = cleanTitle(match.title);
+        selected.push({ ...match, tickerTitle: cleaned });
+        addedNames.add(cleaned.toLowerCase());
       }
     }
 
     // 2. Fill remaining slots up to 10 products
     for (const p of products) {
-      if (!addedIds.has(p.id)) {
-        selected.push(p);
-        addedIds.add(p.id);
+      const cleaned = cleanTitle(p.title);
+      if (!addedNames.has(cleaned.toLowerCase())) {
+        selected.push({ ...p, tickerTitle: cleaned });
+        addedNames.add(cleaned.toLowerCase());
       }
       if (selected.length >= 10) break;
     }
 
-    return selected.length > 0 ? selected : products;
+    return selected.length > 0 ? selected : products.map(p => ({ ...p, tickerTitle: cleanTitle(p.title) }));
   }, [products]);
 
   useEffect(() => {
@@ -208,7 +223,7 @@ const Home = () => {
               to={product.id ? `/product/${product.id}` : '#'}
               className="ticker-item"
             >
-              <span className="ticker-bullet">✦</span> {product.title}
+              <span className="ticker-bullet">✦</span> {product.tickerTitle || product.title}
             </Link>
           ))}
         </div>
