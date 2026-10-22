@@ -4,7 +4,7 @@ import { Loader2, Search, LayoutGrid, CheckCircle2, IndianRupee } from 'lucide-r
 import { getProducts, getFallbackProducts } from '../services/productService';
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
-import { getDisplayName } from '../utils/productUtils';
+import { getDisplayName, getCategoryDisplayName } from '../utils/productUtils';
 import './Products.css';
 
 const Products = () => {
@@ -54,13 +54,36 @@ const Products = () => {
     window.scrollTo(0, 0);
   }, [location.search]);
 
-  // Derive categories and counts
+  // Derive categories and counts with curated display order
   const categories = useMemo(() => {
-    const cats = { 'All': products.length };
+    const counts = { 'All': products.length };
     products.forEach(p => {
-      cats[p.category] = (cats[p.category] || 0) + 1;
+      counts[p.category] = (counts[p.category] || 0) + 1;
     });
-    return cats;
+
+    // Curated customer-friendly order
+    const preferredOrder = [
+      'All',
+      'wood-pressed-oils',
+      'a2-ghee',
+      'natural-sweeteners',
+      'countryside-grocery'
+    ];
+
+    const sortedCats = {};
+    for (const key of preferredOrder) {
+      if (counts[key] !== undefined) {
+        sortedCats[key] = counts[key];
+      }
+    }
+
+    for (const key of Object.keys(counts)) {
+      if (sortedCats[key] === undefined) {
+        sortedCats[key] = counts[key];
+      }
+    }
+
+    return sortedCats;
   }, [products]);
 
   const filteredProducts = useMemo(() => {
@@ -173,7 +196,7 @@ const Products = () => {
                       onClick={() => setCategory(catName)}
                       className={`category-btn ${category === catName ? 'active' : ''}`}
                     >
-                      <span className="category-name">{catName.toLowerCase() === 'a2-ghee' ? 'Ghee' : catName}</span>
+                      <span className="category-name">{getCategoryDisplayName(catName)}</span>
                       <span className="category-count">({count})</span>
                     </button>
                   </li>
