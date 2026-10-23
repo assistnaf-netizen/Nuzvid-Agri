@@ -25,15 +25,33 @@ const Contact = () => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      toast.success("Thank you! Your message has been sent successfully.");
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      toast.success("Thank you! Your message has been sent to our farm support team.");
       setFormData({ name: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      console.error('Contact submit error:', err);
+      toast.error(err.message || 'Something went wrong. Please try again or call us.');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const containerVariants = {
