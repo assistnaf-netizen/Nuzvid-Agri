@@ -11,7 +11,15 @@ const OurIntro = () => {
 
   return (
     <div className="intro-page-wrapper">
-      <SEO title="Our Intro" description="Discover the story and tradition behind Nuzvid Agri Farms." />
+      <SEO 
+        title="When Food Was Love, Not Industry | Our Traditional Farming Story"
+        description="Discover how Nuzvid Agri Farms honors traditional farming wisdom. Reviving slow-crafted wood-pressed oils, chemical-free native cow A2 ghee, and natural nutrition for future generations."
+        keywords="traditional food making, Vedic lifestyle, unadulterated cold pressed oils, healthy eating habits, Nuzvid Agri Farms intro"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Our Intro', path: '/our-intro' }
+        ]}
+      />
       
       {/* Hero Banner Section */}
       <section className="intro-hero">

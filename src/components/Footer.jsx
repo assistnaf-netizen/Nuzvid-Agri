@@ -335,7 +335,7 @@ const Footer = () => {
       <div className="copyright-bar">
         <div className="container copyright-inner">
           <p className="copy-text">
-            &copy; {new Date().getFullYear()} <strong>Nuzvid Agri Farms</strong>. Pure Wood Pressed &amp; Vedic Living. All Rights Reserved.
+            &copy; {new Date().getFullYear()} <strong>Nuzvid Agri Farms</strong>. Pure &amp; Delight. All Rights Reserved.
             <span className="copy-sep">•</span>
             <span className="dev-credit">
               Developed by{' '}

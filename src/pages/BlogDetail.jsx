@@ -34,24 +34,38 @@ const BlogDetail = () => {
   return (
     <div className="blog-detail-page py-5">
       <SEO 
-        title={blog.title} 
+        title={`${blog.title} - Natural Health & Organic Wisdom`} 
         description={blog.description} 
         image={blog.image}
         type="article"
-        productSchema={{
+        keywords={`${blog.title}, ${blog.category || 'organic food'}, health benefits, natural nutrition, Nuzvid Agri Farms blog`}
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Blogs', path: '/blogs' },
+          { name: blog.title, path: `/blogs/${slug}` }
+        ]}
+        schema={{
           "@context": "https://schema.org",
-          "@type": "Article",
+          "@type": "BlogPosting",
           "headline": blog.title,
-          "image": [
-            blog.image
-           ],
-          "datePublished": "2024-01-01T08:00:00+08:00",
-          "dateModified": "2024-01-01T08:00:00+08:00",
+          "description": blog.description,
+          "image": [blog.image],
+          "datePublished": "2024-01-01T08:00:00+05:30",
+          "dateModified": "2024-01-01T08:00:00+05:30",
+          "mainEntityOfPage": `https://www.nuzvidagrifarms.com/blogs/${slug}`,
+          "publisher": {
+            "@type": "Organization",
+            "name": "Nuzvid Agri Farms",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.nuzvidagrifarms.com/favicon-512x512.png"
+            }
+          },
           "author": [{
-              "@type": "Organization",
-              "name": "Nuzvid Agri Farms",
-              "url": "https://www.nuzvidagrifarms.com"
-            }]
+            "@type": "Organization",
+            "name": "Nuzvid Agri Farms",
+            "url": "https://www.nuzvidagrifarms.com"
+          }]
         }}
       />
       

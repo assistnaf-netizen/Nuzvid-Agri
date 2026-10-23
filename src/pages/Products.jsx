@@ -140,7 +140,15 @@ const Products = () => {
 
   return (
     <div className="products-page">
-      <SEO title="Shop All Products" description="Browse our wide range of premium organic food products, cold pressed oils, and A2 Ghee." />
+      <SEO 
+        title="Buy Wood Pressed Oils & Pure A2 Desi Cow Ghee Online"
+        description="Explore 100% natural stone-ground wood pressed oils, Vedic bilona A2 cow ghee, raw forest honey, organic jaggery, and chemical-free groceries. Direct farm delivery across India."
+        keywords="buy wood pressed oil online, cold pressed groundnut oil, sesame oil, coconut oil, A2 bilona ghee, pure cow ghee, raw forest honey, organic groceries online"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Products', path: '/products' }
+        ]}
+      />
 
       {/* Banner */}
       <div className="products-banner">

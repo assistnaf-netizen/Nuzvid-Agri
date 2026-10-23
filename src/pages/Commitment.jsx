@@ -11,7 +11,15 @@ const Commitment = () => {
 
   return (
     <div className="commitment-page-wrapper">
-      <SEO title="Our Commitment" description="Learn about our dedication to organic farming, purity, and sustainability." />
+      <SEO 
+        title="Our Commitment to Purity, Soil Health & Chemical-Free Farmers"
+        description="Discover our promise to Indian agriculture, sustainable soil preservation, and supporting rural farmers who practice traditional, zero-chemical natural farming."
+        keywords="organic farming commitment, chemical free soil, traditional farmers support, sustainable agriculture India, Nuzvid Agri Farms values"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Our Commitment', path: '/our-commitment' }
+        ]}
+      />
       <div className="commitment-container">
         
         {/* Top Section */}

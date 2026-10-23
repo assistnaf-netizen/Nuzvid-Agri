@@ -4,7 +4,7 @@ import SEO from '../components/SEO';
 import './About.css';
 
 const About = () => {
-  
+
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -12,7 +12,15 @@ const About = () => {
 
   return (
     <div className="about-page-wrapper">
-      <SEO title="About Us" description="Learn more about Nuzvid Agri Farms, our mission to provide pure, wood-pressed oils, and our commitment to sustainable farming." />
+      <SEO 
+        title="Our Story & Farm Heritage | Traditional Vedic Organic Farming"
+        description="Learn about Nuzvid Agri Farms' mission to restore pure traditional eating. Rooted in Andhra Pradesh farming families, we craft unadulterated wood-pressed oils, bilona ghee, and wholesome farm food."
+        keywords="about Nuzvid Agri Farms, traditional organic farming Andhra Pradesh, Vedic bilona method, chemical-free farm foods, pure oil extraction"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'About Us', path: '/about-us' }
+        ]}
+      />
       {/* Hero Banner Section */}
       <section className="about-hero" style={{ backgroundImage: "url('https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977')" }}>
         <div className="about-hero-text">
@@ -26,13 +34,13 @@ const About = () => {
           {/* Left: Image with overlapping badge */}
           <div className="story-image-side">
             {/* REPLACE THIS IMAGE SRC WITH YOUR EXACT FAMILY IMAGE URL */}
-            <img 
-              src="/about-family.png" 
-              alt="Farming Family" 
-              className="main-story-img" 
+            <img
+              src="/about-family.png"
+              alt="Farming Family"
+              className="main-story-img"
             />
           </div>
-          
+
           {/* Right: Text content */}
           <div className="story-text-side">
             <h4 className="subtitle">KNOW MORE ABOUT Nuzvid Agri Farms</h4>
@@ -60,11 +68,11 @@ const About = () => {
         <div className="mission-container">
           {/* Left: Graphic image with vertical bar */}
           <div className="mission-image-side">
-             {/* REPLACE THIS IMAGE SRC WITH YOUR EXACT BULL OIL-PRESS GRAPHIC URL */}
-            <img 
-              src="/about-bull.png" 
-              alt="Purity Patience Health" 
-              className="mission-img" 
+            {/* REPLACE THIS IMAGE SRC WITH YOUR EXACT BULL OIL-PRESS GRAPHIC URL */}
+            <img
+              src="/about-bull.png"
+              alt="Purity Patience Health"
+              className="mission-img"
             />
           </div>
 

@@ -51,7 +51,15 @@ const Contact = () => {
 
   return (
     <div className="contact-page-wrapper">
-      <SEO title="Contact Us" description="Get in touch with Nuzvid Agri Farms for inquiries about our organic products, orders, or partnerships." />
+      <SEO 
+        title="Contact Nuzvid Agri Farms | Customer Support & Farm Orders"
+        description="Connect with Nuzvid Agri Farms in Nuzvid, Andhra Pradesh. Contact our customer care team for natural product inquiries, bulk orders, feedback, or farm visits."
+        keywords="contact Nuzvid Agri Farms, Nuzvid Agri Farms phone number, organic farm Nuzvid AP, customer support farm products, buy direct from farm"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Contact Us', path: '/contact' }
+        ]}
+      />
       {/* Hero Banner */}
       <section className="contact-hero">
         <motion.div 
@@ -60,7 +68,8 @@ const Contact = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h1>Connect With Our Farm</h1>
+          <span className="contact-hero-tag">Reach Out To Us</span>
+          <h1>Connect With Our <span>Farm</span></h1>
           <p>We'd love to hear from you. Let's start a conversation.</p>
         </motion.div>
       </section>
@@ -93,7 +102,7 @@ const Contact = () => {
             </div>
             <div className="info-details">
               <h4>Call Us</h4>
-              <p>+91 (123) 456-7890</p>
+              <p>+91 99855 55525</p>
             </div>
           </div>
 

@@ -58,9 +58,31 @@ const Faqs = () => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': faqsData.map(item => ({
+      '@type': 'Question',
+      'name': item.question,
+      'acceptedAnswer': {
+        '@type': 'Answer',
+        'text': item.answer
+      }
+    }))
+  };
+
   return (
     <div className="faqs-page-wrapper">
-      <SEO title="FAQs" description="Frequently Asked Questions – Nuzvid Agri Farms" />
+      <SEO 
+        title="Frequently Asked Questions (FAQs) | Pure Oils, A2 Ghee & Delivery"
+        description="Find answers to common questions about our wood-pressing process, purity testing, bilona ghee preparation, nationwide shipping, packaging, and shelf life at Nuzvid Agri Farms."
+        keywords="Nuzvid Agri Farms FAQs, wood pressed oil purity, bilona ghee making, shipping organic farm products, order tracking NAF"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'FAQs', path: '/faqs' }
+        ]}
+        schema={faqSchema}
+      />
       <section className="faqs-hero">
         <h1>FAQs</h1>
         <div className="breadcrumb">

@@ -276,7 +276,7 @@ const ManageProducts = () => {
                 <option value="wood-pressed-oils">Wood Pressed Oils</option>
                 <option value="a2-ghee">A2 Ghee</option>
                 <option value="natural-sweeteners">Natural Sweeteners</option>
-                <option value="countryside-grocery">Countryside Grocery</option>
+                <option value="countryside-grocery">Grocery</option>
               </select>
             </div>
             <div>

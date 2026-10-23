@@ -650,16 +650,27 @@ const ProductDetail = () => {
     <div className="product-detail-page">
       {product && (
         <SEO
-          title={product.title}
+          title={`${product.title} - 100% Pure & Farm Fresh`}
           description={product.description}
           image={product.image}
           type="product"
+          keywords={`${product.title}, buy ${product.title} online, organic ${product.title}, pure farm fresh ${product.title}, Nuzvid Agri Farms`}
+          breadcrumbs={[
+            { name: 'Home', path: '/' },
+            { name: 'Products', path: '/products' },
+            { name: product.title, path: `/products/${product.id}` }
+          ]}
           productSchema={{
             "@context": "https://schema.org/",
             "@type": "Product",
             "name": product.title,
             "image": product.image,
             "description": product.description,
+            "sku": displaySku || `NAF-${product.id}`,
+            "brand": {
+              "@type": "Brand",
+              "name": "Nuzvid Agri Farms"
+            },
             "offers": {
               "@type": "Offer",
               "url": window.location.href,

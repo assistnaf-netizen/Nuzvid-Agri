@@ -80,6 +80,7 @@ function App() {
             <Route path="/our-intro" element={<OurIntro />} />
             <Route path="/pages/our-intro" element={<OurIntro />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/contact-us" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />

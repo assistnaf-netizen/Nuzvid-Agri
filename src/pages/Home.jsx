@@ -183,9 +183,10 @@ const Home = () => {
   return (
     <div className="home-page">
       <SEO
-        title="Home"
-        description="Welcome to Nuzvid Agri Farms. Pure wood-pressed oils, A2 Ghee, and organic groceries from our farm to your table."
-        productSchema={{
+        title="Nuzvid Agri Farms | Pure Wood-Pressed Oils, A2 Desi Cow Ghee & Organic Groceries"
+        description="Shop 100% pure cold wood-pressed oils, Vedic Bilona A2 Desi Cow Ghee, wild raw forest honey, and organic groceries directly from our farm in Nuzvid, Andhra Pradesh."
+        keywords="Nuzvid Agri Farms, wood pressed oils, cold pressed oil, A2 cow ghee, bilona ghee, pure desi ghee, organic honey, raw forest honey, jaggery powder, natural sweeteners, organic spices, Andhra Pradesh organic farm"
+        schema={{
           "@context": "https://schema.org",
           "@graph": [
             {
@@ -195,13 +196,39 @@ const Home = () => {
               "url": "https://www.nuzvidagrifarms.com/",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png"
+                "url": "https://www.nuzvidagrifarms.com/favicon-512x512.png"
+              },
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+91 99855 55525",
+                "contactType": "customer service",
+                "email": "assist.naf@gmail.com",
+                "areaServed": "IN",
+                "availableLanguage": ["en", "te", "hi"]
               },
               "sameAs": [
                 "https://www.facebook.com/profile.php?id=61579403908868",
                 "https://www.instagram.com/nuzvidagrifarms/",
                 "https://www.youtube.com/@NuzvidAgriFarms"
               ]
+            },
+            {
+              "@type": "Store",
+              "@id": "https://www.nuzvidagrifarms.com/#store",
+              "name": "Nuzvid Agri Farms",
+              "image": "https://www.nuzvidagrifarms.com/favicon-512x512.png",
+              "url": "https://www.nuzvidagrifarms.com/",
+              "telephone": "+91 99855 55525",
+              "email": "assist.naf@gmail.com",
+              "priceRange": "₹₹",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "19-55, Thummala Vari Street",
+                "addressLocality": "Nuzvid",
+                "addressRegion": "Andhra Pradesh",
+                "postalCode": "521201",
+                "addressCountry": "IN"
+              }
             },
             {
               "@type": "WebSite",
@@ -366,7 +393,7 @@ const Home = () => {
               className={`tab-btn ${activeTab === 'countryside-grocery' ? 'active' : ''}`}
               onClick={() => setActiveTab('countryside-grocery')}
             >
-              Spices & Powders
+              Grocery
             </button>
           </div>
 

@@ -11,7 +11,15 @@ const Blogs = () => {
 
   return (
     <div className="blogs-page-wrapper">
-      <SEO title="News & Stories - Nuzvid Agri Farms" description="Discover our roots, traditional farming practices, and the wholesome goodness behind every Nuzvid Agri Farms product." />
+      <SEO 
+        title="Organic Living & Health Tips Blog | Vedic Nutrition & Pure Farming"
+        description="Read expert guides on the health benefits of wood-pressed oils, Ayurveda qualities of native cow A2 bilona ghee, raw honey remedies, and traditional organic farming."
+        keywords="health benefits wood pressed oils, A2 bilona ghee benefits, organic living blog, ayurveda ghee nutrition, raw honey health tips, Nuzvid Agri Farms stories"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Blogs', path: '/blogs' }
+        ]}
+      />
       <section className="blogs-hero">
         <h1>News & Stories</h1>
         <p>Discover our roots, traditional farming practices, and the wholesome goodness behind every Nuzvid Agri Farms product.</p>
