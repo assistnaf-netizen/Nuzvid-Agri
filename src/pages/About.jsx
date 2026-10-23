@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import './About.css';
 
@@ -21,12 +20,6 @@ const About = () => {
           { name: 'About Us', path: '/about-us' }
         ]}
       />
-      {/* Hero Banner Section */}
-      <section className="about-hero" style={{ backgroundImage: "url('https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977')" }}>
-        <div className="about-hero-text">
-          <Link to="/">Home</Link> | <span>About Us</span>
-        </div>
-      </section>
 
       {/* Section 1: Our Story */}
       <section className="about-section">

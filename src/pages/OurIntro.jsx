@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import './OurIntro.css';
 
@@ -21,13 +20,6 @@ const OurIntro = () => {
         ]}
       />
       
-      {/* Hero Banner Section */}
-      <section className="intro-hero">
-        <div className="intro-hero-text">
-          <Link to="/">Home</Link> | <span>Our Intro</span>
-        </div>
-      </section>
-
       {/* Main Content Section */}
       <section className="intro-section">
         <div className="intro-container">
