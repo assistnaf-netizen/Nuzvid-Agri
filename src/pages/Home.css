@@ -316,6 +316,71 @@
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* Ribbon Banner as Background for The Goodness We Share */
+.goodness-ribbon-banner {
+  width: 100%;
+  min-height: 150px;
+  background-image: url('/home-mid-banner.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 35px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 20px rgba(60, 28, 20, 0.06);
+}
+
+.goodness-ribbon-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(253, 250, 244, 0.08) 0%, rgba(253, 250, 244, 0.35) 30%, rgba(253, 250, 244, 0.35) 70%, rgba(253, 250, 244, 0.08) 100%);
+  pointer-events: none;
+}
+
+.goodness-ribbon-banner .section-title {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: var(--color-primary, #3C1C14);
+  letter-spacing: 0.5px;
+  background: rgba(255, 253, 248, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 12px 38px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(214, 141, 60, 0.45);
+  box-shadow: 0 8px 24px rgba(60, 28, 20, 0.12), 0 2px 6px rgba(214, 141, 60, 0.15);
+}
+
+@media (max-width: 768px) {
+  .goodness-ribbon-banner {
+    min-height: 110px;
+    padding: 20px 15px;
+    margin-bottom: 25px;
+  }
+  .goodness-ribbon-banner .section-title {
+    font-size: 1.7rem;
+    padding: 8px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .goodness-ribbon-banner {
+    min-height: 95px;
+    padding: 15px 10px;
+  }
+  .goodness-ribbon-banner .section-title {
+    font-size: 1.35rem;
+    padding: 6px 18px;
+  }
+}
+
 /* Tabs */
 .section-title {
   font-size: 2.5rem;

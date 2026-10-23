@@ -339,21 +339,6 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Mid Banner Section */}
-      <motion.section
-        className="mid-banner-section"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <img
-          src="/home-mid-banner.jpeg"
-          alt="Nuzvid Agri Farms Highlights"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
-      </motion.section>
-
       {/* The Goodness We Share */}
       <motion.section
         className="goodness-section py-4"
@@ -362,8 +347,13 @@ const Home = () => {
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="container">
+        {/* Illustrated Ribbon Banner Background for Title */}
+        <div className="goodness-ribbon-banner">
+          <div className="goodness-ribbon-overlay"></div>
           <h2 className="section-title text-center">The Goodness We Share</h2>
+        </div>
+
+        <div className="container">
           <div className="tabs">
             <button
               className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
