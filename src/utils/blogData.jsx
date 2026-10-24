@@ -120,7 +120,7 @@ export const blogsContent = [
     description: "This isn’t just about what’s on your plate. It’s about how it got there. We support traditional farmers because their way of farming heals—not only the land, but our bodies and communities.",
     date: "September 2025",
     category: "Farming",
-    image: "/blogs/real-food.jpg",
+    image: "/blogs/nuzvid-agri-farms-real-food.jpg",
     content: (
       <>
         <p>We didn’t build Nuzvid Agri Farms to start a business. We built it because something essential was missing.</p>
@@ -248,7 +248,7 @@ export const blogsContent = [
     description: "In an era where sweetness often comes at the cost of health, organic jaggery offers a rare and beautiful balance, the pleasure of natural sweetness, paired with the purity of real nutrition.",
     date: "September 2025",
     category: "Sweeteners",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Jaggery_370x.jpg?v=1759150700",
+    image: "/blogs/organic-jaggery.jpg",
     content: (
       <>
         <p>In an era where sweetness often comes at the cost of health, organic jaggery offers a rare and beautiful balance, the pleasure of natural sweetness, paired with the purity of real nutrition. At Nuzvid Agri Farms, we craft our jaggery the way our ancestors did: slowly, thoughtfully, and without compromise.</p>
@@ -299,7 +299,7 @@ export const blogsContent = [
     description: "We don’t just make oil. We preserve stories, values, and vitality. From seed selection to extraction, our process is rooted in respect for nature, tradition, and your health.",
     date: "September 2025",
     category: "Oils",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Oils_370x.jpg?v=1759150787",
+    image: "/blogs/wood-cold-pressed-oils.jpg",
     content: (
       <>
         <p>In an age of fast food and faster lifestyles, we often forget the soul of our meals: the ingredients themselves. At Nuzvid Agri Farms, we believe it’s time to slow down and reconnect with the land, with tradition, and with the nourishing power of real food.</p>
@@ -370,7 +370,7 @@ export const blogsContent = [
     description: "Opening a jar of Nuzvid A2 Ghee is welcoming a legacy of love, tradition, and healing into your home. It’s a reminder that the food we eat can be medicine, joy, and connection.",
     date: "September 2025",
     category: "Dairy",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL1-A2GHEE_370x.jpg?v=1759150680",
+    image: "/blogs/a2-ghee.png",
     content: (
       <>
         <p>Ghee is more than just an ingredient in Indian kitchens. It’s a treasure chest of tradition, health, and love. At Nuzvid Agri Farms, our A2 Ghee is crafted with this deep respect, connecting you to a heritage of purity and wellness. When you bring our ghee home, you’re inviting generations of knowledge, care, and natural goodness into your life. Let’s take you on the journey of this golden superfood, from our native cows grazing freely in open fields to the lovingly handcrafted jar on your table, and discover why it deserves a special place in your kitchen and heart.</p>
@@ -414,7 +414,7 @@ export const blogsContent = [
     description: "By choosing this honey, you’re not just choosing better health. You’re choosing sustainable practices, natural purity, and a return to the way honey was meant to be: raw, wild, and full of life.",
     date: "September 2025",
     category: "Wellness",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Honey_fde9b232-10fa-4e95-8e25-5d109399ddf9_370x.jpg?v=1759150454",
+    image: "/blogs/raw-forest-honey.jpg",
     content: (
       <>
         <h4 className="mt-4 mb-3" style={{ fontWeight: '700', color: '#000' }}>1. Straight from the Wild: Where Nature Does the Work</h4>
