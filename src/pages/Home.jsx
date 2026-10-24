@@ -441,7 +441,7 @@ const Home = () => {
         {/* Absolutely positioned product composition image on the left */}
         <div className="basket-left-img">
           <img
-            src="/farm-video-thumbnail.png"
+            src="/Pantry Ingredients.png"
             alt="Health Basket Collage"
           />
         </div>
