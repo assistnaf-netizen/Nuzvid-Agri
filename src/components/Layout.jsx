@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import CartDrawer from './CartDrawer';
 import './Layout.css';
 
 const Layout = () => {
@@ -27,6 +28,7 @@ const Layout = () => {
   return (
     <>
       <Header />
+      <CartDrawer />
       <main className="main-content">
         <Outlet />
       </main>

@@ -16,7 +16,7 @@ const Header = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { cartItems } = useCart();
+  const { cartItems, openCart } = useCart();
   const { wishlistItems } = useWishlist();
   const { user, isAdmin, logoutMock } = useAuth();
   const location = useLocation();
@@ -138,14 +138,20 @@ const Header = () => {
               )}
             </Link>
 
-            <Link to="/cart" className="icon-btn" aria-label="Shopping Cart">
+            <button 
+              type="button"
+              className="icon-btn"
+              onClick={openCart}
+              aria-label="Shopping Cart"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            >
               <ShoppingCart size={22} />
               {cartItems.reduce((acc, item) => acc + item.quantity, 0) > 0 && (
                 <span className="cart-count">
                   {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
                 </span>
               )}
-            </Link>
+            </button>
             <button 
               className="icon-btn mobile-menu-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

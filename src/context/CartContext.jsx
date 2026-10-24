@@ -54,7 +54,13 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const addToCart = async (product, quantity = 1) => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+  const toggleCart = () => setIsCartOpen(prev => !prev);
+
+  const addToCart = async (product, quantity = 1, shouldOpenDrawer = true) => {
     const cartItemId = product.cartItemId || product.id;
     
     setCartItems(prev => {
@@ -79,6 +85,9 @@ export const CartProvider = ({ children }) => {
     }
 
     toast.success(`Added ${product.title} to cart`);
+    if (shouldOpenDrawer) {
+      setIsCartOpen(true);
+    }
   };
 
   const removeFromCart = async (cartItemId) => {
@@ -122,7 +131,19 @@ export const CartProvider = ({ children }) => {
   const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart, totalAmount }}>
+    <CartContext.Provider value={{
+      cartItems,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      totalAmount,
+      isCartOpen,
+      setIsCartOpen,
+      openCart,
+      closeCart,
+      toggleCart
+    }}>
       {children}
     </CartContext.Provider>
   );
