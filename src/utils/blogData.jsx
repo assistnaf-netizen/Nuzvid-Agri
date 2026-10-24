@@ -7,7 +7,7 @@ export const blogsContent = [
     description: "Every grain brings authentic, natural sweetness with nourishing benefits. We believe your food should be honest and pure. Our brown sugar reflects our dedication to quality, tradition, and sustainability.",
     date: "September 2025",
     category: "Sweeteners",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/Organic_Brown_sugar_370x.png?v=1759230994",
+    image: "/blogs/organic-brown-sugar.jpg",
     content: (
       <>
         <p>Welcome the rich, natural sweetness of our pure brown sugar, crafted without chemicals or refining. This isn’t just any sugar. It’s a return to the authentic flavors and nutrition nature intended, bringing both taste and health benefits to your kitchen.</p>
@@ -45,7 +45,7 @@ export const blogsContent = [
     description: "Made from the rich, creamy milk of grass-fed buffaloes and carefully slow-cooked using time-honored methods, this ghee captures the very essence of purity and nourishment in every golden spoonful.",
     date: "September 2025",
     category: "Dairy",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL1-BufaloGhee_370x.jpg?v=1759150769",
+    image: "/blogs/buffalo-ghee.jpg",
     content: (
       <>
         <p>Some ingredients do more than just enhance flavor. They bring with them a legacy of care, nature’s bounty, and deep-rooted traditions. Our Buffalo Ghee is one such treasure. Made from the rich, creamy milk of grass-fed buffaloes and carefully slow-cooked using time-honored methods, this ghee captures the very essence of purity and nourishment in every golden spoonful. With its rich aroma, characteristic soft golden granules, and wholesome nutrition, it transforms everyday meals into soulful experiences. Free from additives and shortcuts, this is genuine, farm-fresh ghee that nurtures your family and honors the farmers who make it possible.</p>
@@ -76,7 +76,7 @@ export const blogsContent = [
     description: "Our Himalayan pink salt is not just a seasoning. It’s purity preserved in every crystal, a bridge to ancient natural processes, and a simple luxury that nourishes both body and soul.",
     date: "September 2025",
     category: "Salts",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-MineralSalt_370x.jpg?v=1759150645",
+    image: "/blogs/himalayan-pink-salt.jpg",
     content: (
       <>
         <h4 className="mt-4 mb-3" style={{ fontWeight: '700', color: '#000' }}>Connecting to Nature Through Himalayan Pink Salt</h4>
@@ -120,7 +120,7 @@ export const blogsContent = [
     description: "This isn’t just about what’s on your plate. It’s about how it got there. We support traditional farmers because their way of farming heals—not only the land, but our bodies and communities.",
     date: "September 2025",
     category: "Farming",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/Flier_370x.jpg?v=1759298285",
+    image: "/blogs/real-food.jpg",
     content: (
       <>
         <p>We didn’t build Nuzvid Agri Farms to start a business. We built it because something essential was missing.</p>
@@ -152,7 +152,7 @@ export const blogsContent = [
     description: "At Nuzvid Agri Farms, every product tells a story. Our Naturally Grown, Hand-Pounded Red Chilli Powder, made from premium Guntur chillies, carries the essence of that story in every grain.",
     date: "September 2025",
     category: "Spices",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-RedChilliPowder_370x.jpg?v=1759150731",
+    image: "/blogs/red-chilli-powder.jpg",
     content: (
       <>
         <p>Some ingredients don’t just add spice. They carry heritage, pride, and a sense of home. Our Red Chilli Powder, made from handpicked Guntur chillies, brings more than heat. It delivers the unmistakable flavor of tradition, care, and strength straight to your kitchen.</p>
@@ -199,7 +199,7 @@ export const blogsContent = [
     description: "In every Indian kitchen, turmeric is more than just a spice. It is a symbol of healing, heritage, and warmth. For centuries, it has brought color to our food, comfort to our lives, and care to our health.",
     date: "September 2025",
     category: "Spices",
-    image: "https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Turmeric_370x.jpg?v=1759150715",
+    image: "/blogs/turmeric-powder.jpg",
     content: (
       <>
         <p>In every Indian kitchen, turmeric is more than just a spice. It is a symbol of healing, heritage, and warmth. For centuries, it has brought color to our food, comfort to our lives, and care to our health.</p>
