@@ -210,7 +210,7 @@ const MyAccount = () => {
           status: o.status,
           items: o.order_items ? o.order_items.length : 0,
           productName,
-          productImage: firstItem ? firstItem.product_image : 'https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png',
+          productImage: firstItem ? firstItem.product_image : '/Nuzvid Agri Farms Logo.png',
           address: o.shipping_address,
           paymentMethod: o.payment_method,
           trackingId: o.status === 'Shipped' || o.status === 'Delivered' ? 'AWB...' : 'Pending',

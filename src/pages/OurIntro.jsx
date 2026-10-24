@@ -43,7 +43,7 @@ const OurIntro = () => {
             
             <div className="intro-image-side">
               <img 
-                src="https://www.nuzvidagrifarms.com/cdn/shop/files/Our_Intro_1200x.jpg?v=1759857682" 
+                src="/Our_Intro_1200x.webp" 
                 alt="Traditional farming family" 
                 className="intro-main-img" 
               />

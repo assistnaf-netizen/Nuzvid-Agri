@@ -305,7 +305,7 @@ const Home = () => {
             {/* Left Large Banner */}
             <div className="promo-banner-large hover-zoom">
               <Link to="/our-commitment" className="promo-img-link">
-                <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/our_commitment_1200x.jpg?v=1759857822" alt="Our Commitment" className="promo-bg-img" />
+                <img src="/commitment-new-farmer.jpg" alt="Our Commitment" className="promo-bg-img" />
                 <div className="banner-overlay"></div>
                 <div className="banner-arrow-btn">
                   <FaArrowRight />
@@ -317,7 +317,7 @@ const Home = () => {
             <div className="promo-banners-stacked">
               <div className="promo-banner-small hover-zoom">
                 <Link to="/about-us" className="promo-img-link">
-                  <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/ABOUT_US_1200x.jpg?v=1759149023" alt="About Us" className="promo-bg-img" />
+                  <img src="/about-family.png" alt="About Us" className="promo-bg-img" />
                   <div className="banner-overlay"></div>
                   <div className="banner-arrow-btn">
                     <FaArrowRight />
@@ -327,7 +327,7 @@ const Home = () => {
 
               <div className="promo-banner-small hover-zoom">
                 <Link to="/our-intro" className="promo-img-link">
-                  <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Our_Intro_1200x.jpg?v=1759857682" alt="Our Intro" className="promo-bg-img" />
+                  <img src="/Our_Intro_1200x.webp" alt="Our Intro" className="promo-bg-img" />
                   <div className="banner-overlay"></div>
                   <div className="banner-arrow-btn">
                     <FaArrowRight />
@@ -441,7 +441,7 @@ const Home = () => {
         {/* Absolutely positioned product composition image on the left */}
         <div className="basket-left-img">
           <img
-            src="https://www.nuzvidagrifarms.com/cdn/shop/files/Monthly_banner_b0109ce9-ef11-4669-aab8-936a4c64223f_514x.png?v=1759637551"
+            src="/farm-video-thumbnail.png"
             alt="Health Basket Collage"
           />
         </div>

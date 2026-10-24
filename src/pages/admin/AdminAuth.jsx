@@ -90,7 +90,7 @@ const AdminAuth = () => {
           <div className="admin-form-content">
             <div className="brand-logo">
               <img 
-                src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" 
+                src="/Nuzvid Agri Farms Logo.png" 
                 alt="Nuzvid Agri Farms" 
               />
             </div>

@@ -157,12 +157,12 @@ const Auth = () => {
         
         {/* Registration Form (Left Side) */}
         <div className="auth-form-side form-register">
-          <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: '#666', textDecoration: 'none', marginBottom: '20px', fontSize: '14px', fontWeight: '500', width: 'fit-content' }}>
+          <Link to="/" className="auth-back-link">
             <ArrowLeft size={16} /> Back to Home
           </Link>
           
-          <div className="text-center mobile-logo" style={{ marginBottom: '20px', display: 'none' }}>
-            <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" alt="Nuzvid Agri Farms" style={{ height: '80px', objectFit: 'contain' }} />
+          <div className="text-center mobile-logo">
+            <img src="/Nuzvid Agri Farms Logo.png" alt="Nuzvid Agri Farms" />
           </div>
           
           <h2>Create Account</h2>
@@ -199,8 +199,8 @@ const Auth = () => {
                 onChange={(e) => setRegisterPassword(e.target.value)}
               />
             </div>
-            <button type="submit" className="btn-primary" disabled={loading} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-              <UserPlus size={20} /> {loading ? 'Creating Account...' : 'Create Account'}
+            <button type="submit" className="btn-primary" disabled={loading}>
+              <UserPlus size={19} /> {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
           
@@ -211,12 +211,12 @@ const Auth = () => {
 
         {/* Login Form (Right Side) */}
         <div className="auth-form-side form-login">
-          <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: '#666', textDecoration: 'none', marginBottom: '20px', fontSize: '14px', fontWeight: '500', width: 'fit-content' }}>
+          <Link to="/" className="auth-back-link">
             <ArrowLeft size={16} /> Back to Home
           </Link>
           
-          <div className="text-center mobile-logo" style={{ marginBottom: '20px', display: 'none' }}>
-            <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" alt="Nuzvid Agri Farms" style={{ height: '80px', objectFit: 'contain' }} />
+          <div className="text-center mobile-logo">
+            <img src="/Nuzvid Agri Farms Logo.png" alt="Nuzvid Agri Farms" />
           </div>
           
           <h2>Sign In</h2>
@@ -263,8 +263,8 @@ const Auth = () => {
               </div>
             ) : null}
             
-            <button type="submit" className="btn-primary" disabled={loading} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-              {!otpSent ? <Mail size={20} /> : <LogIn size={20} />}
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {!otpSent ? <Mail size={19} /> : <LogIn size={19} />}
               {loading 
                 ? 'Processing...' 
                 : (otpSent ? 'Verify OTP & Login' : 'Send OTP to Email')
@@ -289,10 +289,10 @@ const Auth = () => {
           initial={false}
           animate={{
             x: isLogin ? '-100%' : '0%',
-            borderTopLeftRadius: isLogin ? '20px' : '0px',
-            borderBottomLeftRadius: isLogin ? '20px' : '0px',
-            borderTopRightRadius: isLogin ? '0px' : '20px',
-            borderBottomRightRadius: isLogin ? '0px' : '20px',
+            borderTopLeftRadius: isLogin ? '28px' : '0px',
+            borderBottomLeftRadius: isLogin ? '28px' : '0px',
+            borderTopRightRadius: isLogin ? '0px' : '28px',
+            borderBottomRightRadius: isLogin ? '0px' : '28px',
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
@@ -305,14 +305,20 @@ const Auth = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 50 }}
                 transition={{ duration: 0.3 }}
-                style={{ backgroundImage: "url('https://www.nuzvidagrifarms.com/cdn/shop/files/new_1920x.jpg?v=1759635977')" }}
+                style={{ backgroundImage: "url('/hero-banner.webp')" }}
               >
                 <div className="auth-image-overlay"></div>
                 <div className="auth-image-text text-center">
-                  <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" alt="Logo" style={{ height: '80px', marginBottom: '20px', filter: 'brightness(0) invert(1)' }} />
+                  <div className="auth-side-logo-container">
+                    <img 
+                      src="/Nuzvid Agri Farms Logo.png" 
+                      alt="Nuzvid Agri Farms Logo" 
+                      className="auth-side-logo" 
+                    />
+                  </div>
                   <h3>Welcome Back</h3>
-                  <p style={{marginBottom: '30px'}}>Sign in to your account to track orders, manage your wishlist, and checkout faster.</p>
-                  <p>Don't have an account?</p>
+                  <p style={{marginBottom: '28px'}}>Sign in to your account to track orders, manage your wishlist, and checkout faster.</p>
+                  <p style={{fontSize: '14px', opacity: 0.85, marginBottom: '6px'}}>Don't have an account?</p>
                   <button className="btn-outline-white" onClick={() => toggleMode('register')}>Create Account</button>
                 </div>
               </motion.div>
@@ -324,14 +330,20 @@ const Auth = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.3 }}
-                style={{ backgroundImage: "url('https://www.nuzvidagrifarms.com/cdn/shop/articles/NAF-FL-Oils_370x.jpg?v=1759150787')" }}
+                style={{ backgroundImage: "url('/farm-video-thumbnail.webp')" }}
               >
                 <div className="auth-image-overlay"></div>
                 <div className="auth-image-text text-center">
-                  <img src="https://www.nuzvidagrifarms.com/cdn/shop/files/Nuzvid_logo_463bcf9e-fbf0-4e1b-9f12-2734584a22df.png" alt="Logo" style={{ height: '80px', marginBottom: '20px', filter: 'brightness(0) invert(1)' }} />
+                  <div className="auth-side-logo-container">
+                    <img 
+                      src="/Nuzvid Agri Farms Logo.png" 
+                      alt="Nuzvid Agri Farms Logo" 
+                      className="auth-side-logo" 
+                    />
+                  </div>
                   <h3>Join Our Family</h3>
-                  <p style={{marginBottom: '30px'}}>Experience the pure delight of farm-fresh, organic products delivered straight to your door.</p>
-                  <p>Already have an account?</p>
+                  <p style={{marginBottom: '28px'}}>Experience the pure delight of farm-fresh, organic products delivered straight to your door.</p>
+                  <p style={{fontSize: '14px', opacity: 0.85, marginBottom: '6px'}}>Already have an account?</p>
                   <button className="btn-outline-white" onClick={() => toggleMode('login')}>Sign In</button>
                 </div>
               </motion.div>

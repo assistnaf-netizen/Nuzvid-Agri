@@ -158,7 +158,7 @@ const Products = () => {
       {/* Banner */}
       <div className="products-banner">
         <img
-          src="https://www.nuzvidagrifarms.com/cdn/shop/files/Our_Intro_1200x.jpg?v=1759857682"
+          src="/Our_Intro_1200x.webp"
           alt="Products Banner"
           className="banner-img"
         />

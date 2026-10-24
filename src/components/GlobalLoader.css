@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   /* Cinematic Background Image */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('https://www.nuzvidagrifarms.com/cdn/shop/files/our_commitment_1200x.jpg?v=1759857822');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('/commitment-new-farmer.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
