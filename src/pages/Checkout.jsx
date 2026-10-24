@@ -13,9 +13,13 @@ import './Checkout.css';
 
 const Checkout = () => {
   
-  const { cartItems, totalAmount, clearCart } = useCart();
+  const { cartItems, totalAmount, clearCart, closeCart } = useCart();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    closeCart();
+  }, [closeCart]);
   
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
@@ -312,6 +316,7 @@ const Checkout = () => {
           async (response) => {
             await saveOrderToDatabase(orderId, 'Razorpay UPI/Card', response.razorpay_payment_id, 'Paid');
             toast.success('Payment successful!');
+            closeCart();
             clearCart();
             setLoading(false);
             setCompletedOrderDetails({ 
@@ -335,6 +340,7 @@ const Checkout = () => {
     } else {
       // Cash on Delivery
       await saveOrderToDatabase(orderId, 'Cash on Delivery', null, 'COD');
+      closeCart();
       clearCart();
       setLoading(false);
       setCompletedOrderDetails({ 

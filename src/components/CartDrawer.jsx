@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getDisplayName } from '../utils/productUtils';
@@ -13,6 +14,12 @@ const CartDrawer = () => {
   const { isCartOpen, closeCart, cartItems, updateQuantity, removeFromCart, totalAmount } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Automatically close drawer when route changes
+  useEffect(() => {
+    closeCart();
+  }, [location.pathname]);
 
   // Close drawer on Escape key press
   useEffect(() => {
@@ -147,20 +154,31 @@ const CartDrawer = () => {
 
                     return (
                       <div key={itemId} className="cart-drawer-item">
-                        <div className="cart-drawer-item-img-wrap">
+                        <Link
+                          to={`/product/${item.id}`}
+                          onClick={closeCart}
+                          className="cart-drawer-item-img-wrap"
+                          style={{ textDecoration: 'none' }}
+                        >
                           <img
                             src={item.image || 'https://placehold.co/120x120/f9fafb/9ca3af?text=NAF'}
                             alt={item.title}
                             className="cart-drawer-item-img"
                             loading="lazy"
                           />
-                        </div>
+                        </Link>
 
                         <div className="cart-drawer-item-content">
                           <div className="cart-drawer-item-top">
-                            <h4 className="cart-drawer-item-name" title={item.title}>
-                              {getDisplayName(item.title)}
-                            </h4>
+                            <Link
+                              to={`/product/${item.id}`}
+                              onClick={closeCart}
+                              style={{ textDecoration: 'none', color: 'inherit', flex: 1, minWidth: 0 }}
+                            >
+                              <h4 className="cart-drawer-item-name" title={item.title}>
+                                {getDisplayName(item.title)}
+                              </h4>
+                            </Link>
                             <button
                               className="cart-drawer-item-remove"
                               onClick={() => removeFromCart(itemId)}
@@ -189,7 +207,14 @@ const CartDrawer = () => {
                               <span className="qty-number">{item.quantity}</span>
                               <button
                                 className="qty-btn"
-                                onClick={() => updateQuantity(itemId, item.quantity + 1)}
+                                onClick={() => {
+                                  const maxStock = item.stock_quantity || 100;
+                                  if (item.quantity >= maxStock) {
+                                    toast.error(`Only ${maxStock} units available in stock.`);
+                                    return;
+                                  }
+                                  updateQuantity(itemId, item.quantity + 1);
+                                }}
                                 aria-label="Increase quantity"
                               >
                                 <Plus size={13} />

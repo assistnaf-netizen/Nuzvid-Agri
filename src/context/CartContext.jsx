@@ -71,7 +71,9 @@ export const CartProvider = ({ children }) => {
       return [...prev, { ...product, cartItemId, quantity }];
     });
 
-    if (user) {
+    const isValidUUID = (str) => typeof str === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+
+    if (user && isValidUUID(product.id)) {
       try {
         const { data: existing } = await supabase.from('cart_items').select('*').eq('user_id', user.id).eq('product_id', product.id).single();
         if (existing) {
@@ -93,7 +95,8 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (cartItemId) => {
     setCartItems(prev => prev.filter(item => item.cartItemId !== cartItemId && item.id !== cartItemId));
     
-    if (user) {
+    const isValidUUID = (str) => typeof str === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+    if (user && isValidUUID(cartItemId)) {
       try {
         await supabase.from('cart_items').delete().eq('user_id', user.id).eq('product_id', cartItemId);
       } catch (err) {
@@ -108,7 +111,8 @@ export const CartProvider = ({ children }) => {
     if (quantity <= 0) return removeFromCart(cartItemId);
     setCartItems(prev => prev.map(item => (item.cartItemId === cartItemId || item.id === cartItemId) ? { ...item, quantity } : item));
     
-    if (user) {
+    const isValidUUID = (str) => typeof str === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+    if (user && isValidUUID(cartItemId)) {
       try {
         await supabase.from('cart_items').update({ quantity }).eq('user_id', user.id).eq('product_id', cartItemId);
       } catch (err) {

@@ -37,9 +37,28 @@ export default async function handler(req, res) {
       }
 
       const realOrderId = orderData[0].id;
+      const isUUID = (str) => typeof str === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+
+      // Fetch all products once to resolve any non-UUID or fallback IDs safely
+      const { data: allDbProducts } = await supabaseAdmin.from('products').select('id, name');
+
       const itemsToInsert = itemsPayload.map(item => {
         const { weight, ...rest } = item;
-        return { ...rest, order_id: realOrderId };
+        let validProductId = item.product_id;
+
+        if (!isUUID(validProductId)) {
+          const matched = allDbProducts?.find(p =>
+            p.name?.toLowerCase().includes((item.product_title || '').toLowerCase()) ||
+            (item.product_title || '').toLowerCase().includes(p.name?.toLowerCase())
+          );
+          validProductId = matched ? matched.id : (allDbProducts?.[0]?.id || null);
+        }
+
+        return { 
+          ...rest, 
+          product_id: validProductId,
+          order_id: realOrderId 
+        };
       });
 
       const { error: itemsError } = await supabaseAdmin.from('order_items').insert(itemsToInsert);
@@ -51,7 +70,17 @@ export default async function handler(req, res) {
       // --- INVENTORY DEDUCTION LOGIC ---
       try {
         for (const item of itemsPayload) {
-          const { data: prodData } = await supabaseAdmin.from('products').select('stock_quantity, variants').eq('id', item.product_id).single();
+          let targetId = item.product_id;
+          if (!isUUID(targetId)) {
+            const matched = allDbProducts?.find(p =>
+              p.name?.toLowerCase().includes((item.product_title || '').toLowerCase()) ||
+              (item.product_title || '').toLowerCase().includes(p.name?.toLowerCase())
+            );
+            targetId = matched?.id;
+          }
+          if (!targetId) continue;
+
+          const { data: prodData } = await supabaseAdmin.from('products').select('stock_quantity, variants').eq('id', targetId).single();
           if (prodData) {
             if (item.weight && prodData.variants && prodData.variants.length > 0) {
               const updatedVariants = prodData.variants.map(v => {
@@ -60,10 +89,10 @@ export default async function handler(req, res) {
                 }
                 return v;
               });
-              await supabaseAdmin.from('products').update({ variants: updatedVariants }).eq('id', item.product_id);
+              await supabaseAdmin.from('products').update({ variants: updatedVariants }).eq('id', targetId);
             } else {
               const newStock = Math.max(0, (prodData.stock_quantity || 0) - item.quantity);
-              await supabaseAdmin.from('products').update({ stock_quantity: newStock }).eq('id', item.product_id);
+              await supabaseAdmin.from('products').update({ stock_quantity: newStock }).eq('id', targetId);
             }
           }
         }

@@ -636,7 +636,8 @@ const ProductDetail = () => {
       image: product.image,
       weight: finalWeight,
       sku: selectedVariant ? selectedVariant.sku : product.sku,
-      isFreeShipping: product.isFreeShipping
+      isFreeShipping: product.isFreeShipping,
+      stock_quantity: displayStock
     }, quantity);
 
     setAddedToCart(true);

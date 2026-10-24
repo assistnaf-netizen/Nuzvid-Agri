@@ -49,7 +49,8 @@ const ProductCard = ({ product }) => {
       price: currentPrice,
       mrp: currentMrp,
       weight: currentWeight,
-      cartItemId: `${product.id}-${currentWeight}`
+      cartItemId: `${product.id}-${currentWeight}`,
+      stock_quantity: selectedVariant?.stock_quantity ?? product.stock_quantity ?? 100
     });
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2500);
