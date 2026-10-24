@@ -20,7 +20,7 @@ const ManageProducts = () => {
 
   const [newProduct, setNewProduct] = useState({
     title: '', price: '', mrp: '', category: '', 
-    sku: '', weight: '', stock_quantity: 10, highlights: '', description: '', 
+    sku: '', weight: '', stock_quantity: 100, highlights: '', description: '', 
     isNew: false, sale: false, hasVariants: false, variants: [], isFreeShipping: false
   });
 
@@ -54,7 +54,7 @@ const ManageProducts = () => {
         })(),
         sku: p.sku || '',
         weight: p.weight || '',
-        stock_quantity: p.stock_quantity !== null ? p.stock_quantity : 10,
+        stock_quantity: p.stock_quantity !== null ? p.stock_quantity : 100,
         highlights: p.highlights || [],
         description: p.description,
         isNew: p.is_featured,
@@ -211,7 +211,7 @@ const ManageProducts = () => {
     setEditId(null);
     setNewProduct({ 
       title: '', price: '', mrp: '', category: '', 
-      sku: '', weight: '', stock_quantity: 10, highlights: '', description: '', 
+      sku: '', weight: '', stock_quantity: 100, highlights: '', description: '', 
       isNew: false, sale: false, hasVariants: false, variants: [], isFreeShipping: false
     });
     setExistingImages([]);
@@ -341,7 +341,7 @@ const ManageProducts = () => {
                     <button type="button" onClick={() => { const v = newProduct.variants.filter((_, i) => i !== index); setNewProduct({...newProduct, variants: v}); }} style={{ padding: '8px', background: '#fef2f2', color: '#ef4444', border: '1px solid #fca5a5', borderRadius: '6px', cursor: 'pointer' }}><Trash2 size={16} /></button>
                   </div>
                 ))}
-                <button type="button" onClick={() => setNewProduct({...newProduct, variants: [...newProduct.variants, { weight: '', price: '', mrp: '', sku: '', stock_quantity: 10 }]})} style={{ padding: '10px 15px', background: 'white', border: '1px dashed #3b82f6', color: '#3b82f6', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}><Plus size={16} /> Add Variant</button>
+                <button type="button" onClick={() => setNewProduct({...newProduct, variants: [...newProduct.variants, { weight: '', price: '', mrp: '', sku: '', stock_quantity: 100 }]})} style={{ padding: '10px 15px', background: 'white', border: '1px dashed #3b82f6', color: '#3b82f6', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}><Plus size={16} /> Add Variant</button>
               </div>
             )}
           </div>

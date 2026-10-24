@@ -3,12 +3,12 @@ import { supabase } from '../lib/supabase.js';
 import { getDisplayName } from '../utils/productUtils.js';
 
 let memoryCache = null;
-const CACHE_KEY = 'naf_products_cache_v5';
+const CACHE_KEY = 'naf_products_cache_v6';
 
 // Automatically clean legacy caches from user browsers
 if (typeof window !== 'undefined') {
   try {
-    ['naf_products_cache', 'naf_products_cache_v1', 'naf_products_cache_v2', 'naf_products_cache_v3', 'naf_products_cache_v4'].forEach(k => localStorage.removeItem(k));
+    ['naf_products_cache', 'naf_products_cache_v1', 'naf_products_cache_v2', 'naf_products_cache_v3', 'naf_products_cache_v4', 'naf_products_cache_v5'].forEach(k => localStorage.removeItem(k));
   } catch (e) {}
 }
 
@@ -83,15 +83,23 @@ export const consolidateProducts = (productsList) => {
     let rawVariants = [];
     if (Array.isArray(raw.variants) && raw.variants.length > 0) {
       rawVariants = raw.variants.map(v => ({
+        id: v.id,
+        sku: v.sku || raw.sku,
         weight: (v.weight || '').trim() || (raw.weight || 'Standard'),
         price: Number(v.price),
-        mrp: Number(v.mrp || v.original_price || v.price)
+        mrp: Number(v.mrp || v.original_price || v.price),
+        stock_quantity: (v.stock_quantity !== undefined && v.stock_quantity !== null)
+          ? Number(v.stock_quantity)
+          : ((raw.stock_quantity !== undefined && raw.stock_quantity !== null) ? Number(raw.stock_quantity) : 100)
       }));
     } else if (raw.weight) {
       rawVariants = [{
+        id: raw.id,
+        sku: raw.sku,
         weight: raw.weight,
         price: Number(raw.price),
-        mrp: Number(raw.mrp || raw.original_price || raw.price)
+        mrp: Number(raw.mrp || raw.original_price || raw.price),
+        stock_quantity: (raw.stock_quantity !== undefined && raw.stock_quantity !== null) ? Number(raw.stock_quantity) : 100
       }];
     }
 
@@ -108,6 +116,8 @@ export const consolidateProducts = (productsList) => {
       canonicalMap.set(canonicalKey, {
         ...raw,
         title: canonicalTitle,
+        stock_quantity: (raw.stock_quantity !== undefined && raw.stock_quantity !== null) ? Number(raw.stock_quantity) : 100,
+        in_stock: true,
         variants: [...rawVariants]
       });
     } else {
@@ -117,14 +127,22 @@ export const consolidateProducts = (productsList) => {
 
       for (const rv of rawVariants) {
         const vWeight = (rv.weight || '').trim().toLowerCase();
-        const found = combinedVariants.find(v => (v.weight || '').trim().toLowerCase() === vWeight);
-        if (!found && rv.weight) {
+        const foundIndex = combinedVariants.findIndex(v => (v.weight || '').trim().toLowerCase() === vWeight);
+        if (foundIndex === -1 && rv.weight) {
           combinedVariants.push(rv);
+        } else if (foundIndex !== -1) {
+          combinedVariants[foundIndex] = {
+            ...combinedVariants[foundIndex],
+            ...rv,
+            stock_quantity: rv.stock_quantity ?? combinedVariants[foundIndex].stock_quantity ?? 100
+          };
         }
       }
 
       canonicalMap.set(canonicalKey, {
         ...existing,
+        stock_quantity: existing.stock_quantity || raw.stock_quantity || 100,
+        in_stock: true,
         variants: combinedVariants
       });
     }
@@ -139,7 +157,8 @@ export const consolidateProducts = (productsList) => {
       variants = [{
         weight: prod.weight,
         price: Number(prod.price),
-        mrp: Number(prod.mrp || prod.price)
+        mrp: Number(prod.mrp || prod.price),
+        stock_quantity: (prod.stock_quantity !== undefined && prod.stock_quantity !== null) ? Number(prod.stock_quantity) : 100
       }];
     }
 
@@ -151,12 +170,15 @@ export const consolidateProducts = (productsList) => {
     const basePrice = variants.length > 0 ? variants[0].price : prod.price;
     const baseMrp = variants.length > 0 ? (variants[0].mrp || variants[0].price) : (prod.mrp || prod.price);
     const baseWeight = variants.length > 0 ? variants[0].weight : prod.weight;
+    const baseStock = variants.length > 0 ? (variants[0].stock_quantity ?? prod.stock_quantity ?? 100) : (prod.stock_quantity ?? 100);
 
     return {
       ...prod,
       price: basePrice,
       mrp: baseMrp,
       weight: baseWeight,
+      stock_quantity: baseStock,
+      in_stock: baseStock > 0,
       variants
     };
   });
@@ -170,7 +192,9 @@ export const getFallbackProducts = () => {
     images: (p.images && p.images.length > 0) ? p.images : [p.image],
     isFreeShipping: p.isFreeShipping || false,
     rating: p.rating ?? 5.0,
-    reviews: p.reviews ?? 15
+    reviews: p.reviews ?? 15,
+    stock_quantity: (p.stock_quantity !== undefined && p.stock_quantity !== null) ? Number(p.stock_quantity) : 100,
+    in_stock: true
   }));
   return consolidateProducts(normalized);
 };
@@ -259,7 +283,8 @@ export const refreshProductsFromSupabase = async () => {
         description: p.description,
         weight: p.weight,
         sku: p.sku,
-        stock_quantity: p.stock_quantity ?? 10,
+        stock_quantity: (p.stock_quantity !== undefined && p.stock_quantity !== null) ? Number(p.stock_quantity) : 100,
+        in_stock: p.in_stock !== undefined ? Boolean(p.in_stock) : true,
         variants: p.variants || (fallbackMatch ? fallbackMatch.variants : []),
         highlights: p.highlights || [],
         isNew: p.is_featured,

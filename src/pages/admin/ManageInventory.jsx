@@ -54,9 +54,13 @@ const ManageInventory = () => {
         if (error) throw error;
       } else {
         const updatedVariants = [...product.variants];
+        const totalVariantStock = updatedVariants.reduce((sum, v) => sum + parseInt(v.stock_quantity || 0), 0);
         const { error } = await supabase
           .from('products')
-          .update({ variants: updatedVariants })
+          .update({ 
+            variants: updatedVariants,
+            in_stock: totalVariantStock > 0
+          })
           .eq('id', product.id);
         if (error) throw error;
       }

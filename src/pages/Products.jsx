@@ -111,6 +111,11 @@ const Products = () => {
     if (!isNaN(min)) result = result.filter(p => p.price >= min);
     if (!isNaN(max)) result = result.filter(p => p.price <= max);
 
+    // In stock filter
+    if (inStockOnly) {
+      result = result.filter(p => (p.stock_quantity ?? 100) > 0);
+    }
+
     // Sorting
     switch (sortOrder) {
       case 'price-asc':

@@ -21,27 +21,28 @@ export const products = [
     "isNew": true,
     "sale": true,
     "isFreeShipping": true,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "v1",
         "weight": "250 ml",
         "price": 900,
         "mrp": 1000,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "v2",
         "weight": "500 ml",
         "price": 1750,
         "mrp": 1900,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "v3",
         "weight": "1 Liter",
         "price": 3500,
         "mrp": 3800,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -67,20 +68,21 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "bg-v1",
         "weight": "500 ml",
         "price": 520,
         "mrp": 600,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "bg-v2",
         "weight": "1 Liter",
         "price": 980,
         "mrp": 1100,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -105,27 +107,28 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "mcp-v1",
         "weight": "250 Grams",
         "price": 135,
         "mrp": 150,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "mcp-v2",
         "weight": "500 Grams",
         "price": 260,
         "mrp": 290,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "mcp-v3",
         "weight": "1 KG",
         "price": 500,
         "mrp": 550,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -150,20 +153,21 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "ms-v1",
         "weight": "500 Grams",
         "price": 50,
         "mrp": 65,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "ms-v2",
         "weight": "1 KG",
         "price": 100,
         "mrp": 120,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -188,27 +192,28 @@ export const products = [
     "isNew": true,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "fh-v1",
         "weight": "250 Grams",
         "price": 199,
         "mrp": 250,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "fh-v2",
         "weight": "500 Grams",
         "price": 415,
         "mrp": 480,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "fh-v3",
         "weight": "1 KG",
         "price": 790,
         "mrp": 900,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -233,20 +238,21 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "oj-v1",
         "weight": "500 Grams",
         "price": 80,
         "mrp": 100,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "oj-v2",
         "weight": "1 Kg",
         "price": 150,
         "mrp": 180,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -271,20 +277,21 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "ojp-v1",
         "weight": "500 Grams",
         "price": 80,
         "mrp": 110,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "ojp-v2",
         "weight": "900 Grams",
         "price": 135,
         "mrp": 160,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -309,20 +316,21 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "ons-v1",
         "weight": "500 Grams",
         "price": 80,
         "mrp": 95,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "ons-v2",
         "weight": "1 KG",
         "price": 150,
         "mrp": 170,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -347,27 +355,28 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "rcp-v1",
         "weight": "250 Grams",
         "price": 180,
         "mrp": 200,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "rcp-v2",
         "weight": "500 Grams",
         "price": 325,
         "mrp": 360,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "rcp-v3",
         "weight": "1 KG",
         "price": 599,
         "mrp": 650,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -392,27 +401,28 @@ export const products = [
     "isNew": true,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "otp-v1",
         "weight": "250 Grams",
         "price": 125,
         "mrp": 160,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "otp-v2",
         "weight": "500 Grams",
         "price": 220,
         "mrp": 250,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "otp-v3",
         "weight": "1 KG",
         "price": 400,
         "mrp": 450,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -437,27 +447,28 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "co-v1",
         "weight": "250 ml",
         "price": 220,
         "mrp": 280,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "co-v2",
         "weight": "500 ml",
         "price": 440,
         "mrp": 500,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "co-v3",
         "weight": "1 Liter",
         "price": 880,
         "mrp": 950,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -482,27 +493,28 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "go-v1",
         "weight": "1 Liter",
         "price": 390,
         "mrp": 450,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "go-v2",
         "weight": "2 Liter",
         "price": 760,
         "mrp": 850,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "go-v3",
         "weight": "5 Liter",
         "price": 1900,
         "mrp": 2100,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -527,27 +539,28 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "mo-v1",
         "weight": "250 ml",
         "price": 125,
         "mrp": 145,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "mo-v2",
         "weight": "500 ml",
         "price": 245,
         "mrp": 280,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "mo-v3",
         "weight": "1 Liter",
         "price": 485,
         "mrp": 540,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -572,27 +585,28 @@ export const products = [
     "isNew": false,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "so-v1",
         "weight": "1 Liter",
         "price": 545,
         "mrp": 600,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "so-v2",
         "weight": "2 Liter",
         "price": 1070,
         "mrp": 1150,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "so-v3",
         "weight": "5 Liter",
         "price": 2675,
         "mrp": 2850,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   },
@@ -617,27 +631,28 @@ export const products = [
     "isNew": true,
     "sale": true,
     "isFreeShipping": false,
+    "stock_quantity": 100,
     "variants": [
       {
         "id": "seo-v1",
         "weight": "1 Liter",
         "price": 525,
         "mrp": 580,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "seo-v2",
         "weight": "2 Liter",
         "price": 1050,
         "mrp": 1120,
-        "stock_quantity": 50
+        "stock_quantity": 100
       },
       {
         "id": "seo-v3",
         "weight": "5 Liter",
         "price": 2575,
         "mrp": 2750,
-        "stock_quantity": 50
+        "stock_quantity": 100
       }
     ]
   }

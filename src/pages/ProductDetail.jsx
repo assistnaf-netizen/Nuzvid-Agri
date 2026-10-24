@@ -615,7 +615,9 @@ const ProductDetail = () => {
     );
   }
 
-  const displayStock = selectedVariant ? selectedVariant.stock_quantity : product.stock_quantity;
+  const displayStock = (selectedVariant?.stock_quantity !== undefined && selectedVariant?.stock_quantity !== null)
+    ? Number(selectedVariant.stock_quantity)
+    : ((product?.stock_quantity !== undefined && product?.stock_quantity !== null) ? Number(product.stock_quantity) : 100);
 
   const handleQuantityChange = (type) => {
     if (type === 'increment' && quantity < displayStock) setQuantity(q => q + 1);
@@ -675,8 +677,8 @@ const ProductDetail = () => {
               "@type": "Offer",
               "url": window.location.href,
               "priceCurrency": "INR",
-              "price": product.price,
-              "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+              "price": displayPrice,
+              "availability": displayStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
               "itemCondition": "https://schema.org/NewCondition"
             }
           }}
